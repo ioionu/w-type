@@ -30,6 +30,7 @@
   b.body;
   b.x;
   b.y;
+  b.size = 10;
   b.Container_initialize = b.initialize;
   b.initialize = function() {
     this.Container_initialize();
@@ -46,6 +47,39 @@
 
   window.Bullet = Bullet;
 }(window)); //end bullet
+
+(function (window) {
+  function Baddy() {
+    this.initialize();
+  }
+  var b = Baddy.prototype = new createjs.Container();
+
+  b.body;
+  b.x;
+  b.y;
+  b.size = 10;
+  b.Container_initialize = b.initialize;
+  b.initialize = function() {
+    this.Container_initialize();
+    console.log("baddy", load_queue);
+    this.body = new createjs.Bitmap(load_queue.getResult("baddy"));
+    this.addChild(this.body);
+  }
+
+  b.tick = function(){
+    this.x -= 1;
+    this.y = 200 + (Math.sin(this.x)*10);
+  }
+
+  window.Baddy = Baddy;
+}(window)); //end bullet
+
+function hitTest(a, b) {
+  hx = a.x - b.x;
+  hy = a.y - b.y;
+  dist = Math.sqrt(hx*hx+hy*hy);
+  return dist <= a.size/2 + b.size/2;
+}
 
 var load_queue;
 var stage;
@@ -66,20 +100,25 @@ document.onkeyup = handleKeyUp;
 
 var k_left, k_right, k_up, k_down, k_shoot;
 var bullets = [];
+var baddies = [];
+var baddie_rate = 200;
+var baddie_next;
   
-var MECHSPEED = 10;
+var MECHSPEED = 5;
 
 function init() {
   // code here.
   load_queue = new createjs.LoadQueue(false);
   load_queue.installPlugin(createjs.Sound);
   load_queue.addEventListener("complete", fuckShit);
-  load_queue.loadManifest([{id: 'sound', src: 'burp.mp3'}, {id: 'peow', src: 'peow.mp3'}, {id: 'bunny', src: 'bunny.png'}, {id: 'mech', src: 'mech.png'}]);
+  load_queue.loadManifest([{id: 'sound', src: 'burp.mp3'}, {id: 'peow', src: 'peow.mp3'}, {id: 'bunny', src: 'bunny.png'}, {id: 'mech', src: 'mech.png'}, {id: 'baddy', src: 'baddy.png'}]);
   //load_queue.load();
 
 }
 
 function fuckShit(e) {
+  baddie_next = 0;
+
   stage = new createjs.Stage("demoCanvas");
   var circle = new createjs.Shape();
   circle.graphics.beginFill("pink").drawCircle(0, 0, 50);
@@ -129,6 +168,32 @@ function tick(event) {
 
   for(bullet in bullets) {
     bullets[bullet].tick();
+  }
+
+  for(baddy in baddies) {
+    baddies[baddy].tick();
+  }
+
+  for(baddy in baddies) {
+    for(bullet in bullets) {
+      if(baddies[baddy].hitTest(bullets[bullet].x, bullets[bullet].y)) {
+        console.log("hit!!");
+        stage.removeChild(baddies[baddy]);
+      }
+      if(hitTest(bullets[bullet], baddies[baddy])) {
+        console.log("hit!!");
+        stage.removeChild(baddies[baddy]);
+        stage.removeChild(bullets[bullet]);
+      } 
+    }
+  }
+
+
+  if(baddie_next > baddie_rate) {
+    addBaddy();
+    baddie_next = 0;
+  } else {
+    baddie_next++;
   }
   stage.update();
 }
@@ -193,4 +258,12 @@ function fireBullet() {
   bullets[i].x = mech.x;
   bullets[i].y = mech.y;
   stage.addChild(bullets[i]);
+}
+
+function addBaddy() {
+  i = baddies.length+1;
+  baddies[i] = new Baddy();
+  baddies[i].x = 500;
+  baddies[i].y = 100;
+  stage.addChild(baddies[i]);
 }
