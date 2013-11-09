@@ -23,8 +23,8 @@
 }(window)); //end mech
 
 (function (window) {
-  function Bullet() {
-    this.initialize();
+  function Bullet(params) {
+    this.initialize(params);
   }
   var b = Bullet.prototype = new createjs.Container();
 
@@ -33,10 +33,12 @@
   b.y;
   b.size = 10;
   b.Container_initialize = b.initialize;
-  b.initialize = function() {
+  b.initialize = function(params) {
     this.Container_initialize();
     console.log("bullet", load_queue);
     this.body = new createjs.Bitmap(load_queue.getResult("bunny"));
+    this.x = params.x;
+    this.y = params.y;
     this.addChild(this.body);
   }
 
@@ -257,10 +259,7 @@ function getBullet() {
 function fireBullet() {
   //createjs.Sound.play("peow");
   console.log("peow!");
-  i = bullets.length+1;
-  bullets[i] = new Bullet();
-  bullets[i].x = mech.x;
-  bullets[i].y = mech.y;
+  i = bullets.push( new Bullet({'x': mech.x, 'y': mech.y}) );
   stage.addChild(bullets[i]);
 }
 
