@@ -6,6 +6,7 @@
 
   m.body;
   m.Container_initialize = m.initialize;
+  m.size = 10;
   m.initialize = function() {
     this.Container_initialize();
     console.log(load_queue);
@@ -175,15 +176,18 @@ function tick(event) {
   }
 
   for(baddy in baddies) {
+    if(hitTest(mech, baddies[baddy])) {
+      console.log("dead");
+      baddies.splice(baddy, 1);
+      stage.removeChild(mech);
+    }
     for(bullet in bullets) {
-      if(baddies[baddy].hitTest(bullets[bullet].x, bullets[bullet].y)) {
-        console.log("hit!!");
-        stage.removeChild(baddies[baddy]);
-      }
       if(hitTest(bullets[bullet], baddies[baddy])) {
         console.log("hit!!");
         stage.removeChild(baddies[baddy]);
         stage.removeChild(bullets[bullet]);
+        baddies.splice(baddy, 1);
+        bullets.splice(bullet, 1);
       } 
     }
   }
