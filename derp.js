@@ -24,13 +24,13 @@ GAME.Mech.prototype.derp = function() {
 };
 
 GAME.Mech.prototype.update = function() {
-  //this.view.animationSpeed = 0.20;//this.realAnimationSpeed;
+  this.view.animationSpeed = this.realAnimationSpeed;
   if(k_right) {
-    this.view.position.x = this.view.position.x+MECHSPEED;
+    this.view.position.x += MECHSPEED;
   }
   
   if(k_left) {
-    this.view.position.x = this.view.position.x-MECHSPEED;
+    this.view.position.x -= MECHSPEED/2;
   }
   
   if(k_up) {
@@ -42,36 +42,43 @@ GAME.Mech.prototype.update = function() {
   }
 };
 
+GAME.Mech.prototype.x = function() {
+  return this.view.position.x;
+}
+
+GAME.Mech.prototype.y = function() {
+  return this.view.position.y;
+}
 //end mech
 
-(function (window) {
-  function Bullet(params) {
-    this.initialize(params);
-  }
-  var b = Bullet.prototype = new createjs.Container();
+GAME.Bullet = function(param) {
 
-  b.body;
-  b.x;
-  b.y;
-  b.size = 10;
-  b.Container_initialize = b.initialize;
-  b.initialize = function(params) {
-    this.Container_initialize();
-    console.log("bullet", load_queue);
-    this.body = new createjs.Bitmap(load_queue.getResult("bunny"));
-    this.x = params.x;
-    this.y = params.y;
-    this.addChild(this.body);
-  }
+  this.BULLET_SPEED = 10;
+  this.frames = [
+    PIXI.Texture.fromFrame("bullet01.png")
+   ,PIXI.Texture.fromFrame("bullet02.png")
+   ,PIXI.Texture.fromFrame("bullet03.png")
+  ];
+  this.view = new PIXI.MovieClip(this.frames);
+  this.view.animationSpeed = 0.20;
+  this.view.play();
+  this.view.anchor.x = this.view.anchor.y = 0.5;
+  this.view.position.x = param.x;
+  this.view.position.y = param.y;
+  
+}
 
-  b.tick = function(){
-    this.x += 1;
-    this.y;
-    //console.log("bullet tick", this);
-  }
+GAME.Bullet.prototype.update = function() {
+  this.view.position.x += this.BULLET_SPEED;
+}
 
-  window.Bullet = Bullet;
-}(window)); //end bullet
+function fireBullet() {
+  //createjs.Sound.play("peow");
+  console.log("peow!");
+  i = bullets.push( new GAME.Bullet({'x': mech.x(), 'y': mech.y()}) );
+  stage.addChild(bullets[i-1].view);
+}
+//end bullet
 
 (function (window) {
   function Baddy() {
@@ -150,7 +157,7 @@ function init() {
 function fuckShit() {
   var WIDTH = 800;
   var HEIGHT = 600;
-  stage = new PIXI.Stage(0xEEFFFF);
+  stage = new PIXI.Stage(0x000000);
 
   // let pixi choose WebGL or canvas
   renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
@@ -172,6 +179,12 @@ function fuckShit() {
 function animate() {
   mech.update();
   requestAnimFrame( animate );
+  if(k_shoot) {
+    fireBullet(); 
+  }
+  for(bullet in bullets) {
+    bullets[bullet].update();
+  }
   renderer.render(stage);
 }
 
@@ -283,12 +296,6 @@ function getBullet() {
   return i;
 }
 
-function fireBullet() {
-  //createjs.Sound.play("peow");
-  console.log("peow!");
-  i = bullets.push( new Bullet({'x': mech.x, 'y': mech.y}) );
-  stage.addChild(bullets[i]);
-}
 
 function addBaddy() {
   i = baddies.length+1;
