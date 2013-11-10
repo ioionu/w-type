@@ -1,26 +1,48 @@
-(function (window) {
-  function Mech() {
-    this.initialize();
-  }
-  var m = Mech.prototype = new createjs.Container();
+var GAME = GAME || {};
 
-  m.body;
-  m.Container_initialize = m.initialize;
-  m.size = 10;
-  m.initialize = function() {
-    this.Container_initialize();
-    console.log(load_queue);
-    this.body = new createjs.Bitmap(load_queue.getResult("mech"));
-    this.addChild(this.body)
-  }
+GAME.Mech = function() {
+  this.position = new PIXI.Point();
+  this.frames = [
+    PIXI.Texture.fromFrame("mech01.png")
+   ,PIXI.Texture.fromFrame("mech02.png")
+   ,PIXI.Texture.fromFrame("mech03.png")
+  ];
+  this.view = new PIXI.MovieClip(this.frames);
+  this.view.animationSpeed = 0.20;
+  this.view.play();
+  this.view.anchor.x = 0.5;
+  this.view.anchor.y = 0.5;
+  this.view.position.y = 240;
+  this.view.position.x = 100;
+  this.realAnimationSpeed = 0.20;
+};
 
-  m.tick = function(){
-    this.x = 100;
-    this.y = 100;
-  }
+GAME.Mech.constructor = GAME.Mech;
 
-  window.Mech = Mech;
-}(window)); //end mech
+GAME.Mech.prototype.derp = function() {
+  console.log("derp");
+};
+
+GAME.Mech.prototype.update = function() {
+  //this.view.animationSpeed = 0.20;//this.realAnimationSpeed;
+  if(k_right) {
+    this.view.position.x = this.view.position.x+MECHSPEED;
+  }
+  
+  if(k_left) {
+    this.view.position.x = this.view.position.x-MECHSPEED;
+  }
+  
+  if(k_up) {
+    this.view.position.y -= MECHSPEED;
+  }
+  
+  if(k_down) {
+    this.view.position.y += MECHSPEED;
+  }
+};
+
+//end mech
 
 (function (window) {
   function Bullet(params) {
@@ -86,6 +108,7 @@ function hitTest(a, b) {
 
 var load_queue;
 var stage;
+var renderer;
 var mech;
 
 var KEYCODE_ENTER = 13;   //usefull keycode
@@ -111,41 +134,45 @@ var MECHSPEED = 5;
 
 function init() {
   // code here.
+  /*
   load_queue = new createjs.LoadQueue(false);
   load_queue.installPlugin(createjs.Sound);
   load_queue.addEventListener("complete", fuckShit);
   load_queue.loadManifest([{id: 'sound', src: 'burp.mp3'}, {id: 'peow', src: 'peow.mp3'}, {id: 'bunny', src: 'bunny.png'}, {id: 'mech', src: 'mech.png'}, {id: 'baddy', src: 'baddy.png'}]);
   //load_queue.load();
-
+  */
+  loader = new PIXI.AssetLoader(['SpriteSheet.json']);
+  loader.load();
+  //loader.onComplete = function(){console.log("loaded", loader)};
+  loader.onComplete = fuckShit;
 }
 
-function fuckShit(e) {
+function fuckShit() {
+  var WIDTH = 800;
+  var HEIGHT = 600;
+  stage = new PIXI.Stage(0xEEFFFF);
+
+  // let pixi choose WebGL or canvas
+  renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
+  // set the canvas width and height to fill the screen
+  renderer.view.style.display = "block";
+  renderer.view.style.width = "100%"
+  renderer.view.style.height = "100%"
+
+  // attach render to page
+  document.body.appendChild(renderer.view);
   baddie_next = 0;
 
-  stage = new createjs.Stage("demoCanvas");
-  var circle = new createjs.Shape();
-  circle.graphics.beginFill("pink").drawCircle(0, 0, 50);
-  circle.x = 100;
-  circle.y = 100;
-  circle.addEventListener("click", function(event){
-    var bunny = new createjs.Bitmap(load_queue.getResult('bunny'));
-    bunny.x = Math.random()*500;
-    bunny.y = Math.random()*300;
-    //bunny.x = bunny.y = 20;
-    stage.addChild(bunny);
-    console.log(event, stage, bunny);
-    stage.update();
-    createjs.Sound.play("sound");
-  });
-  createjs.Tween.get(circle, {loop: true}).to({x:200}, 300).to({x:100}, 3000);
-  createjs.Ticker.addEventListener("tick", stage);
-  stage.addChild(circle);
+  mech = new GAME.Mech();
+  stage.addChild(mech.view);
+  requestAnimFrame( animate );
+  //createjs.Ticker.addEventListener("tick", tick);
+}
 
-  mech = new Mech();
-  mech.x = 100;
-  mech.y = 100;
-  stage.addChild(mech);
-  createjs.Ticker.addEventListener("tick", tick);
+function animate() {
+  mech.update();
+  requestAnimFrame( animate );
+  renderer.render(stage);
 }
 
 function tick(event) {
