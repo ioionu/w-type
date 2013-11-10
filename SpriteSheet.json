@@ -1,6 +1,6 @@
 {
   "frames": {
-    "bullet01.png": {
+    "baddy01.png": {
       "frame": {
         "x": 0,
         "y": 0,
@@ -20,9 +20,69 @@
         "h": 30
       }
     },
-    "bullet02.png": {
+    "baddy02.png": {
       "frame": {
         "x": 30,
+        "y": 0,
+        "w": 30,
+        "h": 30
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 30,
+        "h": 30
+      },
+      "sourceSize": {
+        "w": 30,
+        "h": 30
+      }
+    },
+    "baddy03.png": {
+      "frame": {
+        "x": 0,
+        "y": 30,
+        "w": 30,
+        "h": 30
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 30,
+        "h": 30
+      },
+      "sourceSize": {
+        "w": 30,
+        "h": 30
+      }
+    },
+    "bullet01.png": {
+      "frame": {
+        "x": 30,
+        "y": 30,
+        "w": 30,
+        "h": 30
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 30,
+        "h": 30
+      },
+      "sourceSize": {
+        "w": 30,
+        "h": 30
+      }
+    },
+    "bullet02.png": {
+      "frame": {
+        "x": 60,
         "y": 0,
         "w": 30,
         "h": 30
@@ -42,7 +102,7 @@
     },
     "bullet03.png": {
       "frame": {
-        "x": 0,
+        "x": 60,
         "y": 30,
         "w": 30,
         "h": 30
@@ -62,8 +122,8 @@
     },
     "mech01.png": {
       "frame": {
-        "x": 30,
-        "y": 30,
+        "x": 0,
+        "y": 60,
         "w": 30,
         "h": 30
       },
@@ -82,8 +142,8 @@
     },
     "mech02.png": {
       "frame": {
-        "x": 60,
-        "y": 0,
+        "x": 30,
+        "y": 60,
         "w": 30,
         "h": 30
       },
@@ -103,7 +163,7 @@
     "mech03.png": {
       "frame": {
         "x": 60,
-        "y": 30,
+        "y": 60,
         "w": 30,
         "h": 30
       },
@@ -128,7 +188,7 @@
     "format": "RGBA8888",
     "size": {
       "w": 90,
-      "h": 60
+      "h": 90
     },
     "scale": 1
   }
