@@ -9,6 +9,16 @@ GAME.GameElement = function() {
   }
 };
 
+GAME.GameElement.prototype.x = function(){
+  return this.view.position.x;
+};
+
+GAME.GameElement.prototype.y = function(){
+  return this.view.position.y;
+};
+
+// end game element
+
 GAME.Mech = function() {
   this.position = new PIXI.Point();
   this.frames = [
@@ -36,30 +46,41 @@ GAME.Mech.prototype.derp = function() {
 
 GAME.Mech.prototype.update = function() {
   this.view.animationSpeed = this.realAnimationSpeed;
+  p = {
+    'x': this.view.position.x
+   ,'y': this.view.position.y
+   ,'w': this.view.width
+   ,'h': this.view.height
+   ,'rw': renderer.width
+   ,'rh': renderer.height
+   ,'m':'inside'
+  };
   if(k_right) {
-    this.view.position.x += MECHSPEED;
+    p.x = this.view.position
+    if(checkBounds(this.view.position.x + MECHSPEED, p.y, p.w, p.h, p.rw, p.rh, p.m)){
+      this.view.position.x += MECHSPEED;
+    }
   }
   
   if(k_left) {
-    this.view.position.x -= MECHSPEED/2;
+    if(checkBounds(this.view.position.x - MECHSPEED, p.y, p.w, p.h, p.rw, p.rh, p.m)){
+      this.view.position.x -= MECHSPEED/2;
+    }
   }
   
   if(k_up) {
-    this.view.position.y -= MECHSPEED;
+    if(checkBounds(p.x, this.view.position.y - MECHSPEED, p.w, p.h, p.rw, p.rh, p.m)){
+      this.view.position.y -= MECHSPEED;
+    }
   }
   
   if(k_down) {
-    this.view.position.y += MECHSPEED;
+    if(checkBounds(p.x, this.view.position.y + MECHSPEED, p.w, p.h, p.rw, p.rh, p.m)){
+      this.view.position.y += MECHSPEED;
+    }
   }
 };
 
-GAME.Mech.prototype.x = function() {
-  return this.view.position.x;
-}
-
-GAME.Mech.prototype.y = function() {
-  return this.view.position.y;
-}
 //end mech
 
 GAME.Bullet = function(param) {
@@ -86,27 +107,26 @@ GAME.Bullet.prototype = new GAME.GameElement();
 GAME.Bullet.prototype.update = function() {
   this.view.position.x += this.BULLET_SPEED;
 };
-GAME.Bullet.prototype.x = function(){
-  return this.view.position.x;
-};
 
-GAME.Bullet.prototype.y = function(){
-  return this.view.position.y;
-};
 function fireBullet() {
   //createjs.Sound.play("peow");
-  console.log("peow!");
-  i = bullets.push( new GAME.Bullet({'x': mech.x(), 'y': mech.y()}) );
-  stage.addChild(bullets[i-1].view);
+  if(fire_next < FIRERATE){
+    fire_next++;
+  } else {
+    console.log("peow!");
+    i = bullets.push( new GAME.Bullet({'x': mech.x(), 'y': mech.y()}) );
+    stage.addChild(bullets[i-1].view);
+    fire_next = 0;
+  }
 };
 //end bullet
 
 GAME.Baddy = function() {
 
-  this.SPEED = 0.5;
+  this.SPEED = 1;
   this.YMOD = 0.1;
   this.YBASE = Math.random()*600; // TODO get this from stage height
-  this.YPOWER = Math.random()*200;
+  this.YPOWER = Math.random()*100;
 
   this.frames = [
     PIXI.Texture.fromFrame("baddy01.png")
@@ -129,14 +149,6 @@ GAME.Baddy.prototype.update = function(){
   this.view.position.x -= this.SPEED;
   this.view.position.y = (Math.sin( (this.x() * this.YMOD) ) * this.YPOWER) + this.YBASE;
   this.YPOWER -= this.YPOWER * (this.YMOD/100);
-};
-
-GAME.Baddy.prototype.x = function(){
-  return this.view.position.x;
-};
-
-GAME.Baddy.prototype.y = function(){
-  return this.view.position.y;
 };
 
 function addBaddy() {
@@ -179,19 +191,12 @@ var baddie_rate = 100;
 var baddie_next;
   
 var MECHSPEED = 5;
+var FIRERATE = 100;
+var fire_next;
 
 function init() {
-  // code here.
-  /*
-  load_queue = new createjs.LoadQueue(false);
-  load_queue.installPlugin(createjs.Sound);
-  load_queue.addEventListener("complete", fuckShit);
-  load_queue.loadManifest([{id: 'sound', src: 'burp.mp3'}, {id: 'peow', src: 'peow.mp3'}, {id: 'bunny', src: 'bunny.png'}, {id: 'mech', src: 'mech.png'}, {id: 'baddy', src: 'baddy.png'}]);
-  //load_queue.load();
-  */
   loader = new PIXI.AssetLoader(['SpriteSheet.json']);
   loader.load();
-  //loader.onComplete = function(){console.log("loaded", loader)};
   loader.onComplete = fuckShit;
 }
 
@@ -214,7 +219,22 @@ function fuckShit() {
   mech = new GAME.Mech();
   stage.addChild(mech.view);
   requestAnimFrame( animate );
-  //createjs.Ticker.addEventListener("tick", tick);
+}
+
+function checkBounds(x,y,h,w,sw,sh, mode) {
+
+  if(mode == 'inside'){
+
+    if(x - w/2 > 0 && x + w/2 < sw && y - h/2 > 0 && y + h/2 < sh){return true;}
+    else {return false;}
+  }
+  else if(mode == 'outside'){
+
+    if(x + w/2 > 0 && x - w/2 < sw && y + h/2 > 0 && y - h/2 < sh){return true;}
+    else {return false;}
+  }
+  console.log("derp... checkbounds spacked out");
+  return false;
 }
 
 function animate() {
@@ -267,61 +287,6 @@ function animate() {
   renderer.render(stage);
 }
 
-function tick(event) {
-  if(k_right) {
-    mech.x = mech.x+MECHSPEED;
-  }
-  
-  if(k_left) {
-    mech.x = mech.x-MECHSPEED;
-  }
-  
-  if(k_up) {
-    mech.y = mech.y-MECHSPEED;
-  }
-  
-  if(k_down) {
-    mech.y = mech.y+MECHSPEED;
-  }
-  
-  if(k_shoot) {
-    fireBullet(); 
-  }
-
-  for(bullet in bullets) {
-    bullets[bullet].tick();
-  }
-
-  for(baddy in baddies) {
-    baddies[baddy].tick();
-  }
-
-  for(baddy in baddies) {
-    if(hitTest(mech, baddies[baddy])) {
-      console.log("dead");
-      baddies.splice(baddy, 1);
-      stage.removeChild(mech);
-    }
-    for(bullet in bullets) {
-      if(hitTest(bullets[bullet], baddies[baddy])) {
-        console.log("hit!!");
-        stage.removeChild(baddies[baddy]);
-        stage.removeChild(bullets[bullet]);
-        baddies.splice(baddy, 1);
-        bullets.splice(bullet, 1);
-      } 
-    }
-  }
-
-
-  if(baddie_next > baddie_rate) {
-    addBaddy();
-    baddie_next = 0;
-  } else {
-    baddie_next++;
-  }
-  stage.update();
-}
 //allow for WASD and arrow control scheme
 function handleKeyDown(e) {
   //console.log(e.keyCode);
