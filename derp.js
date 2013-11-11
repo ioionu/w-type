@@ -92,7 +92,7 @@ GAME.Bullet = function(param) {
    ,PIXI.Texture.fromFrame("bullet03.png")
   ];
   this.view = new PIXI.MovieClip(this.frames);
-  this.view.animationSpeed = 0.10;
+  this.view.animationSpeed = 0.05;
   this.view.play();
   this.view.anchor.x = this.view.anchor.y = 0.5;
   this.view.position.x = param.x;
@@ -110,9 +110,7 @@ GAME.Bullet.prototype.update = function() {
 
 function fireBullet() {
   //createjs.Sound.play("peow");
-  if(fire_next < FIRERATE){
-    fire_next++;
-  } else {
+  if(fire_next > FIRERATE){
     console.log("peow!");
     i = bullets.push( new GAME.Bullet({'x': mech.x(), 'y': mech.y()}) );
     stage.addChild(bullets[i-1].view);
@@ -191,7 +189,7 @@ var baddie_rate = 100;
 var baddie_next;
   
 var MECHSPEED = 5;
-var FIRERATE = 100;
+var FIRERATE = 20;
 var fire_next;
 
 function init() {
@@ -214,7 +212,7 @@ function fuckShit() {
 
   // attach render to page
   document.body.appendChild(renderer.view);
-  baddie_next = 0;
+  baddie_next = fire_next = 0;
 
   mech = new GAME.Mech();
   stage.addChild(mech.view);
@@ -242,6 +240,7 @@ function animate() {
   requestAnimFrame( animate );
   
   // shooth bullet
+  fire_next++;
   if(k_shoot) {
     fireBullet(); 
   }
