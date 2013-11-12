@@ -1,6 +1,7 @@
 var GAME = GAME || {};
 
 GAME.GameElement = function() {
+  this.active = true;
   this.size = function(){
     return {
       'w': this.view.texture.width
@@ -17,6 +18,13 @@ GAME.GameElement.prototype.y = function(){
   return this.view.position.y;
 };
 
+GAME.GameElement.prototype.right = function(){
+  return this.view.position.x - this.view.width/2;
+}
+GAME.GameElement.prototype.die = function(){
+  stage.removeChild(this.view);
+  this.active = false;
+}
 // end game element
 
 GAME.Mech = function() {
@@ -117,6 +125,10 @@ function fireBullet() {
     fire_next = 0;
   }
 };
+
+function baddieFireBullet() {
+
+}
 //end bullet
 
 GAME.Baddy = function() {
@@ -147,6 +159,18 @@ GAME.Baddy.prototype.update = function(){
   this.view.position.x -= this.SPEED;
   this.view.position.y = (Math.sin( (this.x() * this.YMOD) ) * this.YPOWER) + this.YBASE;
   this.YPOWER -= this.YPOWER * (this.YMOD/100);
+};
+
+GAME.Baddy.prototype.inBounds = function() {
+  return checkBounds(
+    this.view.position.x
+   ,this.view.position.y
+   ,this.view.width
+   ,this.view.height
+   ,renderer.width
+   ,renderer.height
+   ,'outside'
+  );
 };
 
 function addBaddy() {
@@ -185,6 +209,7 @@ document.onkeyup = handleKeyUp;
 var k_left, k_right, k_up, k_down, k_shoot;
 var bullets = [];
 var baddies = [];
+var baddies_bullets = [];
 var baddie_rate = 100;
 var baddie_next;
   
@@ -199,16 +224,29 @@ function init() {
 }
 
 function fuckShit() {
+
   var WIDTH = 800;
   var HEIGHT = 600;
+ 
   stage = new PIXI.Stage(0x000000);
 
   // let pixi choose WebGL or canvas
   renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
   // set the canvas width and height to fill the screen
+  var screen_width = $(window).width();//800;
+  var screen_height = $(window).height();//600;
+  if(screen_width > screen_height) {
+    factor = screen_height / HEIGHT;
+  } else {
+    factor = screen_width / WIDTH;
+  }
+  calc_height = HEIGHT * factor;
+  calc_width = WIDTH * factor;
+  console.log(factor, calc_height, screen_height, calc_width, screen_width);
+
   renderer.view.style.display = "block";
-  renderer.view.style.width = "100%"
-  renderer.view.style.height = "100%"
+  renderer.view.style.width = calc_width + "px"; //"100%";
+  renderer.view.style.height = calc_height + "px"; //"100%";
 
   // attach render to page
   document.body.appendChild(renderer.view);
@@ -238,7 +276,6 @@ function checkBounds(x,y,h,w,sw,sh, mode) {
 function animate() {
   mech.update();
   requestAnimFrame( animate );
-  
   // shooth bullet
   fire_next++;
   if(k_shoot) {
@@ -263,24 +300,34 @@ function animate() {
   } else {
     baddie_next++;
   }
+  
 
   // test for hits
-  for(baddy in baddies) {
-    if(hitTest(mech, baddies[baddy])) {
-      console.log("dead");
-      //baddies.splice(baddy, 1);
-      stage.removeChild(mech.view);
-    }
-    for(bullet in bullets) {
-      if(hitTest(bullets[bullet], baddies[baddy])) {
-        console.log("hit!!");
-        stage.removeChild(baddies[baddy].view);
-        stage.removeChild(bullets[bullet].view);
-        baddies.splice(baddy, 1);
-        bullets.splice(bullet, 1);
-      } 
+  for(var baddy = 0; baddy < baddies.length; baddy++) {
+    if(baddies[baddy].active) {
+      if(hitTest(mech, baddies[baddy])) {
+        console.log("dead");
+        //baddies.splice(baddy, 1);
+        mech.die();
+        baddies[baddy].die();
+      }
+
+      if(baddies[baddy].right() < 0) {
+        baddies[baddy].die();
+        console.log("baddie removed");
+        break;
+      }
+      for(var bullet = 0; bullet < bullets.length; bullet++) {
+        if(hitTest(bullets[bullet], baddies[baddy])) {
+          console.log("hit!!");
+          baddies[baddy].die();
+          bullets[bullet].die();
+        } 
+      }
+
     }
   }
+
 
   //draw
   renderer.render(stage);
@@ -313,5 +360,4 @@ function handleKeyUp(e) {
     case KEYCODE_S: k_down = false; return false; break;
   }
 }
-
 
