@@ -2,6 +2,7 @@ var GAME = GAME || {};
 
 GAME.GameElement = function() {
   this.active = true;
+  this.life = 100;
   this.size = function(){
     return {
       'w': this.view.texture.width
@@ -26,6 +27,17 @@ GAME.GameElement.prototype.y = function(y){
 
 GAME.GameElement.prototype.right = function(){
   return this.view.position.x - this.view.width/2;
+}
+
+GAME.GameElement.prototype.hit = function(damage) {
+  this.life -= damage;
+  console.log("hit", this.life);
+  if(this.life <= 0) {
+    this.die();
+    return true;
+  } else {
+    return false;
+  }
 }
 GAME.GameElement.prototype.die = function(){
   stage.removeChild(this.view);
@@ -103,6 +115,8 @@ GAME.Mech.prototype.update = function() {
 GAME.Bullet = function(param) {
 
   this.BULLET_SPEED = 5;
+  this.damage = param['damage'];
+  this.source = param['source'];
   this.frames = [
     PIXI.Texture.fromFrame("bullet01.png")
    ,PIXI.Texture.fromFrame("bullet02.png")
@@ -165,11 +179,6 @@ GAME.Bullet.prototype.update = function() {
   this.view.position.x += this.BULLET_SPEED;
 };
 
-GAME.Bullet.prototype.update2 = function() {
-  this.x( this.x() + Math.sin(this.angle * (Math.PI/-180)) * this.BULLET_SPEED );
-  this.y( this.y() + Math.cos(this.angle * (Math.PI/-180)) * this.BULLET_SPEED );
-}
-
 function fireBullet() {
   //createjs.Sound.play("peow");
   if(fire_next > FIRERATE){
@@ -179,6 +188,8 @@ function fireBullet() {
      ,'y1': mech.y()
      ,'x2': renderer.width + 30 //TODO dont hard code in 30
      ,'y2': mech.y()
+     ,'source': mech
+     ,'damage': 50
     }));
     stage.addChild(bullets[i-1].view);
     fire_next = 0;
@@ -190,7 +201,7 @@ function baddieFireBullet() {
 }
 //end bullet
 
-GAME.Baddy = function() {
+GAME.Baddy = function(source) {
 
   this.SPEED = 1;
   this.YMOD = 0.1;
@@ -207,7 +218,7 @@ GAME.Baddy = function() {
   this.view.animationSpeed = 0.20;
   this.view.play();
   this.view.anchor.x = this.view.anchor.y = 0.5;
-  this.view.position.x = 800; //TODO get this from stage width
+  this.view.position.x = renderer.width;
   this.view.position.y = this.YBASE;
 };
 
@@ -219,7 +230,7 @@ GAME.Baddy.prototype.update = function(){
   this.view.position.y = (Math.sin( (this.x() * this.YMOD) ) * this.YPOWER) + this.YBASE;
   this.YPOWER -= this.YPOWER * (this.YMOD/100);
   if( this.x() == 600 ){
-    params = {'x1': this.x()-50, 'y1': this.y(), 'x2': mech.x(), 'y2': mech.y()};
+    params = {'x1': this.x(), 'y1': this.y(), 'x2': mech.x(), 'y2': mech.y(), 'source': this, 'damage': 10};
     i = bullets.push( new GAME.Bullet(params) );
     stage.addChild(bullets[i-1].view);
   }
@@ -244,12 +255,17 @@ function addBaddy() {
 //end baddy
 
 function hitTest(a, b) {
-  hx = a.x() - b.x();
-  hy = a.y() - b.y();
-  dist = Math.sqrt(hx*hx+hy*hy);
-  width_a = ((a.size()).h)/2;
-  width_b = ((b.size()).h)/2;
-  return dist <= width_a + width_b;
+  if(typeof a != 'undefined' && typeof b != 'undefined') {
+    if(a.active && b.active && a.source != b && b.source != a) {
+      hx = a.x() - b.x();
+      hy = a.y() - b.y();
+      dist = Math.sqrt(hx*hx+hy*hy);
+      width_a = ((a.size()).h)/2;
+      width_b = ((b.size()).h)/2;
+      return dist <= width_a + width_b;
+    }
+  }
+  return false;
 }
 
 function getAngle(x1,y1,x2,y2) {
@@ -356,10 +372,6 @@ function animate() {
     //bullets[bullet].update2();
   }
 
-  // move bad guys
-  for(baddy in baddies) {
-    baddies[baddy].update();
-  }
 
   // add bad guy
   //console.log(baddie_next, baddie_rate);
@@ -371,27 +383,32 @@ function animate() {
   }
   
 
-  // test for hits
+  // test for hits and move baddies
   for(var baddy = 0; baddy < baddies.length; baddy++) {
     if(baddies[baddy].active) {
+      baddies[baddy].update();
       if(hitTest(mech, baddies[baddy])) {
-        console.log("dead");
+        //console.log("dead");
         //baddies.splice(baddy, 1);
-        mech.die();
-        baddies[baddy].die();
+        //かみかぜ
+        mech.hit(100);
+        baddies[baddy].hit(100);
       }
 
       if(baddies[baddy].right() < 0) {
         baddies[baddy].die();
-        console.log("baddie removed");
-        //break;
       }
       for(var bullet = 0; bullet < bullets.length; bullet++) {
+        damage = bullets[bullet].damage;
         if(hitTest(bullets[bullet], baddies[baddy])) {
           console.log("hit!!");
-          baddies[baddy].die();
+          baddies[baddy].hit(damage);
           bullets[bullet].die();
         } 
+        if(bullets[bullet].source != mech && hitTest(bullets[bullet], mech)) {
+          bullets[bullet].die();
+          mech.hit(damage);
+        }
       }
 
     }
