@@ -10,11 +10,17 @@ GAME.GameElement = function() {
   }
 };
 
-GAME.GameElement.prototype.x = function(){
+GAME.GameElement.prototype.x = function(x){
+  if(typeof x !== 'undefined'){
+    this.view.position.x = x;
+  }
   return this.view.position.x;
 };
 
-GAME.GameElement.prototype.y = function(){
+GAME.GameElement.prototype.y = function(y){
+  if(typeof y !== 'undefined') {
+    this.view.position.y = y;
+  }
   return this.view.position.y;
 };
 
@@ -91,9 +97,12 @@ GAME.Mech.prototype.update = function() {
 
 //end mech
 
+/*
+ * {'x': this.x()-50, 'y': this.y()};
+ * */
 GAME.Bullet = function(param) {
 
-  this.BULLET_SPEED = 10;
+  this.BULLET_SPEED = 5;
   this.frames = [
     PIXI.Texture.fromFrame("bullet01.png")
    ,PIXI.Texture.fromFrame("bullet02.png")
@@ -103,9 +112,49 @@ GAME.Bullet = function(param) {
   this.view.animationSpeed = 0.05;
   this.view.play();
   this.view.anchor.x = this.view.anchor.y = 0.5;
-  this.view.position.x = param.x;
-  this.view.position.y = param.y;
+  this.view.position.x = param.x1;
+  this.view.position.y = param.y1;
+  this.tween = {};
+
+  // bullet will continue to the closeset left or right edge after hitting target x,y  
+  this.finish_point = 0 - 30; //TODO: dont hardcode 30 (get it from width of bullet or make a standard out of bounds distance)
   
+  if(param.x2 > renderer.width/2) {
+    this.finish_point = renderer.width + 30;
+  }
+
+  // first point on bullets bezier path will be this far out in front of the origin
+  this.first_point_distance = 100;
+  if(param.x2 < param.x1) {
+    this.first_point_distance *= -1;
+  }
+
+  this.tween.x = new TWEEN.Tween({
+    x:this.x()
+   ,target_x:this.x2
+   ,bullet:this
+  })
+    .to({x: [this.x()+this.first_point_distance, param.x2, this.finish_point]}, 1500)
+    .delay(0)
+    .easing(TWEEN.Easing.Linear.None)
+    .interpolation(TWEEN.Interpolation.Bezier)
+    .onUpdate( function(){
+      this.bullet.x(this.x);
+    })
+    .start();
+
+  this.tween.y = new TWEEN.Tween({
+    y:this.y()
+   ,target_y:this.y2
+   ,bullet:this
+  })
+    .to({y: [this.y(), param.y2, param.y2]}, 1500)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .interpolation(TWEEN.Interpolation.Bezier)
+    .onUpdate( function(){
+      this.bullet.y(this.y);
+    })
+    .start();
 };
 
 GAME.Bullet.constructor = GAME.Bullet;
@@ -116,11 +165,21 @@ GAME.Bullet.prototype.update = function() {
   this.view.position.x += this.BULLET_SPEED;
 };
 
+GAME.Bullet.prototype.update2 = function() {
+  this.x( this.x() + Math.sin(this.angle * (Math.PI/-180)) * this.BULLET_SPEED );
+  this.y( this.y() + Math.cos(this.angle * (Math.PI/-180)) * this.BULLET_SPEED );
+}
+
 function fireBullet() {
   //createjs.Sound.play("peow");
   if(fire_next > FIRERATE){
     console.log("peow!");
-    i = bullets.push( new GAME.Bullet({'x': mech.x(), 'y': mech.y()}) );
+    i = bullets.push( new GAME.Bullet({
+      'x1': mech.x()
+     ,'y1': mech.y()
+     ,'x2': renderer.width + 30 //TODO dont hard code in 30
+     ,'y2': mech.y()
+    }));
     stage.addChild(bullets[i-1].view);
     fire_next = 0;
   }
@@ -159,6 +218,11 @@ GAME.Baddy.prototype.update = function(){
   this.view.position.x -= this.SPEED;
   this.view.position.y = (Math.sin( (this.x() * this.YMOD) ) * this.YPOWER) + this.YBASE;
   this.YPOWER -= this.YPOWER * (this.YMOD/100);
+  if( this.x() == 600 ){
+    params = {'x1': this.x()-50, 'y1': this.y(), 'x2': mech.x(), 'y2': mech.y()};
+    i = bullets.push( new GAME.Bullet(params) );
+    stage.addChild(bullets[i-1].view);
+  }
 };
 
 GAME.Baddy.prototype.inBounds = function() {
@@ -186,6 +250,10 @@ function hitTest(a, b) {
   width_a = ((a.size()).h)/2;
   width_b = ((b.size()).h)/2;
   return dist <= width_a + width_b;
+}
+
+function getAngle(x1,y1,x2,y2) {
+  return Math.atan2(  (y1-y2) ,(x1-x2)) ;//* 180 / Math.PI;
 }
 
 var load_queue;
@@ -276,6 +344,7 @@ function checkBounds(x,y,h,w,sw,sh, mode) {
 function animate() {
   mech.update();
   requestAnimFrame( animate );
+  TWEEN.update();
   // shooth bullet
   fire_next++;
   if(k_shoot) {
@@ -284,7 +353,7 @@ function animate() {
 
   // move bullets
   for(bullet in bullets) {
-    bullets[bullet].update();
+    //bullets[bullet].update2();
   }
 
   // move bad guys
@@ -315,7 +384,7 @@ function animate() {
       if(baddies[baddy].right() < 0) {
         baddies[baddy].die();
         console.log("baddie removed");
-        break;
+        //break;
       }
       for(var bullet = 0; bullet < bullets.length; bullet++) {
         if(hitTest(bullets[bullet], baddies[baddy])) {
