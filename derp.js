@@ -20,6 +20,7 @@ document.onkeyup = handleKeyUp;
 var k_left, k_right, k_up, k_down, k_shoot;
 var bullets = [];
 var baddies = [];
+var stars = [];
 var baddies_bullets = [];
 var baddie_rate = 100;
 var baddie_next;
@@ -85,7 +86,7 @@ function fuckShit() {
   }
   calc_height = HEIGHT * factor;
   calc_width = WIDTH * factor;
-  console.log(factor, calc_height, screen_height, calc_width, screen_width);
+  //console.log(factor, calc_height, screen_height, calc_width, screen_width);
 
   renderer.view.style.display = "block";
   renderer.view.style.width = calc_width + "px"; //"100%";
@@ -98,6 +99,10 @@ function fuckShit() {
 
   mech = new GAME.Mech();
   stage.addChild(mech.view);
+
+  for(var s = 0; s < 50; s++) {
+    addStar();
+  }
   requestAnimFrame( animate );
 
   Hammer(document.getElementById(renderer.view.id)).on("swipeleft", function() {
@@ -222,7 +227,7 @@ function animate() {
       for(var bullet = 0; bullet < bullets.length; bullet++) {
         damage = bullets[bullet].damage;
         if(hitTest(bullets[bullet], baddies[baddy])) {
-          console.log("hit!!");
+          //console.log("hit!!");
           baddies[baddy].hit(damage);
           baddies[baddy].recoil(bullets[bullet]);
           bullets[bullet].die();
