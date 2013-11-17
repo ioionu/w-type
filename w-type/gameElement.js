@@ -43,7 +43,16 @@ GAME.GameElement.prototype.hit = function(damage) {
 GAME.GameElement.prototype.die = function(){
   stage.removeChild(this.view);
   this.active = false;
-  createjs.Sound.play("die");
-}
+  createjs.Sound.play(this.sound.die);
+};
+
+GAME.GameElement.prototype.recoil = function(bullet) {
+  var recoil = 5;
+  if(bullet.x() < this.x()) {
+    this.x( this.x()+recoil);
+  } else {
+    this.x( this.x()-recoil);
+  }
+};
 // end game element
 

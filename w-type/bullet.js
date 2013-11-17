@@ -24,7 +24,7 @@ GAME.Bullet = function(param) {
   // bullet will continue to the closeset left or right edge after hitting target x,y  
   this.finish_point = 0 - 30; //TODO: dont hardcode 30 (get it from width of bullet or make a standard out of bounds distance)
   
-  if(param.x2 > renderer.width/2) {
+  if(param.x2 > param.x1) {
     this.finish_point = renderer.width + 30;
   }
 
@@ -80,7 +80,7 @@ function fireBullet() {
      ,'x2': renderer.width + 30 //TODO dont hard code in 30
      ,'y2': mech.y()
      ,'source': mech
-     ,'damage': 50
+     ,'damage': 34
     }));
     stage.addChild(bullets[i-1].view);
     fire_next = 0;

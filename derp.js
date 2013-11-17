@@ -24,9 +24,10 @@ var baddies_bullets = [];
 var baddie_rate = 100;
 var baddie_next;
   
-var MECHSPEED = 5;
-var FIRERATE = 20;
+var MECHSPEED = 7;
+var FIRERATE = 10;
 var fire_next;
+
 
 function hitTest(a, b) {
   if(typeof a != 'undefined' && typeof b != 'undefined') {
@@ -55,6 +56,7 @@ function init() {
   queue.installPlugin(createjs.Sound);
   queue.addEventListener("complete", handleComplete);
   queue.loadManifest([ {id: "hit", src:"audio/fx_kick.mp3"}, {id: "fire", src: "audio/yFX3.mp3"}, {id: 'die', src: 'audio/tom_01.mp3'} ]);
+  createjs.Sound.setMute(true);
 
 }
 
@@ -88,6 +90,7 @@ function fuckShit() {
   renderer.view.style.display = "block";
   renderer.view.style.width = calc_width + "px"; //"100%";
   renderer.view.style.height = calc_height + "px"; //"100%";
+  renderer.view.id = "fuckhead";
 
   // attach render to page
   document.body.appendChild(renderer.view);
@@ -96,6 +99,38 @@ function fuckShit() {
   mech = new GAME.Mech();
   stage.addChild(mech.view);
   requestAnimFrame( animate );
+
+  Hammer(document.getElementById(renderer.view.id)).on("swipeleft", function() {
+      k_left = true;
+      k_right = k_up = k_down = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("swiperight", function() {
+      k_right = true;
+      k_left = k_up = k_down = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("swipeup", function() {
+      k_up = true;
+      k_right = k_left = k_down = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("swipedown", function() {
+      k_down = true;
+      k_right = k_left = k_up = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("swipedown", function() {
+      k_down = true;
+      k_right = k_left = k_up = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("tap", function() {
+      fireBullet();
+      //k_shoot = true;
+      //k_right = k_left = k_up = false;
+      //alert('you swiped left!');
+  });
 }
 
 function checkBounds(x,y,h,w,sw,sh, mode) {
@@ -189,11 +224,13 @@ function animate() {
         if(hitTest(bullets[bullet], baddies[baddy])) {
           console.log("hit!!");
           baddies[baddy].hit(damage);
+          baddies[baddy].recoil(bullets[bullet]);
           bullets[bullet].die();
         } 
         if(bullets[bullet].source != mech && hitTest(bullets[bullet], mech)) {
           bullets[bullet].die();
           mech.hit(damage);
+          mech.recoil(bullets[bullet]);
         }
       }
 

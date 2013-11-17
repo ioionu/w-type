@@ -19,6 +19,9 @@ GAME.Baddy = function(source) {
   this.view.anchor.x = this.view.anchor.y = 0.5;
   this.view.position.x = renderer.width;
   this.view.position.y = this.YBASE;
+
+  this.sound = {};
+  this.sound.die = "die";
 };
 
 GAME.Baddy.constructor = GAME.Baddy;
