@@ -23,7 +23,7 @@ GAME.Star = function() {
     x:this.x(),
     star: this
   })
-    .to({x:0}, Math.random() * 1000)
+    .to({x:-1}, Math.random() * 1000)
     .delay(Math.random() * 1000)
     .repeat(Infinity)
     .easing(TWEEN.Easing.Linear.None)

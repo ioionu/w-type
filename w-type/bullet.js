@@ -19,6 +19,11 @@ GAME.Bullet = function(param) {
   this.view.anchor.x = this.view.anchor.y = 0.5;
   this.view.position.x = param.x1;
   this.view.position.y = param.y1;
+
+  this.interpolation = TWEEN.Interpolation.Bezier;
+  if(typeof param.interpolation == 'None') {
+    this.interpolation = param.interpolation;
+  }
   this.tween = {};
 
   // bullet will continue to the closeset left or right edge after hitting target x,y  
@@ -42,7 +47,7 @@ GAME.Bullet = function(param) {
     .to({x: [this.x()+this.first_point_distance, param.x2, this.finish_point]}, 1500)
     .delay(0)
     .easing(TWEEN.Easing.Linear.None)
-    .interpolation(TWEEN.Interpolation.Bezier)
+    .interpolation(this.interpolation)
     .onUpdate( function(){
       this.bullet.x(this.x);
     })
@@ -55,7 +60,7 @@ GAME.Bullet = function(param) {
   })
     .to({y: [this.y(), param.y2, param.y2]}, 1500)
     .easing(TWEEN.Easing.Quadratic.InOut)
-    .interpolation(TWEEN.Interpolation.Bezier)
+    .interpolation(this.interpolation)
     .onUpdate( function(){
       this.bullet.y(this.y);
     })
@@ -72,15 +77,33 @@ GAME.Bullet.prototype.update = function() {
 
 function fireBullet() {
   //createjs.Sound.play("peow");
+  var x, y, a, A;
+  var p = {};
   if(fire_next > FIRERATE){
     console.log("peow!");
+
+    var A = mech.r();
+    var a = (A < 0) ? mech.y() : renderer.height - mech.y();
+    if(A != 0) {
+      //console.log(A,a);
+      p = getTargetPoint(A,a);
+      p.y = (A > 0) ? renderer.height+30 : 0-30;
+      p.x += mech.x();
+    } else {
+      p = {};
+      p.x = renderer.width;
+      p.y = mech.y();
+    }
+
     i = bullets.push( new GAME.Bullet({
       'x1': mech.x()
      ,'y1': mech.y()
-     ,'x2': renderer.width + 30 //TODO dont hard code in 30
-     ,'y2': mech.y()
+     ,'x2': p.x //TODO dont hard code in 30
+     ,'y2': p.y
      ,'source': mech
-     ,'damage': 34
+     ,'damage': 34,
+      'inerpolation': TWEEN.Interpolation.None
+
     }));
     stage.addChild(bullets[i-1].view);
     fire_next = 0;

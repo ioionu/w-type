@@ -25,9 +25,37 @@ GAME.GameElement.prototype.y = function(y){
   return this.view.position.y;
 };
 
+GAME.GameElement.prototype.a = function(a){
+  if(typeof a !== 'undefined') {
+    this.view.alpha = a;
+  }
+  return this.view.alpha;
+};
+
+GAME.GameElement.prototype.w = function(w){
+  if(typeof w !== 'undefined') {
+    this.view.width = w;
+  }
+  return this.view.width;
+};
+
+GAME.GameElement.prototype.h = function(h){
+  if(typeof h !== 'undefined') {
+    this.view.height = h;
+  }
+  return this.view.height;
+};
+
 GAME.GameElement.prototype.right = function(){
   return this.view.position.x - this.view.width/2;
 }
+
+GAME.GameElement.prototype.r = function(r) {
+  if(typeof r !== 'undefined') {
+    this.view.rotation = r;
+  }
+  return this.view.rotation;
+};
 
 GAME.GameElement.prototype.hit = function(damage) {
   this.life -= damage;

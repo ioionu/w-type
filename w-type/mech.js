@@ -15,6 +15,7 @@ GAME.Mech = function() {
   this.view.position.y = 240;
   this.view.position.x = 100;
   this.realAnimationSpeed = 0.20;
+  this.pitch = 0.2; // when mech is moving up or down
 };
 
 GAME.Mech.constructor = GAME.Mech;
@@ -25,6 +26,20 @@ GAME.Mech.prototype.derp = function() {
   console.log("derp");
 };
 
+
+GAME.Mech.prototype.up = function() {
+  if(checkBounds(p.x, this.view.position.y - MECHSPEED, p.w, p.h, p.rw, p.rh, p.m)){
+    this.view.position.y -= MECHSPEED;
+  }
+  this.view.rotation = this.pitch * -1;
+}
+
+GAME.Mech.prototype.down = function() {
+  if(checkBounds(p.x, this.view.position.y + MECHSPEED, p.w, p.h, p.rw, p.rh, p.m)){
+    this.view.position.y += MECHSPEED;
+  }
+  this.view.rotation = this.pitch;
+}
 GAME.Mech.prototype.update = function() {
   this.view.animationSpeed = this.realAnimationSpeed;
   p = {
@@ -49,16 +64,19 @@ GAME.Mech.prototype.update = function() {
     }
   }
   
+  var adj_altitude = false;
   if(k_up) {
-    if(checkBounds(p.x, this.view.position.y - MECHSPEED, p.w, p.h, p.rw, p.rh, p.m)){
-      this.view.position.y -= MECHSPEED;
-    }
+    this.up();
+    adj_altitude = true;
   }
   
   if(k_down) {
-    if(checkBounds(p.x, this.view.position.y + MECHSPEED, p.w, p.h, p.rw, p.rh, p.m)){
-      this.view.position.y += MECHSPEED;
-    }
+    this.down();
+    adj_altitude = true;
+  }
+
+  if(adj_altitude == false) {
+   // this.view.rotation = 0;
   }
 };
 

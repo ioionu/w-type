@@ -21,6 +21,7 @@ var k_left, k_right, k_up, k_down, k_shoot;
 var bullets = [];
 var baddies = [];
 var stars = [];
+var nebula = [];
 var baddies_bullets = [];
 var baddie_rate = 100;
 var baddie_next;
@@ -48,8 +49,27 @@ function getAngle(x1,y1,x2,y2) {
   return Math.atan2(  (y1-y2) ,(x1-x2)) ;//* 180 / Math.PI;
 }
 
+/* A = the angle of the ship in radians
+ * a = the distance from the top of the renderer
+ */
+function getTargetPoint(A,a) {
+  //if A is negative make it possitive
+  if(A == 0) {
+    return false;
+  }
+  A = A < 0 ? A * -1 : A;
+  A = A*2;
+  var C = 90;
+  var A = A / (Math.PI/180); //convert radians to degree... because im dumb
+  var B = 180 - A - C;
+
+  var b = Math.sin( B * (Math.PI/180) ) * a / Math.sin( A * (Math.PI/180) );
+
+  return {x:b,y:a};
+}
+
 function init() {
-  loader = new PIXI.AssetLoader(['SpriteSheet.json']);
+  loader = new PIXI.AssetLoader(['SpriteSheet.json', 'cloud.jpg']);
   loader.load();
   loader.onComplete = fuckShit;
   
@@ -97,12 +117,22 @@ function fuckShit() {
   document.body.appendChild(renderer.view);
   baddie_next = fire_next = 0;
 
+  /*
+  nebula.push( new GAME.Nebula(0) );
+  nebula.push( new GAME.Nebula(5000) );
+  nebula.push( new GAME.Nebula(10000) );
+  nebula.push( new GAME.Nebula(15000) );
+  for(var i = 0; i < 4; i++) {
+    stage.addChild(nebula[i].view);
+  }
+  */
   mech = new GAME.Mech();
   stage.addChild(mech.view);
 
   for(var s = 0; s < 50; s++) {
     addStar();
   }
+
   requestAnimFrame( animate );
 
   Hammer(document.getElementById(renderer.view.id)).on("swipeleft", function() {
@@ -136,6 +166,16 @@ function fuckShit() {
       //k_right = k_left = k_up = false;
       //alert('you swiped left!');
   });
+   
+  /*
+  var m_canvas = document.createElement('canvas');
+  m_canvas.width = 64;
+  m_canvas.height = 64;
+  var m_context = m_canvas.getContext('2d');
+  canvg(m_canvas, "mech.svg");
+  svbtex = new PIXI.Sprite(new PIXI.Texture.fromCanvas(m_canvas));
+  stage.addChild(svbtex);
+  */
 }
 
 function checkBounds(x,y,h,w,sw,sh, mode) {
@@ -217,7 +257,7 @@ function animate() {
         //console.log("dead");
         //baddies.splice(baddy, 1);
         //かみかぜ
-        mech.hit(100);
+        //mech.hit(100);
         baddies[baddy].hit(100);
       }
 
