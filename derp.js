@@ -68,6 +68,7 @@ function getTargetPoint(A,a) {
   return {x:b,y:a};
 }
 
+
 function init() {
   loader = new PIXI.AssetLoader(['SpriteSheet.json', 'cloud.jpg']);
   loader.load();

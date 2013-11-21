@@ -56,12 +56,14 @@ GAME.Mech.prototype.update = function() {
     if(checkBounds(this.view.position.x + MECHSPEED, p.y, p.w, p.h, p.rw, p.rh, p.m)){
       this.view.position.x += MECHSPEED;
     }
+    this.view.rotation = 0;
   }
   
   if(k_left) {
     if(checkBounds(this.view.position.x - MECHSPEED, p.y, p.w, p.h, p.rw, p.rh, p.m)){
       this.view.position.x -= MECHSPEED/2;
     }
+    this.view.rotation = 0;
   }
   
   var adj_altitude = false;

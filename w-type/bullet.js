@@ -75,35 +75,84 @@ GAME.Bullet.prototype.update = function() {
   this.view.position.x += this.BULLET_SPEED;
 };
 
+/*
+ * as opposed to baddy bullets above
+ */
+GAME.GoodyBullet = function(param) {
+
+  this.BULLET_SPEED = 2;
+  this.damage = param['damage'];
+  this.source = param['source'];
+  this.frames = [
+    PIXI.Texture.fromFrame("bullet01.png")
+   ,PIXI.Texture.fromFrame("bullet02.png")
+   ,PIXI.Texture.fromFrame("bullet03.png")
+  ];
+  this.view = new PIXI.MovieClip(this.frames);
+  this.view.animationSpeed = 0.05;
+  this.view.play();
+  this.view.anchor.x = this.view.anchor.y = 0.5;
+  this.view.position.x = param.x1;
+  this.view.position.y = param.y1;
+  this.target = {
+    x: param.x2,
+    y: param.y2
+  };
+  this.tween_speed = param.distance * this.BULLET_SPEED;
+
+  this.tween = new TWEEN.Tween({
+    x:this.x(),
+    y:this.y(),
+    bullet:this
+  })
+    .to({x: this.target.x, y: this.target.y}, this.tween_speed)
+    .delay(0)
+    .easing(TWEEN.Easing.Linear.None)
+    .onUpdate( function(){
+      this.bullet.x(this.x);
+      this.bullet.y(this.y);
+    })
+    .start();
+
+};
+
+GAME.GoodyBullet.constructor = GAME.GoodyBullet;
+
+GAME.GoodyBullet.prototype = new GAME.GameElement();
+
 function fireBullet() {
   //createjs.Sound.play("peow");
-  var x, y, a, A;
+  var x, y, a, A, b, distance;
   var p = {};
   if(fire_next > FIRERATE){
-    console.log("peow!");
+    //console.log("peow!");
 
     var A = mech.r();
     var a = (A < 0) ? mech.y() : renderer.height - mech.y();
     if(A != 0) {
       //console.log(A,a);
       p = getTargetPoint(A,a);
+      b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed 
       p.y = (A > 0) ? renderer.height+30 : 0-30;
       p.x += mech.x();
+      distance = Math.sqrt(a*a + b*b);
     } else {
       p = {};
-      p.x = renderer.width;
+      p.x = renderer.width + 30; //TODO remove hardcode 30
+
       p.y = mech.y();
+      distance = p.x - mech.x(); 
     }
 
-    i = bullets.push( new GAME.Bullet({
-      'x1': mech.x()
-     ,'y1': mech.y()
-     ,'x2': p.x //TODO dont hard code in 30
-     ,'y2': p.y
-     ,'source': mech
-     ,'damage': 34,
-      'inerpolation': TWEEN.Interpolation.None
 
+    i = bullets.push( new GAME.GoodyBullet({
+      'x1': mech.x(),
+      'y1': mech.y(),
+      'x2': p.x,
+      'y2': p.y,
+      'source': mech,
+      'damage': 34,
+      'distance':distance
     }));
     stage.addChild(bullets[i-1].view);
     fire_next = 0;
