@@ -16,6 +16,8 @@ GAME.Mech = function() {
   this.view.position.x = 100;
   this.realAnimationSpeed = 0.20;
   this.pitch = 0.2; // when mech is moving up or down
+
+  this.addLifeBar();
 };
 
 GAME.Mech.constructor = GAME.Mech;
@@ -78,7 +80,7 @@ GAME.Mech.prototype.update = function() {
   }
 
   if(adj_altitude == false) {
-   // this.view.rotation = 0;
+    this.view.rotation = 0;
   }
 };
 

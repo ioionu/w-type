@@ -151,7 +151,7 @@ function fireBullet() {
       'x2': p.x,
       'y2': p.y,
       'source': mech,
-      'damage': 34,
+      'damage': 25,
       'distance':distance
     }));
     stage.addChild(bullets[i-1].view);

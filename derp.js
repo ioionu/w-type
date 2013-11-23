@@ -23,7 +23,7 @@ var baddies = [];
 var stars = [];
 var nebula = [];
 var baddies_bullets = [];
-var baddie_rate = 100;
+var baddie_rate = 250;
 var baddie_next;
   
 var MECHSPEED = 7;
@@ -53,13 +53,13 @@ function getAngle(x1,y1,x2,y2) {
  * a = the distance from the top of the renderer
  */
 function getTargetPoint(A,a) {
-  //if A is negative make it possitive
   if(A == 0) {
     return false;
   }
+  //if A is negative make it possitive
   A = A < 0 ? A * -1 : A;
   A = A*2;
-  var C = 90;
+  var C = 90; //TODO use radians not degrees
   var A = A / (Math.PI/180); //convert radians to degree... because im dumb
   var B = 180 - A - C;
 
@@ -258,7 +258,7 @@ function animate() {
         //console.log("dead");
         //baddies.splice(baddy, 1);
         //かみかぜ
-        //mech.hit(100);
+        mech.hit(20);
         baddies[baddy].hit(100);
       }
 

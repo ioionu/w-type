@@ -3,6 +3,7 @@ var GAME = GAME || {};
 GAME.GameElement = function() {
   this.active = true;
   this.life = 100;
+  this.life_full = this.life;
   this.size = function(){
     return {
       'w': this.view.texture.width
@@ -59,19 +60,25 @@ GAME.GameElement.prototype.r = function(r) {
 
 GAME.GameElement.prototype.hit = function(damage) {
   this.life -= damage;
+  if(typeof this.life_bar !== 'undefined') {
+    this.life_bar.update( this.life ); /* ugh... now i understand why js is...
+                                                                * TODO: look at crreating a life() function in baddy
+                                                                * or do use _super fu http://ejohn.org/blog/simple-javascript-inheritance/
+                                                                */
+  }
   console.log("hit", this.life);
   if(this.life <= 0) {
     this.die();
     return true;
   } else {
-    createjs.Sound.play("hit");
+    //createjs.Sound.play("hit");
     return false;
   }
 }
 GAME.GameElement.prototype.die = function(){
   stage.removeChild(this.view);
   this.active = false;
-  createjs.Sound.play(this.sound.die);
+  //createjs.Sound.play(this.sound.die);
 };
 
 GAME.GameElement.prototype.recoil = function(bullet) {
@@ -82,5 +89,10 @@ GAME.GameElement.prototype.recoil = function(bullet) {
     this.x( this.x()-recoil);
   }
 };
+
+GAME.GameElement.prototype.addLifeBar = function() {
+  this.life_bar = new GAME.LifeBar({life_full:this.life_full, life: this.life});
+  this.view.addChild( this.life_bar.view );
+}
 // end game element
 

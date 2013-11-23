@@ -20,12 +20,19 @@ GAME.Baddy = function(source) {
   this.view.position.x = renderer.width;
   this.view.position.y = this.YBASE;
 
+  this.addLifeBar();
+
   this.sound = {};
   this.sound.die = "die";
 };
 
 GAME.Baddy.constructor = GAME.Baddy;
 GAME.Baddy.prototype = new GAME.GameElement();
+
+GAME.Baddy.prototype.updateLife = function() {
+  this.view.addChild( new GAME.LifeBar().view );
+  //life_bar.scale.x = this.life / this.life_full;
+};
 
 GAME.Baddy.prototype.update = function(){
   this.view.position.x -= this.SPEED;
