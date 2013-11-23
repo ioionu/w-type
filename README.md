@@ -1,4 +1,4 @@
 w-type
 ======
 
-learning createjs by building a r-type clone
+learning PIXI.js by building an r-type clone

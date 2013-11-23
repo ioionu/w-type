@@ -1,91 +1,7 @@
-(function (window) {
-  function Mech() {
-    this.initialize();
-  }
-  var m = Mech.prototype = new createjs.Container();
-
-  m.body;
-  m.Container_initialize = m.initialize;
-  m.size = 10;
-  m.initialize = function() {
-    this.Container_initialize();
-    console.log(load_queue);
-    this.body = new createjs.Bitmap(load_queue.getResult("mech"));
-    this.addChild(this.body)
-  }
-
-  m.tick = function(){
-    this.x = 100;
-    this.y = 100;
-  }
-
-  window.Mech = Mech;
-}(window)); //end mech
-
-(function (window) {
-  function Bullet(params) {
-    this.initialize(params);
-  }
-  var b = Bullet.prototype = new createjs.Container();
-
-  b.body;
-  b.x;
-  b.y;
-  b.size = 10;
-  b.Container_initialize = b.initialize;
-  b.initialize = function(params) {
-    this.Container_initialize();
-    console.log("bullet", load_queue);
-    this.body = new createjs.Bitmap(load_queue.getResult("bunny"));
-    this.x = params.x;
-    this.y = params.y;
-    this.addChild(this.body);
-  }
-
-  b.tick = function(){
-    this.x += 1;
-    this.y;
-    //console.log("bullet tick", this);
-  }
-
-  window.Bullet = Bullet;
-}(window)); //end bullet
-
-(function (window) {
-  function Baddy() {
-    this.initialize();
-  }
-  var b = Baddy.prototype = new createjs.Container();
-
-  b.body;
-  b.x;
-  b.y;
-  b.size = 10;
-  b.Container_initialize = b.initialize;
-  b.initialize = function() {
-    this.Container_initialize();
-    console.log("baddy", load_queue);
-    this.body = new createjs.Bitmap(load_queue.getResult("baddy"));
-    this.addChild(this.body);
-  }
-
-  b.tick = function(){
-    this.x -= 1;
-    this.y = 200 + (Math.sin(this.x)*10);
-  }
-
-  window.Baddy = Baddy;
-}(window)); //end bullet
-
-function hitTest(a, b) {
-  hx = a.x - b.x;
-  hy = a.y - b.y;
-  dist = Math.sqrt(hx*hx+hy*hy);
-  return dist <= a.size/2 + b.size/2;
-}
 
 var load_queue;
 var stage;
+var renderer;
 var mech;
 
 var KEYCODE_ENTER = 13;   //usefull keycode
@@ -104,105 +20,181 @@ document.onkeyup = handleKeyUp;
 var k_left, k_right, k_up, k_down, k_shoot;
 var bullets = [];
 var baddies = [];
-var baddie_rate = 200;
+var stars = [];
+var nebula = [];
+var baddies_bullets = [];
+var baddie_rate = 250;
 var baddie_next;
   
-var MECHSPEED = 5;
+var MECHSPEED = 7;
+var FIRERATE = 10;
+var fire_next;
+
+
+function hitTest(a, b) {
+  if(typeof a != 'undefined' && typeof b != 'undefined') {
+    if(a.active && b.active && a.source != b && b.source != a) {
+      hx = a.x() - b.x();
+      hy = a.y() - b.y();
+      dist = Math.sqrt(hx*hx+hy*hy);
+      width_a = ((a.size()).h)/2;
+      width_b = ((b.size()).h)/2;
+      return dist <= width_a + width_b;
+    }
+  }
+  return false;
+}
+
+function getAngle(x1,y1,x2,y2) {
+  return Math.atan2(  (y1-y2) ,(x1-x2)) ;//* 180 / Math.PI;
+}
+
+/* A = the angle of the ship in radians
+ * a = the distance from the top of the renderer
+ */
+function getTargetPoint(A,a) {
+  if(A == 0) {
+    return false;
+  }
+  //if A is negative make it possitive
+  A = A < 0 ? A * -1 : A;
+  A = A*2;
+  var C = 90; //TODO use radians not degrees
+  var A = A / (Math.PI/180); //convert radians to degree... because im dumb
+  var B = 180 - A - C;
+
+  var b = Math.sin( B * (Math.PI/180) ) * a / Math.sin( A * (Math.PI/180) );
+
+  return {x:b,y:a};
+}
+
 
 function init() {
-  // code here.
-  load_queue = new createjs.LoadQueue(false);
-  load_queue.installPlugin(createjs.Sound);
-  load_queue.addEventListener("complete", fuckShit);
-  load_queue.loadManifest([{id: 'sound', src: 'burp.mp3'}, {id: 'peow', src: 'peow.mp3'}, {id: 'bunny', src: 'bunny.png'}, {id: 'mech', src: 'mech.png'}, {id: 'baddy', src: 'baddy.png'}]);
-  //load_queue.load();
+  loader = new PIXI.AssetLoader(['SpriteSheet.json', 'cloud.jpg']);
+  loader.load();
+  loader.onComplete = fuckShit;
+  
+  var queue = new createjs.LoadQueue();
+  queue.installPlugin(createjs.Sound);
+  queue.addEventListener("complete", handleComplete);
+  queue.loadManifest([ {id: "hit", src:"audio/fx_kick.mp3"}, {id: "fire", src: "audio/yFX3.mp3"}, {id: 'die', src: 'audio/tom_01.mp3'} ]);
+  createjs.Sound.setMute(true);
 
 }
 
-function fuckShit(e) {
-  baddie_next = 0;
-
-  stage = new createjs.Stage("demoCanvas");
-  var circle = new createjs.Shape();
-  circle.graphics.beginFill("pink").drawCircle(0, 0, 50);
-  circle.x = 100;
-  circle.y = 100;
-  circle.addEventListener("click", function(event){
-    var bunny = new createjs.Bitmap(load_queue.getResult('bunny'));
-    bunny.x = Math.random()*500;
-    bunny.y = Math.random()*300;
-    //bunny.x = bunny.y = 20;
-    stage.addChild(bunny);
-    console.log(event, stage, bunny);
-    stage.update();
-    createjs.Sound.play("sound");
-  });
-  createjs.Tween.get(circle, {loop: true}).to({x:200}, 300).to({x:100}, 3000);
-  createjs.Ticker.addEventListener("tick", stage);
-  stage.addChild(circle);
-
-  mech = new Mech();
-  mech.x = 100;
-  mech.y = 100;
-  stage.addChild(mech);
-  createjs.Ticker.addEventListener("tick", tick);
+function handleComplete(e) {
+  var instance = createjs.Sound.play("hit");
+  var instance = createjs.Sound.play("fire");
+  console.log("doof");
 }
 
-function tick(event) {
-  if(k_right) {
-    mech.x = mech.x+MECHSPEED;
-  }
-  
-  if(k_left) {
-    mech.x = mech.x-MECHSPEED;
-  }
-  
-  if(k_up) {
-    mech.y = mech.y-MECHSPEED;
-  }
-  
-  if(k_down) {
-    mech.y = mech.y+MECHSPEED;
-  }
-  
-  if(k_shoot) {
-    fireBullet(); 
-  }
+function fuckShit() {
 
-  for(bullet in bullets) {
-    bullets[bullet].tick();
-  }
+  var WIDTH = 800;
+  var HEIGHT = 600;
+ 
+  stage = new PIXI.Stage(0x000000);
 
-  for(baddy in baddies) {
-    baddies[baddy].tick();
-  }
-
-  for(baddy in baddies) {
-    if(hitTest(mech, baddies[baddy])) {
-      console.log("dead");
-      baddies.splice(baddy, 1);
-      stage.removeChild(mech);
-    }
-    for(bullet in bullets) {
-      if(hitTest(bullets[bullet], baddies[baddy])) {
-        console.log("hit!!");
-        stage.removeChild(baddies[baddy]);
-        stage.removeChild(bullets[bullet]);
-        baddies.splice(baddy, 1);
-        bullets.splice(bullet, 1);
-      } 
-    }
-  }
-
-
-  if(baddie_next > baddie_rate) {
-    addBaddy();
-    baddie_next = 0;
+  // let pixi choose WebGL or canvas
+  renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
+  // set the canvas width and height to fill the screen
+  var screen_width = $(window).width();//800;
+  var screen_height = $(window).height();//600;
+  if(screen_width > screen_height) {
+    factor = screen_height / HEIGHT;
   } else {
-    baddie_next++;
+    factor = screen_width / WIDTH;
   }
-  stage.update();
+  calc_height = HEIGHT * factor;
+  calc_width = WIDTH * factor;
+  //console.log(factor, calc_height, screen_height, calc_width, screen_width);
+
+  renderer.view.style.display = "block";
+  renderer.view.style.width = calc_width + "px"; //"100%";
+  renderer.view.style.height = calc_height + "px"; //"100%";
+  renderer.view.id = "fuckhead";
+
+  // attach render to page
+  document.body.appendChild(renderer.view);
+  baddie_next = fire_next = 0;
+
+  /*
+  nebula.push( new GAME.Nebula(0) );
+  nebula.push( new GAME.Nebula(5000) );
+  nebula.push( new GAME.Nebula(10000) );
+  nebula.push( new GAME.Nebula(15000) );
+  for(var i = 0; i < 4; i++) {
+    stage.addChild(nebula[i].view);
+  }
+  */
+  mech = new GAME.Mech();
+  stage.addChild(mech.view);
+
+  for(var s = 0; s < 50; s++) {
+    addStar();
+  }
+
+  requestAnimFrame( animate );
+
+  Hammer(document.getElementById(renderer.view.id)).on("swipeleft", function() {
+      k_left = true;
+      k_right = k_up = k_down = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("swiperight", function() {
+      k_right = true;
+      k_left = k_up = k_down = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("swipeup", function() {
+      k_up = true;
+      k_right = k_left = k_down = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("swipedown", function() {
+      k_down = true;
+      k_right = k_left = k_up = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("swipedown", function() {
+      k_down = true;
+      k_right = k_left = k_up = false;
+      //alert('you swiped left!');
+  });
+  Hammer(document.getElementById(renderer.view.id)).on("tap", function() {
+      fireBullet();
+      //k_shoot = true;
+      //k_right = k_left = k_up = false;
+      //alert('you swiped left!');
+  });
+   
+  /*
+  var m_canvas = document.createElement('canvas');
+  m_canvas.width = 64;
+  m_canvas.height = 64;
+  var m_context = m_canvas.getContext('2d');
+  canvg(m_canvas, "mech.svg");
+  svbtex = new PIXI.Sprite(new PIXI.Texture.fromCanvas(m_canvas));
+  stage.addChild(svbtex);
+  */
 }
+
+function checkBounds(x,y,h,w,sw,sh, mode) {
+
+  if(mode == 'inside'){
+
+    if(x - w/2 > 0 && x + w/2 < sw && y - h/2 > 0 && y + h/2 < sh){return true;}
+    else {return false;}
+  }
+  else if(mode == 'outside'){
+
+    if(x + w/2 > 0 && x - w/2 < sw && y + h/2 > 0 && y - h/2 < sh){return true;}
+    else {return false;}
+  }
+  console.log("derp... checkbounds spacked out");
+  return false;
+}
+
 //allow for WASD and arrow control scheme
 function handleKeyDown(e) {
   //console.log(e.keyCode);
@@ -231,42 +223,68 @@ function handleKeyUp(e) {
   }
 }
 
-function getBullet() {
-  var i = 0;
-  var len = bulletStream.length;
 
-  //pooling approach
-  while(i <= len){
-    if(!bulletStream[i]) {
-      bulletStream[i] = new createjs.Shape();
-      break;
-    } else if(!bulletStream[i].active) {
-      bulletStream[i].active = true;
-      break;
-    } else {
-      i++;
+function animate() {
+  mech.update();
+  requestAnimFrame( animate );
+  TWEEN.update();
+  // shooth bullet
+  fire_next++;
+  if(k_shoot) {
+    fireBullet(); 
+  }
+
+  // move bullets
+  for(bullet in bullets) {
+    //bullets[bullet].update2();
+  }
+
+
+  // add bad guy
+  //console.log(baddie_next, baddie_rate);
+  if(baddie_next > baddie_rate) {
+    addBaddy();
+    baddie_next = 0;
+  } else {
+    baddie_next++;
+  }
+  
+
+  // test for hits and move baddies
+  for(var baddy = 0; baddy < baddies.length; baddy++) {
+    if(baddies[baddy].active) {
+      baddies[baddy].update();
+      if(hitTest(mech, baddies[baddy])) {
+        //console.log("dead");
+        //baddies.splice(baddy, 1);
+        //かみかぜ
+        mech.hit(20);
+        baddies[baddy].hit(100);
+      }
+
+      if(baddies[baddy].right() < 0) {
+        baddies[baddy].die();
+      }
+      for(var bullet = 0; bullet < bullets.length; bullet++) {
+        damage = bullets[bullet].damage;
+        if(hitTest(bullets[bullet], baddies[baddy])) {
+          //console.log("hit!!");
+          baddies[baddy].hit(damage);
+          baddies[baddy].recoil(bullets[bullet]);
+          bullets[bullet].die();
+        } 
+        if(bullets[bullet].source != mech && hitTest(bullets[bullet], mech)) {
+          bullets[bullet].die();
+          mech.hit(damage);
+          mech.recoil(bullets[bullet]);
+        }
+      }
+
     }
   }
 
-  if(len == 0) {
-    bulletStream[0] = new createjs.Shape();
-  }
 
-  stage.addChild(bulletStream[i]);
-  return i;
+  //draw
+  renderer.render(stage);
 }
 
-function fireBullet() {
-  //createjs.Sound.play("peow");
-  console.log("peow!");
-  i = bullets.push( new Bullet({'x': mech.x, 'y': mech.y}) );
-  stage.addChild(bullets[i]);
-}
-
-function addBaddy() {
-  i = baddies.length+1;
-  baddies[i] = new Baddy();
-  baddies[i].x = 500;
-  baddies[i].y = 100;
-  stage.addChild(baddies[i]);
-}
