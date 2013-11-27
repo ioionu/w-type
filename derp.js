@@ -23,7 +23,7 @@ var baddies = [];
 var stars = [];
 var nebula = [];
 var baddies_bullets = [];
-var baddie_rate = 250;
+var baddie_rate = 75;
 var baddie_next;
   
 var MECHSPEED = 7;
