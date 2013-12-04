@@ -9,7 +9,16 @@ GAME.GameElement = function() {
       'w': this.view.texture.width
      ,'h': this.view.texture.height
     }
-  }
+  };
+
+};
+
+GAME.GameElement.prototype.loadDefaultFrames = function(x){
+  this.frames.explode = [
+    PIXI.Texture.fromFrame("boom01.png"),
+    PIXI.Texture.fromFrame("boom02.png"),
+    PIXI.Texture.fromFrame("boom03.png")
+  ];
 };
 
 GAME.GameElement.prototype.x = function(x){
@@ -76,10 +85,30 @@ GAME.GameElement.prototype.hit = function(damage) {
   }
 }
 GAME.GameElement.prototype.die = function(){
-  stage.removeChild(this.view);
+  //if explode returns false then it did not blow up the element and we need to remove it here
+  //TODO: clean up explode() so it does not do this funk
+  if(!this.explode()){
+    stage.removeChild(this.view);
+    this.active = false;
+  }
   this.active = false;
   //createjs.Sound.play(this.sound.die);
 };
+
+GAME.GameElement.prototype.explode = function(){
+  if(typeof(this.frames.explode) != 'undefined'){
+    this.view.textures = this.frames.explode;
+    this.view.gotoAndPlay(0);
+    this.view.loop = false;
+    this.view.onComplete = function(){
+      console.log("explosion animation complete");
+      stage.removeChild(this);
+    };
+    return true;
+  } else {
+    return false;
+  }
+}
 
 GAME.GameElement.prototype.recoil = function(bullet) {
   var recoil = 5;

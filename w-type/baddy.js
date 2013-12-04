@@ -6,14 +6,15 @@ GAME.Baddy = function(source) {
   this.YMOD = 0.1;
   this.YBASE = Math.random()*600; // TODO get this from stage height
   this.YPOWER = Math.random()*100;
-
-  this.frames = [
-    PIXI.Texture.fromFrame("baddy01.png")
-   ,PIXI.Texture.fromFrame("baddy02.png")
-   ,PIXI.Texture.fromFrame("baddy03.png")
+  
+  this.frames = {};
+  this.frames.character = [
+    PIXI.Texture.fromFrame("baddy01.png"),
+    PIXI.Texture.fromFrame("baddy02.png"),
+    PIXI.Texture.fromFrame("baddy03.png")
   ];
 
-  this.view = new PIXI.MovieClip(this.frames);
+  this.view = new PIXI.MovieClip(this.frames.character);
   this.view.animationSpeed = 0.20;
   this.view.play();
   this.view.anchor.x = this.view.anchor.y = 0.5;
@@ -21,7 +22,7 @@ GAME.Baddy = function(source) {
   this.view.position.y = this.YBASE;
 
   this.addLifeBar();
-
+  this.loadDefaultFrames();
   this.sound = {};
   this.sound.die = "die";
 };
