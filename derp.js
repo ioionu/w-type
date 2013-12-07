@@ -23,7 +23,7 @@ var baddies = [];
 var stars = [];
 var nebula = [];
 var baddies_bullets = [];
-var baddie_rate = 75;
+var baddie_rate = 250;
 var baddie_next;
   
 var MECHSPEED = 7;
@@ -243,7 +243,8 @@ function animate() {
   // add bad guy
   //console.log(baddie_next, baddie_rate);
   if(baddie_next > baddie_rate) {
-    addBaddy();
+    //addBaddy();
+    createBaddyTweenedSquad()
     baddie_next = 0;
   } else {
     baddie_next++;
@@ -253,7 +254,7 @@ function animate() {
   // test for hits and move baddies
   for(var baddy = 0; baddy < baddies.length; baddy++) {
     if(baddies[baddy].active) {
-      baddies[baddy].update();
+      //baddies[baddy].update();
       if(hitTest(mech, baddies[baddy])) {
         //console.log("dead");
         //baddies.splice(baddy, 1);

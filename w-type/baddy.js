@@ -4,7 +4,7 @@ GAME.Baddy = function(source) {
 
   this.SPEED = 1;
   this.YMOD = 0.1;
-  this.YBASE = Math.random()*600; // TODO get this from stage height
+  this.YBASE = GAME.getHeight() * Math.random();
   this.YPOWER = Math.random()*100;
   
   this.frames = {};
