@@ -1,9 +1,11 @@
 var GAME = GAME || {};
 
-/*
+/**
+ * @class Star
+ * @constructor
  * {'x': this.x()-50, 'y': this.y()};
  * */
-GAME.Star = function() {
+GAME.Star = function(x,y) {
   this.view = new PIXI.Graphics();
   this.view.beginFill(0xFF3300);
 
@@ -15,8 +17,8 @@ GAME.Star = function() {
   //this.view.anchor.x = this.view.anchor.y = 0.5;
   this.view.endFill();
 
-  this.view.position.x = renderer.width;
-  this.view.position.y = Math.random() * renderer.height;
+  this.view.position.x = x;
+  this.view.position.y = y;
 
 
   this.tween = new TWEEN.Tween({
@@ -40,8 +42,4 @@ GAME.Star.constructor = GAME.Star;
 
 GAME.Star.prototype = new GAME.GameElement();
 
-function addStar() {
-  var i = stars.push( new GAME.Star() );
-  stage.addChild(stars[i-1].view);
-};
 

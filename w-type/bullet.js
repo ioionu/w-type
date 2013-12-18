@@ -120,48 +120,4 @@ GAME.GoodyBullet.constructor = GAME.GoodyBullet;
 
 GAME.GoodyBullet.prototype = new GAME.GameElement();
 
-function fireBullet() {
-  //createjs.Sound.play("peow");
-  var x, y, a, A, b, distance;
-  var p = {};
-  if(fire_next > FIRERATE){
-    //console.log("peow!");
-
-    var A = mech.r();
-    var a = (A < 0) ? mech.y() : renderer.height - mech.y();
-    if(A != 0) {
-      //console.log(A,a);
-      p = getTargetPoint(A,a);
-      b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed 
-      p.y = (A > 0) ? renderer.height+30 : 0-30;
-      p.x += mech.x();
-      distance = Math.sqrt(a*a + b*b);
-    } else {
-      p = {};
-      p.x = renderer.width + 30; //TODO remove hardcode 30
-
-      p.y = mech.y();
-      distance = p.x - mech.x(); 
-    }
-
-
-    i = bullets.push( new GAME.GoodyBullet({
-      'x1': mech.x(),
-      'y1': mech.y(),
-      'x2': p.x,
-      'y2': p.y,
-      'source': mech,
-      'damage': 25,
-      'distance':distance
-    }));
-    stage.addChild(bullets[i-1].view);
-    fire_next = 0;
-    var instance = createjs.Sound.play("fire");
-  }
-};
-
-function baddieFireBullet() {
-
-}
-//end bullet
 

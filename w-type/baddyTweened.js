@@ -4,7 +4,6 @@ GAME.BaddyTweened = function(params) {
 
   this.SPEED = 1;
   this.YMOD = 0.1;
-  this.YBASE = GAME.getHeight() * Math.random();
   this.YPOWER = Math.random()*100;
   
   this.frames = {};
@@ -26,6 +25,9 @@ GAME.BaddyTweened = function(params) {
   this.sound = {};
   this.sound.die = "die";
 
+  this.target = params.mech;
+  this.game = params.game;
+
   this.loaded = true; //can baddie fire? TODO: make a shot spacing
   
   this.path = {};
@@ -35,7 +37,7 @@ GAME.BaddyTweened = function(params) {
   this.path.interpolation = TWEEN.Interpolation.Linear;
   this.path.time = 1500;
   this.path.delay = 0;
-  this.path.shoot = 50;
+  this.path.shoot = 50; // time in tween * 100 that baddy will shoot
 
   for(var key in params) {
     this.path[key] = params[key];
@@ -56,7 +58,7 @@ GAME.BaddyTweened = function(params) {
       //console.log(this.baddy.path.shoot, Math.floor( arguments[0] * 100 ));
       if(this.baddy.path.shoot == Math.floor( arguments[0] * 100 )) {
         //console.log(this.baddy.path.shoot, Math.floor( arguments[0] * 100 ));
-        this.baddy.fire();
+        this.baddy.bullet();
       }
     })
     .start();
@@ -84,19 +86,19 @@ GAME.BaddyTweened.prototype.updateLife = function() {
   //life_bar.scale.x = this.life / this.life_full;
 };
 
-GAME.BaddyTweened.prototype.fire = function() {
+GAME.BaddyTweened.prototype.bullet = function() {
   if(this.loaded) {
     params = {
       'x1': this.x(), 
       'y1': this.y(), 
-      'x2': mech.x(), 
-      'y2': mech.y(), 
+      'x2': this.target.x(), 
+      'y2': this.target.y(), 
       'source': this, 
-      'damage': 10
+      'damage': 100
     };
-    i = bullets.push( new GAME.Bullet(params) );
-    stage.addChild(bullets[i-1].view);
     this.loaded = false;
+    bullet = new GAME.Bullet(params) ;
+    this.game.fire(bullet);
   }
 }
 
@@ -106,37 +108,9 @@ GAME.BaddyTweened.prototype.inBounds = function() {
     this.view.position.y,
     this.view.width,
     this.view.height,
-    renderer.width,
-    renderer.height,
+    GAME.w(),
+    GAME.h(),
     'outside'
   );
 };
-
-function addBaddyTweened(params) {
-  i = baddies.push( new GAME.BaddyTweened(params) ); //TODO: move baddies and stage to GAME.baddies and GAME.stage
-  stage.addChild(baddies[i-1].view);
-};
-//end baddy
-
-function createBaddyTweenedSquad() {
-  w = GAME.getWidth();
-  h = GAME.getHeight();
-  path = {};
-  path.x = [w + 50, w * Math.random(), w * Math.random(), -10];
-  path.y = [h * Math.random(), h * Math.random(), h * Math.random()];
-  path.shoot = Math.floor(Math.random() * 100);
-  path.interpolation = TWEEN.Interpolation.Bezier;
-
-  for(var i = 0; i < 5; i++) {
-    addBaddyTweened({
-      x: path.x,
-      y: path.y,
-      delay: i * 1000,
-      time: 10500,
-      interpolation: TWEEN.Interpolation.CatmullRom,
-      shoot: path.shoot
-
-    });
-  }
-}
 

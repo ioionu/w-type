@@ -1,13 +1,20 @@
 var GAME = GAME || {};
 
-GAME.Mech = function() {
+/**
+ * @class Mech
+ * @construcor
+ **/
+GAME.Mech = function(params) {
   this.position = new PIXI.Point();
-  this.frames = [
+
+  this.frames = {};
+  this.loadDefaultFrames();
+  this.frames.character = [
     PIXI.Texture.fromFrame("mech01.png")
    ,PIXI.Texture.fromFrame("mech02.png")
    ,PIXI.Texture.fromFrame("mech03.png")
   ];
-  this.view = new PIXI.MovieClip(this.frames);
+  this.view = new PIXI.MovieClip(this.frames.character);
   this.view.animationSpeed = 0.20;
   this.view.play();
   this.view.anchor.x = 0.5;
@@ -16,6 +23,10 @@ GAME.Mech = function() {
   this.view.position.x = 100;
   this.realAnimationSpeed = 0.20;
   this.pitch = 0.2; // when mech is moving up or down
+  
+  for(p in params) {
+    this[p] = params[p];
+  }
 
   this.addLifeBar();
 };
@@ -42,16 +53,16 @@ GAME.Mech.prototype.down = function() {
   }
   this.view.rotation = this.pitch;
 }
-GAME.Mech.prototype.update = function() {
+GAME.Mech.prototype.update = function(game) {
   this.view.animationSpeed = this.realAnimationSpeed;
   p = {
-    'x': this.view.position.x
-   ,'y': this.view.position.y
-   ,'w': this.view.width
-   ,'h': this.view.height
-   ,'rw': renderer.width
-   ,'rh': renderer.height
-   ,'m':'inside'
+    'x': this.view.position.x,
+    'y': this.view.position.y,
+    'w': this.view.width,
+    'h': this.view.height,
+    'rw': game.w(),
+    'rh': game.h(),
+    'm':'inside'
   };
   if(k_right) {
     p.x = this.view.position
@@ -84,4 +95,43 @@ GAME.Mech.prototype.update = function() {
   }
 };
 
+GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
+  //createjs.Sound.play("peow");
+  var x, y, a, A, b, distance;
+  var p = {};
+
+  //find target...
+  var A = this.r();
+  var a = (A < 0) ? this.y() : screen_height - this.y();
+  if(A != 0) {
+    //console.log(A,a);
+    p = getTargetPoint(A,a);
+    b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed 
+    p.y = (A > 0) ? screen_height+30 : 0-30;
+    p.x += this.x();
+    distance = Math.sqrt(a*a + b*b);
+  } else {
+    //shoot strait
+    p = {};
+    p.x = screen_width + 30; //TODO remove hardcode 30
+
+    p.y = this.y();
+    distance = p.x - this.x(); 
+  }
+
+
+  bullet = new GAME.GoodyBullet({
+    'x1': this.x(),
+    'y1': this.y(),
+    'x2': p.x,
+    'y2': p.y,
+    'source': this,
+    'damage': 25,
+    'distance':distance
+  });
+  //this.bullets.push(bullet);
+  //this.stage.addChild(bullet.view);
+  //var instance = createjs.Sound.play("fire");
+  return bullet;
+};
 //end mech

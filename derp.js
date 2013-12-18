@@ -69,115 +69,12 @@ function getTargetPoint(A,a) {
 }
 
 
-function init() {
-  loader = new PIXI.AssetLoader(['SpriteSheet.json', 'cloud.jpg']);
-  loader.load();
-  loader.onComplete = fuckShit;
-  
-  var queue = new createjs.LoadQueue();
-  queue.installPlugin(createjs.Sound);
-  queue.addEventListener("complete", handleComplete);
-  queue.loadManifest([ {id: "hit", src:"audio/fx_kick.mp3"}, {id: "fire", src: "audio/yFX3.mp3"}, {id: 'die', src: 'audio/tom_01.mp3'} ]);
-  createjs.Sound.setMute(true);
-
-}
-
 function handleComplete(e) {
   var instance = createjs.Sound.play("hit");
   var instance = createjs.Sound.play("fire");
   console.log("doof");
 }
 
-function fuckShit() {
-
-  var WIDTH = 800;
-  var HEIGHT = 600;
- 
-  stage = new PIXI.Stage(0x000000);
-
-  // let pixi choose WebGL or canvas
-  renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
-  // set the canvas width and height to fill the screen
-  var screen_width = $(window).width();//800;
-  var screen_height = $(window).height();//600;
-  if(screen_width > screen_height) {
-    factor = screen_height / HEIGHT;
-  } else {
-    factor = screen_width / WIDTH;
-  }
-  calc_height = HEIGHT * factor;
-  calc_width = WIDTH * factor;
-  //console.log(factor, calc_height, screen_height, calc_width, screen_width);
-
-  renderer.view.style.display = "block";
-  renderer.view.style.width = calc_width + "px"; //"100%";
-  renderer.view.style.height = calc_height + "px"; //"100%";
-  renderer.view.id = "fuckhead";
-
-  // attach render to page
-  document.body.appendChild(renderer.view);
-  baddie_next = fire_next = 0;
-
-  /*
-  nebula.push( new GAME.Nebula(0) );
-  nebula.push( new GAME.Nebula(5000) );
-  nebula.push( new GAME.Nebula(10000) );
-  nebula.push( new GAME.Nebula(15000) );
-  for(var i = 0; i < 4; i++) {
-    stage.addChild(nebula[i].view);
-  }
-  */
-  mech = new GAME.Mech();
-  stage.addChild(mech.view);
-
-  for(var s = 0; s < 50; s++) {
-    addStar();
-  }
-
-  requestAnimFrame( animate );
-
-  Hammer(document.getElementById(renderer.view.id)).on("swipeleft", function() {
-      k_left = true;
-      k_right = k_up = k_down = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(renderer.view.id)).on("swiperight", function() {
-      k_right = true;
-      k_left = k_up = k_down = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(renderer.view.id)).on("swipeup", function() {
-      k_up = true;
-      k_right = k_left = k_down = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(renderer.view.id)).on("swipedown", function() {
-      k_down = true;
-      k_right = k_left = k_up = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(renderer.view.id)).on("swipedown", function() {
-      k_down = true;
-      k_right = k_left = k_up = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(renderer.view.id)).on("tap", function() {
-      fireBullet();
-      //k_shoot = true;
-      //k_right = k_left = k_up = false;
-      //alert('you swiped left!');
-  });
-   
-  /*
-  var m_canvas = document.createElement('canvas');
-  m_canvas.width = 64;
-  m_canvas.height = 64;
-  var m_context = m_canvas.getContext('2d');
-  canvg(m_canvas, "mech.svg");
-  svbtex = new PIXI.Sprite(new PIXI.Texture.fromCanvas(m_canvas));
-  stage.addChild(svbtex);
-  */
-}
 
 function checkBounds(x,y,h,w,sw,sh, mode) {
 
@@ -224,68 +121,10 @@ function handleKeyUp(e) {
 }
 
 
-function animate() {
-  mech.update();
-  requestAnimFrame( animate );
-  TWEEN.update();
-  // shooth bullet
-  fire_next++;
-  if(k_shoot) {
-    fireBullet(); 
-  }
 
-  // move bullets
-  for(bullet in bullets) {
-    //bullets[bullet].update2();
-  }
-
-
-  // add bad guy
-  //console.log(baddie_next, baddie_rate);
-  if(baddie_next > baddie_rate) {
-    //addBaddy();
-    createBaddyTweenedSquad()
-    baddie_next = 0;
-  } else {
-    baddie_next++;
-  }
-  
-
-  // test for hits and move baddies
-  for(var baddy = 0; baddy < baddies.length; baddy++) {
-    if(baddies[baddy].active) {
-      //baddies[baddy].update();
-      if(hitTest(mech, baddies[baddy])) {
-        //console.log("dead");
-        //baddies.splice(baddy, 1);
-        //かみかぜ
-        mech.hit(20);
-        baddies[baddy].hit(100);
-      }
-
-      if(baddies[baddy].right() < 0) {
-        baddies[baddy].die();
-      }
-      for(var bullet = 0; bullet < bullets.length; bullet++) {
-        damage = bullets[bullet].damage;
-        if(hitTest(bullets[bullet], baddies[baddy])) {
-          //console.log("hit!!");
-          baddies[baddy].hit(damage);
-          baddies[baddy].recoil(bullets[bullet]);
-          bullets[bullet].die();
-        } 
-        if(bullets[bullet].source != mech && hitTest(bullets[bullet], mech)) {
-          bullets[bullet].die();
-          mech.hit(damage);
-          mech.recoil(bullets[bullet]);
-        }
-      }
-
-    }
-  }
-
-
-  //draw
-  renderer.render(stage);
+function game(){
+ g = new GAME.game({
+   width: 800,
+   height: 600
+ });
 }
-
