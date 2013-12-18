@@ -211,7 +211,7 @@ GAME.game.prototype.h = function(height) {
 };
 
 GAME.game.prototype.addStar = function() {
-  var star = new GAME.Star();
+  var star = new GAME.Star(this.w(),(Math.random()*this.h()));
   this.stars.push(star);
   this.stage.addChild(star.view);
 };
