@@ -81,9 +81,11 @@ GAME.game.prototype.start = function(e) {
 
   // attach render to page
   document.body.appendChild(this.e.renderer.view);
-  baddie_next = fire_next = 0;
+  this.e.baddie_next = 0;
+  this.e.fire_next = 0;
 
-  this.e.mech = new GAME.Mech();
+  var params = {game: this.e};
+  this.e.mech = new GAME.Mech(params);
   this.e.stage.addChild(this.e.mech.view);
 
   for(var s = 0; s < 50; s++) {
@@ -137,57 +139,62 @@ GAME.game.prototype.animate = function() {
   this.mech.update(this);
   TWEEN.update();
   // shooth bullet
-  fire_next++;
+  this.fire_next++;
   if(k_shoot) {
-    if(fire_next > FIRERATE){
+    if(this.fire_next > this.firerate){
       bullet = this.mech.bullet(this.w(), this.h());
       this.fire(bullet);
-      fire_next = 0;
+      this.fire_next = 0;
     }
   }
 
 
   // add bad guy
   //console.log(baddie_next, baddie_rate);
-  if(baddie_next > baddie_rate) {
+  if(this.baddie_next > this.baddie_rate) {
     //addBaddy();
     this.createBaddyTweenedSquad()
-    baddie_next = 0;
+    this.baddie_next = 0;
   } else {
-    baddie_next++;
+    this.baddie_next++;
   }
   
 
   // test for hits and move baddies
-  for(var baddy = 0; baddy < baddies.length; baddy++) {
-    if(baddies[baddy].active) {
+  for(var baddy = 0; baddy < this.baddies.length; baddy++) {
+    if(this.baddies[baddy].active) {
       //baddies[baddy].update();
-      if(hitTest(mech, baddies[baddy])) {
+      if(hitTest(this.mech, this.baddies[baddy])) {
         //console.log("dead");
         //baddies.splice(baddy, 1);
         //かみかぜ
-        mech.hit(20);
-        baddies[baddy].hit(100);
+        this.mech.hit(20);
+	this.baddies[baddy].die();
+	//this.stage.removeChild(baddies[baddy].view);
       }
 
-      if(baddies[baddy].right() < 0) {
-        baddies[baddy].die();
+      if(this.baddies[baddy].right() < 0) {
+        this.baddies[baddy].die();
+	this.baddies[baddy].removeFromStage();
       }
-      for(var bullet = 0; bullet < bullets.length; bullet++) {
-        damage = bullets[bullet].damage;
-        if(hitTest(bullets[bullet], baddies[baddy])) {
+      for(var bullet = 0; bullet < this.bullets.length; bullet++) {
+        damage = this.bullets[bullet].damage;
+        if(hitTest(this.bullets[bullet], this.baddies[baddy])) {
           //console.log("hit!!");
-          baddies[baddy].hit(damage);
-          baddies[baddy].recoil(bullets[bullet]);
-          bullets[bullet].die();
+          this.baddies[baddy].hit(damage);
+          this.baddies[baddy].recoil(this.bullets[bullet]);
+          this.bullets[bullet].die();
         } 
-        if(bullets[bullet].source != mech && hitTest(bullets[bullet], mech)) {
-          bullets[bullet].die();
-          mech.hit(damage);
-          mech.recoil(bullets[bullet]);
+        if(this.bullets[bullet].source != this.mech && hitTest(this.bullets[bullet], this.mech)) {
+          this.bullets[bullet].die();
+          this.mech.hit(damage);
+          this.mech.recoil(this.bullets[bullet]);
         }
       }
 
+    } else {
+      //if this baddy is not active then remove it from stage
+      this.baddies[baddy].removeFromStage();
     }
   }
 
@@ -215,48 +222,7 @@ GAME.game.prototype.addStar = function() {
   this.stars.push(star);
   this.stage.addChild(star.view);
 };
-/*
-GAME.game.prototype.fireBullet = function(screen_width, screen_height) {
-  //createjs.Sound.play("peow");
-  var x, y, a, A, b, distance;
-  var p = {};
-  if(fire_next > FIRERATE){
-    //console.log("peow!");
 
-    var A = this.mech.r();
-    var a = (A < 0) ? this.mech.y() : params.height - this.mech.y();
-    if(A != 0) {
-      //console.log(A,a);
-      p = getTargetPoint(A,a);
-      b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed 
-      p.y = (A > 0) ? screen_height+30 : 0-30;
-      p.x += this.mech.x();
-      distance = Math.sqrt(a*a + b*b);
-    } else {
-      p = {};
-      p.x = screen_width + 30; //TODO remove hardcode 30
-
-      p.y = this.mech.y();
-      distance = p.x - this.mech.x(); 
-    }
-
-
-    bullet = new GAME.GoodyBullet({
-      'x1': mech.x(),
-      'y1': mech.y(),
-      'x2': p.x,
-      'y2': p.y,
-      'source': mech,
-      'damage': 25,
-      'distance':distance
-    });
-    this.bullets.push(bullet);
-    this.stage.addChild(bullet.view);
-    fire_next = 0;
-    //var instance = createjs.Sound.play("fire");
-  }
-};
-*/
 GAME.game.prototype.addBaddyTweened = function(params) {
   var baddy = new GAME.BaddyTweened(params); 
   this.baddies.push(baddy); //TODO: move baddies and stage to GAME.baddies and GAME.stage

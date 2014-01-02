@@ -6,7 +6,9 @@ var GAME = GAME || {};
  **/
 GAME.Mech = function(params) {
   this.position = new PIXI.Point();
+  this.type = "mech";
 
+  this.game = params.game;
   this.frames = {};
   this.loadDefaultFrames();
   this.frames.character = [
@@ -127,7 +129,8 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
     'y2': p.y,
     'source': this,
     'damage': 25,
-    'distance':distance
+    'distance':distance,
+    'game': this.game
   });
   //this.bullets.push(bullet);
   //this.stage.addChild(bullet.view);

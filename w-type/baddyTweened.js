@@ -1,7 +1,7 @@
 var GAME = GAME || {};
 
 GAME.BaddyTweened = function(params) {
-
+  this.type = "baddyTweened";
   this.SPEED = 1;
   this.YMOD = 0.1;
   this.YPOWER = Math.random()*100;
@@ -94,13 +94,14 @@ GAME.BaddyTweened.prototype.bullet = function() {
       'x2': this.target.x(), 
       'y2': this.target.y(), 
       'source': this, 
-      'damage': 100
+      'damage': 100,
+      'game': this.game
     };
     this.loaded = false;
     bullet = new GAME.Bullet(params) ;
     this.game.fire(bullet);
   }
-}
+};
 
 GAME.BaddyTweened.prototype.inBounds = function() {
   return checkBounds(

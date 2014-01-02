@@ -125,6 +125,8 @@ function handleKeyUp(e) {
 function game(){
  g = new GAME.game({
    width: 800,
-   height: 600
+   height: 600,
+   firerate: FIRERATE,
+   baddie_rate: baddie_rate
  });
 }

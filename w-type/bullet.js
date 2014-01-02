@@ -4,7 +4,7 @@ var GAME = GAME || {};
  * {'x': this.x()-50, 'y': this.y()};
  * */
 GAME.Bullet = function(param) {
-
+  this.type = "bullet";
   this.BULLET_SPEED = 5;
   this.damage = param['damage'];
   this.source = param['source'];
@@ -19,6 +19,8 @@ GAME.Bullet = function(param) {
   this.view.anchor.x = this.view.anchor.y = 0.5;
   this.view.position.x = param.x1;
   this.view.position.y = param.y1;
+
+  this.game = param.game;
 
   this.interpolation = TWEEN.Interpolation.Bezier;
   if(typeof param.interpolation == 'None') {
@@ -80,6 +82,7 @@ GAME.Bullet.prototype.update = function() {
  */
 GAME.GoodyBullet = function(param) {
 
+  this.type = "goodyBullet";
   this.BULLET_SPEED = 2;
   this.damage = param['damage'];
   this.source = param['source'];
@@ -88,6 +91,8 @@ GAME.GoodyBullet = function(param) {
    ,PIXI.Texture.fromFrame("bullet02.png")
    ,PIXI.Texture.fromFrame("bullet03.png")
   ];
+
+  this.game = param.game;
   this.view = new PIXI.MovieClip(this.frames);
   this.view.animationSpeed = 0.05;
   this.view.play();

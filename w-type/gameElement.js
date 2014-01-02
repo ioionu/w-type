@@ -71,14 +71,14 @@ GAME.GameElement.prototype.r = function(r) {
 };
 
 GAME.GameElement.prototype.hit = function(damage) {
-  this.life -= damage;
+  this.life = (this.life - damage < 0) ? 0 : this.life - damage;
   if(typeof this.life_bar !== 'undefined') {
     this.life_bar.update( this.life ); /* ugh... now i understand why js is...
                                                                 * TODO: look at crreating a life() function in baddy
                                                                 * or do use _super fu http://ejohn.org/blog/simple-javascript-inheritance/
                                                                 */
   }
-  console.log("hit", this.life);
+  //console.log("hit", this.life);
   if(this.life <= 0) {
     this.die();
     return true;
@@ -91,10 +91,10 @@ GAME.GameElement.prototype.die = function(){
   //if explode returns false then it did not blow up the element and we need to remove it here
   //TODO: clean up explode() so it does not do this funk
   if(!this.explode()){
-    stage.removeChild(this.view);
     this.active = false;
+    this.removeFromStage();
   }
-  this.active = false;
+  //this.active = false;
   //createjs.Sound.play(this.sound.die);
 };
 
@@ -103,15 +103,26 @@ GAME.GameElement.prototype.explode = function(){
     this.view.textures = this.frames.explode;
     this.view.gotoAndPlay(0);
     this.view.loop = false;
-    this.view.onComplete = function(){
-      console.log("explosion animation complete");
-      stage.removeChild(this);
-    };
+    this.view.game_element = this;
+    this.view.onComplete = disable;
     return true;
   } else {
     return false;
   }
-}
+};
+
+function disable(){
+  if(this.game_element !== 'undefined') {
+    this.game_element.active = false;
+    console.log("diable: " + this.game_element.active + " : " + this.game_element.game.stage);
+  }
+};
+
+GAME.GameElement.prototype.removeFromStage = function(){
+  if(typeof this.game !== 'undefined' && this.view.stage !== null) { 
+    this.game.stage.removeChild(this.view);
+  }
+};
 
 GAME.GameElement.prototype.recoil = function(bullet) {
   var recoil = 5;
