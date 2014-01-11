@@ -136,11 +136,15 @@ GAME.GameElement.prototype.removeFromStage = function(){
 };
 
 GAME.GameElement.prototype.recoil = function(bullet) {
-  var recoil = 5;
+  var recoil = 10;
   if(bullet.x() < this.x()) {
-    this.x( this.x()+recoil);
+    if(checkBounds(this.x() + recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+      this.x( this.x()+recoil);
+    }
   } else {
-    this.x( this.x()-recoil);
+    if(checkBounds(this.x() - recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+      this.x( this.x()-recoil);
+    }
   }
 };
 
