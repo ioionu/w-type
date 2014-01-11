@@ -5,6 +5,7 @@ GAME.BaddyTweened = function(params) {
   this.SPEED = 1;
   this.YMOD = 0.1;
   this.YPOWER = Math.random()*100;
+  this.strength = 10;
   
   this.frames = {};
   this.frames.character = [
@@ -31,8 +32,8 @@ GAME.BaddyTweened = function(params) {
   this.loaded = true; //can baddie fire? TODO: make a shot spacing
   
   this.path = {};
-  this.path.x = params.x;
-  this.path.y = params.y;
+//  this.path.x = params.x;
+//  this.path.y = params.y;
   this.path.easing = TWEEN.Easing.Linear.None;
   this.path.interpolation = TWEEN.Interpolation.Linear;
   this.path.time = 1500;
@@ -48,7 +49,7 @@ GAME.BaddyTweened = function(params) {
     x:this.path.x[0],
     baddy:this
   })
-    .to({x: this.path.x}, this.path.time)
+    .to({x: this.path.x.slice(1)}, this.path.time)
     .delay(this.path.delay)
     .easing(this.path.easing)
     .interpolation(this.path.interpolation)
@@ -67,7 +68,7 @@ GAME.BaddyTweened = function(params) {
     y:this.path.y[0],
     baddy:this
   })
-    .to({y: this.path.y}, this.path.time)
+    .to({y: this.path.y.slice(1)}, this.path.time)
     .delay(this.path.delay)
     .easing(this.path.easing)
     .interpolation(this.path.interpolation)
@@ -87,14 +88,14 @@ GAME.BaddyTweened.prototype.updateLife = function() {
 };
 
 GAME.BaddyTweened.prototype.bullet = function() {
-  if(this.loaded) {
+  if(this.loaded && this.active) {
     params = {
       'x1': this.x(), 
       'y1': this.y(), 
       'x2': this.target.x(), 
       'y2': this.target.y(), 
       'source': this, 
-      'damage': 100,
+      'damage': this.strength,
       'game': this.game
     };
     this.loaded = false;

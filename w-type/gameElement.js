@@ -2,6 +2,7 @@ var GAME = GAME || {};
 
 GAME.GameElement = function() {
   this.active = true;
+  this.remove = false;
   this.life = 100;
   this.life_full = this.life;
   this.size = function(){
@@ -91,10 +92,9 @@ GAME.GameElement.prototype.die = function(){
   //if explode returns false then it did not blow up the element and we need to remove it here
   //TODO: clean up explode() so it does not do this funk
   if(!this.explode()){
-    this.active = false;
     this.removeFromStage();
   }
-  //this.active = false;
+  this.active = false;
   //createjs.Sound.play(this.sound.die);
 };
 
@@ -104,19 +104,17 @@ GAME.GameElement.prototype.explode = function(){
     this.view.gotoAndPlay(0);
     this.view.loop = false;
     this.view.game_element = this;
-    this.view.onComplete = disable;
+    this.view.onComplete = function(){
+      if(this.game_element !== 'undefined') {
+        this.game_element.remove = true;
+      }
+    };
     return true;
   } else {
     return false;
   }
 };
 
-function disable(){
-  if(this.game_element !== 'undefined') {
-    this.game_element.active = false;
-    console.log("diable: " + this.game_element.active + " : " + this.game_element.game.stage);
-  }
-};
 
 GAME.GameElement.prototype.removeFromStage = function(){
   if(typeof this.game !== 'undefined' && this.view.stage !== null) { 

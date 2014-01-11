@@ -32,7 +32,7 @@ GAME.Bullet = function(param) {
   this.finish_point = 0 - 30; //TODO: dont hardcode 30 (get it from width of bullet or make a standard out of bounds distance)
   
   if(param.x2 > param.x1) {
-    this.finish_point = renderer.width + 30;
+    this.finish_point = param.game.renderer.width + 30;
   }
 
   // first point on bullets bezier path will be this far out in front of the origin

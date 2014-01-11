@@ -12,9 +12,9 @@ GAME.Mech = function(params) {
   this.frames = {};
   this.loadDefaultFrames();
   this.frames.character = [
-    PIXI.Texture.fromFrame("mech01.png")
-   ,PIXI.Texture.fromFrame("mech02.png")
-   ,PIXI.Texture.fromFrame("mech03.png")
+    PIXI.Texture.fromFrame("mech01.png"),
+    PIXI.Texture.fromFrame("mech02.png"),
+    PIXI.Texture.fromFrame("mech03.png")
   ];
   this.view = new PIXI.MovieClip(this.frames.character);
   this.view.animationSpeed = 0.20;
@@ -43,14 +43,14 @@ GAME.Mech.prototype.derp = function() {
 
 
 GAME.Mech.prototype.up = function() {
-  if(checkBounds(p.x, this.view.position.y - MECHSPEED, p.w, p.h, p.rw, p.rh, p.m)){
+  if(checkBounds(this.x(), this.y() - MECHSPEED, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
     this.view.position.y -= MECHSPEED;
   }
   this.view.rotation = this.pitch * -1;
 }
 
 GAME.Mech.prototype.down = function() {
-  if(checkBounds(p.x, this.view.position.y + MECHSPEED, p.w, p.h, p.rw, p.rh, p.m)){
+  if(checkBounds(this.x(), this.y() + MECHSPEED, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
     this.view.position.y += MECHSPEED;
   }
   this.view.rotation = this.pitch;
@@ -67,8 +67,8 @@ GAME.Mech.prototype.update = function(game) {
     'm':'inside'
   };
   if(k_right) {
-    p.x = this.view.position
-    if(checkBounds(this.view.position.x + MECHSPEED, p.y, p.w, p.h, p.rw, p.rh, p.m)){
+    p.x = this.view.position;
+    if(checkBounds(this.x() + MECHSPEED, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
       this.view.position.x += MECHSPEED;
     }
     this.view.rotation = 0;
@@ -104,18 +104,18 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
 
   //find target...
   var A = this.r();
-  var a = (A < 0) ? this.y() : screen_height - this.y();
+  var a = (A < 0) ? this.y() : this.game.renderer.height - this.y();
   if(A != 0) {
     //console.log(A,a);
     p = getTargetPoint(A,a);
     b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed 
-    p.y = (A > 0) ? screen_height+30 : 0-30;
+    p.y = (A > 0) ? this.game.renderer.height + 30 : 0-30;
     p.x += this.x();
     distance = Math.sqrt(a*a + b*b);
   } else {
     //shoot strait
     p = {};
-    p.x = screen_width + 30; //TODO remove hardcode 30
+    p.x = this.game.renderer.width + 30; //TODO remove hardcode 30
 
     p.y = this.y();
     distance = p.x - this.x(); 

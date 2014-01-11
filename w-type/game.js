@@ -169,13 +169,13 @@ GAME.game.prototype.animate = function() {
         //baddies.splice(baddy, 1);
         //かみかぜ
         this.mech.hit(20);
-	this.baddies[baddy].die();
+        this.baddies[baddy].die();
 	//this.stage.removeChild(baddies[baddy].view);
       }
 
-      if(this.baddies[baddy].right() < 0) {
+      if(this.baddies[baddy].right() < (this.baddies[baddy].w() * -1)) {
         this.baddies[baddy].die();
-	this.baddies[baddy].removeFromStage();
+        this.baddies[baddy].removeFromStage();
       }
       for(var bullet = 0; bullet < this.bullets.length; bullet++) {
         damage = this.bullets[bullet].damage;
@@ -192,7 +192,8 @@ GAME.game.prototype.animate = function() {
         }
       }
 
-    } else {
+    }
+    if(this.baddies[baddy].remove) {
       //if this baddy is not active then remove it from stage
       this.baddies[baddy].removeFromStage();
     }
@@ -225,7 +226,7 @@ GAME.game.prototype.addStar = function() {
 
 GAME.game.prototype.addBaddyTweened = function(params) {
   var baddy = new GAME.BaddyTweened(params); 
-  this.baddies.push(baddy); //TODO: move baddies and stage to GAME.baddies and GAME.stage
+  this.baddies.push(baddy); 
   this.stage.addChild(baddy.view);
 };
 
@@ -233,7 +234,7 @@ GAME.game.prototype.createBaddyTweenedSquad = function() {
   w = this.w();
   h = this.h();
   path = {
-    x: [w + 50, w * Math.random(), w * Math.random(), -10],
+    x: [w+45 , w * Math.random(), w * Math.random(), -75], //TOTO fix hardcoded last tween poing
     y: [h * Math.random(), h * Math.random(), h * Math.random()],
     shoot: Math.floor(Math.random() * 50),
     interpolation: TWEEN.Interpolation.CatmullRom,
@@ -252,10 +253,10 @@ GAME.game.prototype.createBaddyTweenedSquad = function() {
       game: this
     });
   }
-}
+};
 
 GAME.game.prototype.fire = function(bullet) {
   this.bullets.push(bullet);
   this.stage.addChild(bullet.view);
-}
+};
 //end bullet
