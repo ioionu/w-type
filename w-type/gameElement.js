@@ -82,6 +82,18 @@ GAME.GameElement.prototype.hit = function(damage) {
   //console.log("hit", this.life);
   if(this.life <= 0) {
     this.die();
+
+    //did we kill baddie?
+    if(this.type == 'baddyTweened'){
+      this.game.mech.score + this.value;
+      console.log("score! " + this.game.mech.score) 
+    }
+
+    //did we be dead?
+    if(this.type == 'mech'){
+      this.lives--;
+      console.log("lives: " + this.lives);
+    }
     return true;
   } else {
     //createjs.Sound.play("hit");
@@ -96,6 +108,7 @@ GAME.GameElement.prototype.die = function(){
   }
   this.active = false;
   //createjs.Sound.play(this.sound.die);
+
 };
 
 GAME.GameElement.prototype.explode = function(){

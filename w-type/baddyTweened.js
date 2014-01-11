@@ -6,6 +6,7 @@ GAME.BaddyTweened = function(params) {
   this.YMOD = 0.1;
   this.YPOWER = Math.random()*100;
   this.strength = 10;
+  this.value = 1;
   
   this.frames = {};
   this.frames.character = [

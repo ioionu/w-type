@@ -9,6 +9,8 @@ GAME.Mech = function(params) {
   this.type = "mech";
 
   this.game = params.game;
+  this.lives = 3;
+  this.score = 0;
   this.frames = {};
   this.loadDefaultFrames();
   this.frames.character = [
