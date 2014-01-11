@@ -11,6 +11,7 @@ GAME.Mech = function(params) {
   this.game = params.game;
   this.lives = 3;
   this.score = 0;
+  this.speed = 6; 
   this.frames = {};
   this.loadDefaultFrames();
   this.frames.character = [
@@ -44,19 +45,35 @@ GAME.Mech.prototype.derp = function() {
 };
 
 
-GAME.Mech.prototype.up = function() {
-  if(checkBounds(this.x(), this.y() - MECHSPEED, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
-    this.view.position.y -= MECHSPEED;
+GAME.Mech.prototype.moveUp = function(distance) {
+  if(checkBounds(this.x(), this.y() - distance, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+    this.view.position.y -= distance;
   }
   this.view.rotation = this.pitch * -1;
 }
 
-GAME.Mech.prototype.down = function() {
-  if(checkBounds(this.x(), this.y() + MECHSPEED, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
-    this.view.position.y += MECHSPEED;
+GAME.Mech.prototype.moveDown = function(distance) {
+  if(checkBounds(this.x(), this.y() + distance, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+    this.view.position.y += distance;
   }
   this.view.rotation = this.pitch;
 }
+
+
+GAME.Mech.prototype.moveRight = function(distance) {
+  if(checkBounds(this.x() + distance, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+    this.view.position.x += distance;
+  }
+  this.view.rotation = 0;
+}
+
+GAME.Mech.prototype.moveLeft = function(distance) {
+  if(checkBounds(this.x() - distance, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+    this.view.position.x -= distance;
+  }
+  this.view.rotation = 0;
+};
+
 GAME.Mech.prototype.update = function(game) {
   this.view.animationSpeed = this.realAnimationSpeed;
   p = {
@@ -68,30 +85,24 @@ GAME.Mech.prototype.update = function(game) {
     'rh': game.h(),
     'm':'inside'
   };
-  if(k_right) {
-    p.x = this.view.position;
-    if(checkBounds(this.x() + MECHSPEED, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
-      this.view.position.x += MECHSPEED;
-    }
-    this.view.rotation = 0;
-  }
-  
-  if(k_left) {
-    if(checkBounds(this.view.position.x - MECHSPEED, p.y, p.w, p.h, p.rw, p.rh, p.m)){
-      this.view.position.x -= MECHSPEED/2;
-    }
-    this.view.rotation = 0;
-  }
   
   var adj_altitude = false;
   if(k_up) {
-    this.up();
+    this.moveUp(this.speed);
     adj_altitude = true;
   }
   
   if(k_down) {
-    this.down();
+    this.moveDown(this.speed);
     adj_altitude = true;
+  }
+  
+  if(k_left) {
+    this.moveLeft(this.speed/2);
+  }
+
+  if(k_right) {
+    this.moveRight(this.speed);
   }
 
   if(adj_altitude == false) {
