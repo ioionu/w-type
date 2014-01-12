@@ -74,6 +74,7 @@ GAME.Mech.prototype.moveLeft = function(distance) {
   this.view.rotation = 0;
 };
 
+
 GAME.Mech.prototype.update = function(game) {
   this.view.animationSpeed = this.realAnimationSpeed;
   p = {
@@ -108,6 +109,14 @@ GAME.Mech.prototype.update = function(game) {
   if(adj_altitude == false) {
     this.view.rotation = 0;
   }
+};
+
+GAME.Mech.prototype.respawn = function() {
+  this.view.textures = this.frames.character;
+  this.view.gotoAndPlay(0);
+  this.view.loop = true;
+  console.log("respawn");
+  
 };
 
 GAME.Mech.prototype.bullet = function(screen_width, screen_height) {

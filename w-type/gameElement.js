@@ -85,7 +85,7 @@ GAME.GameElement.prototype.hit = function(damage) {
 
     //did we kill baddie?
     if(this.type == 'baddyTweened'){
-      this.game.mech.score + this.value;
+      this.game.mech.score += this.value;
       console.log("score! " + this.game.mech.score) 
     }
 
@@ -118,8 +118,12 @@ GAME.GameElement.prototype.explode = function(){
     this.view.loop = false;
     this.view.game_element = this;
     this.view.onComplete = function(){
-      if(this.game_element !== 'undefined') {
+      if(typeof this.game_element !== 'undefined') {
         this.game_element.remove = true;
+        if(typeof this.game_element.respawn !== 'undefined') {
+          console.log("respwn triggered");
+          this.game_element.respawn.call(this.game_element);
+        }
       }
     };
     return true;
@@ -134,6 +138,7 @@ GAME.GameElement.prototype.removeFromStage = function(){
     this.game.stage.removeChild(this.view);
   }
 };
+
 
 GAME.GameElement.prototype.recoil = function(bullet) {
   var recoil = 10;

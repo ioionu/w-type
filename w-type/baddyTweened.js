@@ -33,8 +33,6 @@ GAME.BaddyTweened = function(params) {
   this.loaded = true; //can baddie fire? TODO: make a shot spacing
   
   this.path = {};
-//  this.path.x = params.x;
-//  this.path.y = params.y;
   this.path.easing = TWEEN.Easing.Linear.None;
   this.path.interpolation = TWEEN.Interpolation.Linear;
   this.path.time = 1500;
