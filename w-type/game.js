@@ -9,7 +9,7 @@ GAME.game = function(params) {
   //TODO: im sure this could do something awesome!
   this.width = 800;
   this.height = 600;
-  this.sprite_sheet = ['SpriteSheet.json', 'cloud.jpg'];
+  this.sprite_sheet = ['SpriteSheet.json', 'page.jpg'];
   this.audio = [
     {id: "hit", src:"audio/fx_kick.mp3"}, 
     {id: "fire", src: "audio/yFX3.mp3"}, 
@@ -83,16 +83,24 @@ GAME.game.prototype.start = function(e) {
   document.body.appendChild(this.e.renderer.view);
   this.e.baddie_next = 0;
   this.e.fire_next = 0;
+  
+  // background image
+  var page = new PIXI.Sprite( PIXI.Texture.fromImage('page.jpg') );
+  page.width = WIDTH;
+  page.height = HEIGHT;
+  this.e.stage.addChild(page);
 
-  var params = {game: this.e};
-  this.e.mech = new GAME.Mech(params);
-  this.e.stage.addChild(this.e.mech.view);
-
-  for(var s = 0; s < 50; s++) {
+  // add stars
+  for(var s = 0; s < 25; s++) {
     var x = this.e.renderer.width; 
     var y = Math.random() * this.e.renderer.height;
     this.e.addStar();
   }
+
+  // add player
+  var params = {game: this.e};
+  this.e.mech = new GAME.Mech(params);
+  this.e.stage.addChild(this.e.mech.view);
 
 
   Hammer(document.getElementById(this.e.renderer.view.id)).on("swipeleft", function() {

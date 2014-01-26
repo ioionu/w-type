@@ -7,16 +7,24 @@ var GAME = GAME || {};
  * */
 GAME.Star = function(x,y) {
   this.view = new PIXI.Graphics();
-  this.view.beginFill(0xFF3300);
-
+  this.view.beginFill(0xCCCCCC);
   // set a fill and line style
-  this.view.beginFill(0xFF3300);
-  this.view.lineStyle(1, 0xffd900, 1);
+  this.view.beginFill(0xCCCCCC);
+  this.view.lineStyle(1, 0x333333, 1);
   //this.view.lineStyle(2, 0x0000FF, 1);
   this.view.drawRect(0,0,1,1);
   //this.view.anchor.x = this.view.anchor.y = 0.5;
   this.view.endFill();
+  /*
+  var star_id = Math.floor( Math.random() * 3 ) + 1;
+  var star_name = 'star0' + star_id + '.png';
+  console.log(star_name);
 
+  this.view = new PIXI.Sprite( PIXI.Texture.fromImage(star_name) );
+  this.view.width = 10;
+  this.view.height = 11;
+  this.view.rotation = Math.random() * 360;
+*/
   this.view.position.x = x;
   this.view.position.y = y;
 
@@ -25,8 +33,8 @@ GAME.Star = function(x,y) {
     x:this.x(),
     star: this
   })
-    .to({x:-1}, Math.random() * 1000)
-    .delay(Math.random() * 1000)
+    .to({x:-1}, Math.random() * 9000 + 1000)
+    .delay(Math.random() * 10000)
     .repeat(Infinity)
     .easing(TWEEN.Easing.Linear.None)
     .onUpdate( function(){

@@ -239,6 +239,66 @@
         "w": 27,
         "h": 28
       }
+    },
+    "star02.png": {
+      "frame": {
+        "x": 177,
+        "y": 106,
+        "w": 20,
+        "h": 22
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 20,
+        "h": 22
+      },
+      "sourceSize": {
+        "w": 20,
+        "h": 22
+      }
+    },
+    "star03.png": {
+      "frame": {
+        "x": 0,
+        "y": 138,
+        "w": 20,
+        "h": 22
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 20,
+        "h": 22
+      },
+      "sourceSize": {
+        "w": 20,
+        "h": 22
+      }
+    },
+    "star01.png": {
+      "frame": {
+        "x": 20,
+        "y": 138,
+        "w": 20,
+        "h": 19
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 20,
+        "h": 19
+      },
+      "sourceSize": {
+        "w": 20,
+        "h": 19
+      }
     }
   },
   "meta": {
@@ -248,7 +308,7 @@
     "format": "RGBA8888",
     "size": {
       "w": 200,
-      "h": 138
+      "h": 160
     },
     "scale": 1
   }
