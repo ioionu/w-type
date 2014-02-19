@@ -60,90 +60,150 @@
         "h": 38
       }
     },
-    "baddy01.png": {
+    "boom01.png": {
       "frame": {
-        "x": 100,
-        "y": 38,
-        "w": 91,
-        "h": 30
+        "x": 0,
+        "y": 76,
+        "w": 98,
+        "h": 96
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 91,
-        "h": 30
+        "w": 98,
+        "h": 96
       },
       "sourceSize": {
-        "w": 91,
-        "h": 30
+        "w": 98,
+        "h": 96
+      }
+    },
+    "boom02.png": {
+      "frame": {
+        "x": 98,
+        "y": 76,
+        "w": 98,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 98,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 98,
+        "h": 96
+      }
+    },
+    "boom03.png": {
+      "frame": {
+        "x": 200,
+        "y": 0,
+        "w": 98,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 98,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 98,
+        "h": 96
+      }
+    },
+    "boom04.png": {
+      "frame": {
+        "x": 0,
+        "y": 172,
+        "w": 98,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 98,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 98,
+        "h": 96
+      }
+    },
+    "baddy01.png": {
+      "frame": {
+        "x": 200,
+        "y": 96,
+        "w": 90,
+        "h": 63
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 90,
+        "h": 63
+      },
+      "sourceSize": {
+        "w": 90,
+        "h": 63
       }
     },
     "baddy02.png": {
       "frame": {
-        "x": 0,
-        "y": 76,
-        "w": 91,
-        "h": 30
+        "x": 98,
+        "y": 172,
+        "w": 90,
+        "h": 63
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 91,
-        "h": 30
+        "w": 90,
+        "h": 63
       },
       "sourceSize": {
-        "w": 91,
-        "h": 30
+        "w": 90,
+        "h": 63
       }
     },
     "baddy03.png": {
       "frame": {
-        "x": 91,
-        "y": 76,
-        "w": 91,
-        "h": 30
+        "x": 188,
+        "y": 172,
+        "w": 90,
+        "h": 63
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 91,
-        "h": 30
+        "w": 90,
+        "h": 63
       },
       "sourceSize": {
-        "w": 91,
-        "h": 30
-      }
-    },
-    "boom01.png": {
-      "frame": {
-        "x": 0,
-        "y": 106,
-        "w": 31,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 31,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 31,
-        "h": 32
+        "w": 90,
+        "h": 63
       }
     },
     "bullet01.png": {
       "frame": {
-        "x": 31,
-        "y": 106,
+        "x": 100,
+        "y": 38,
         "w": 30,
         "h": 30
       },
@@ -162,8 +222,8 @@
     },
     "bullet02.png": {
       "frame": {
-        "x": 61,
-        "y": 106,
+        "x": 130,
+        "y": 38,
         "w": 30,
         "h": 30
       },
@@ -182,8 +242,8 @@
     },
     "bullet03.png": {
       "frame": {
-        "x": 91,
-        "y": 106,
+        "x": 160,
+        "y": 38,
         "w": 30,
         "h": 30
       },
@@ -198,106 +258,6 @@
       "sourceSize": {
         "w": 30,
         "h": 30
-      }
-    },
-    "boom02.png": {
-      "frame": {
-        "x": 121,
-        "y": 106,
-        "w": 29,
-        "h": 29
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 29,
-        "h": 29
-      },
-      "sourceSize": {
-        "w": 29,
-        "h": 29
-      }
-    },
-    "boom03.png": {
-      "frame": {
-        "x": 150,
-        "y": 106,
-        "w": 27,
-        "h": 28
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 27,
-        "h": 28
-      },
-      "sourceSize": {
-        "w": 27,
-        "h": 28
-      }
-    },
-    "star02.png": {
-      "frame": {
-        "x": 177,
-        "y": 106,
-        "w": 20,
-        "h": 22
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 20,
-        "h": 22
-      },
-      "sourceSize": {
-        "w": 20,
-        "h": 22
-      }
-    },
-    "star03.png": {
-      "frame": {
-        "x": 0,
-        "y": 138,
-        "w": 20,
-        "h": 22
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 20,
-        "h": 22
-      },
-      "sourceSize": {
-        "w": 20,
-        "h": 22
-      }
-    },
-    "star01.png": {
-      "frame": {
-        "x": 20,
-        "y": 138,
-        "w": 20,
-        "h": 19
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 20,
-        "h": 19
-      },
-      "sourceSize": {
-        "w": 20,
-        "h": 19
       }
     }
   },
@@ -307,8 +267,8 @@
     "image": "SpriteSheet.png",
     "format": "RGBA8888",
     "size": {
-      "w": 200,
-      "h": 160
+      "w": 298,
+      "h": 268
     },
     "scale": 1
   }
