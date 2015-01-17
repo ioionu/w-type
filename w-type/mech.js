@@ -112,10 +112,17 @@ GAME.Mech.prototype.update = function(game) {
 };
 
 GAME.Mech.prototype.respawn = function() {
-  this.view.textures = this.frames.character;
-  this.view.gotoAndPlay(0);
-  this.view.loop = true;
-  console.log("respawn");
+  // in the spirit of SMB 0 is a life
+  if (this.lives >= 0) {
+    this.view.textures = this.frames.character;
+    this.view.gotoAndPlay(0);
+    this.view.loop = true;
+    this.active = true;
+    this.life = 100;
+    console.log("respawn");
+  } else {
+    this.game.gameOver();
+  }
   
 };
 

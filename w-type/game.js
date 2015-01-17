@@ -267,4 +267,8 @@ GAME.game.prototype.fire = function(bullet) {
   this.bullets.push(bullet);
   this.stage.addChild(bullet.view);
 };
-//end bullet
+
+GAME.game.prototype.gameOver = function() {
+  console.log("game over man! game over!!!");
+}
+//end game
