@@ -82,7 +82,6 @@ GAME.game.prototype.start = function(e) {
   // attach render to page
   document.body.appendChild(this.e.renderer.view);
   this.e.baddie_next = 0;
-  this.e.fire_next = 0;
   
   // background image
   var page = new PIXI.Sprite( PIXI.Texture.fromImage('page.jpg') );
@@ -147,6 +146,7 @@ GAME.game.prototype.animate = function() {
   this.mech.update(this);
   TWEEN.update();
   // shooth bullet
+/*
   this.fire_next++;
   if(k_shoot) {
     if(this.fire_next > this.firerate){
@@ -155,7 +155,7 @@ GAME.game.prototype.animate = function() {
       this.fire_next = 0;
     }
   }
-
+*/
 
   // add bad guy
   //console.log(baddie_next, baddie_rate);

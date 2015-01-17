@@ -28,6 +28,8 @@ GAME.Mech = function(params) {
   this.view.position.x = 100;
   this.realAnimationSpeed = 0.20;
   this.pitch = 0.2; // when mech is moving up or down
+  this.fire_next = 0;
+
   
   for(p in params) {
     this[p] = params[p];
@@ -77,6 +79,8 @@ GAME.Mech.prototype.moveLeft = function(distance) {
 
 GAME.Mech.prototype.update = function(game) {
   this.view.animationSpeed = this.realAnimationSpeed;
+  this.fire_next++;
+
   p = {
     'x': this.view.position.x,
     'y': this.view.position.y,
@@ -87,27 +91,40 @@ GAME.Mech.prototype.update = function(game) {
     'm':'inside'
   };
   
-  var adj_altitude = false;
-  if(k_up) {
-    this.moveUp(this.speed);
-    adj_altitude = true;
-  }
-  
-  if(k_down) {
-    this.moveDown(this.speed);
-    adj_altitude = true;
-  }
-  
-  if(k_left) {
-    this.moveLeft(this.speed/2);
-  }
+  if (this.active) {
+    var adj_altitude = false;
+    if(k_up) {
+      this.moveUp(this.speed);
+      adj_altitude = true;
+    }
+    
+    if(k_down) {
+      this.moveDown(this.speed);
+      adj_altitude = true;
+    }
+    
+    if(k_left) {
+      this.moveLeft(this.speed/2);
+    }
 
-  if(k_right) {
-    this.moveRight(this.speed);
-  }
+    if(k_right) {
+      this.moveRight(this.speed);
+    }
 
-  if(adj_altitude == false) {
-    this.view.rotation = 0;
+    if(adj_altitude == false) {
+      this.view.rotation = 0;
+    }
+
+    // shooth bullet
+    if(k_shoot) {
+      if(this.fire_next > this.game.firerate){
+        bullet = this.bullet(this.w(), this.h());
+        this.game.fire(bullet);
+        this.fire_next = 0;
+      }
+    }
+
+
   }
 };
 
@@ -119,8 +136,10 @@ GAME.Mech.prototype.respawn = function() {
     this.view.loop = true;
     this.active = true;
     this.life = 100;
+    this.life_bar.update( this.life );
     console.log("respawn");
   } else {
+    this.active = false;
     this.game.gameOver();
   }
   
