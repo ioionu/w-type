@@ -203,7 +203,6 @@ GAME.Mech.prototype.tombStone = function() {
   this.view.interactive = true;
   _this = this;
   this.view.on('mousedown', function(e){
-    console.log("yo!", _this, e);
     _this.game.newGame();
   });
 

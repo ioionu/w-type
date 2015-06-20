@@ -30,6 +30,7 @@ GAME.game = function(params) {
   this.animate = this.animate.bind(this);
   this.init();
 };
+
 GAME.game.constructor = GAME.game;
 
 /**
@@ -108,6 +109,9 @@ GAME.game.prototype.start = function(e) {
   // add score
   this.e.score = new GAME.ScoreBoard(0, this.e.mech.lives);
   this.e.stage.addChild(this.e.score.view);
+
+  // add title
+  this.e.title = new GAME.Title(this.e);
 
   Hammer(document.getElementById(this.e.renderer.view.id)).on("swipeleft", function() {
       k_left = true;
@@ -271,8 +275,9 @@ GAME.game.prototype.fire = function(bullet) {
 GAME.game.prototype.gameOver = function() {
   console.log("game over man! game over!!!");
   this.mech.tombStone();
+  this.title.show();
 
-}
+};
 
 GAME.game.prototype.newGame = function() {
   //TODO: use newGame() function for first game
@@ -282,6 +287,6 @@ GAME.game.prototype.newGame = function() {
   this.mech.removeFromStage();
   this.mech = new GAME.Mech(params);
   this.stage.addChild(this.mech.view);
-}
+};
 
 //end game
