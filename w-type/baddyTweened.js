@@ -7,7 +7,7 @@ GAME.BaddyTweened = function(params) {
   this.YPOWER = Math.random()*100;
   this.strength = 10;
   this.value = 1;
-  
+
   this.frames = {};
   this.frames.character = [
     PIXI.Texture.fromFrame("baddy01.png"),
@@ -15,7 +15,7 @@ GAME.BaddyTweened = function(params) {
     PIXI.Texture.fromFrame("baddy03.png")
   ];
 
-  this.view = new PIXI.MovieClip(this.frames.character);
+  this.view = new PIXI.extras.MovieClip(this.frames.character);
   this.view.animationSpeed = 0.20;
   this.view.play();
   this.view.anchor.x = this.view.anchor.y = 0.5;
@@ -31,7 +31,7 @@ GAME.BaddyTweened = function(params) {
   this.game = params.game;
 
   this.loaded = true; //can baddie fire? TODO: make a shot spacing
-  
+
   this.path = {};
   this.path.easing = TWEEN.Easing.Linear.None;
   this.path.interpolation = TWEEN.Interpolation.Linear;
@@ -41,7 +41,7 @@ GAME.BaddyTweened = function(params) {
 
   for(var key in params) {
     this.path[key] = params[key];
-  };
+  }
 
   this.tween = {};
   this.tween.x = new TWEEN.Tween({
@@ -89,11 +89,11 @@ GAME.BaddyTweened.prototype.updateLife = function() {
 GAME.BaddyTweened.prototype.bullet = function() {
   if(this.loaded && this.active) {
     params = {
-      'x1': this.x(), 
-      'y1': this.y(), 
-      'x2': this.target.x(), 
-      'y2': this.target.y(), 
-      'source': this, 
+      'x1': this.x(),
+      'y1': this.y(),
+      'x2': this.target.x(),
+      'y2': this.target.y(),
+      'source': this,
       'damage': this.strength,
       'game': this.game
     };
@@ -114,4 +114,3 @@ GAME.BaddyTweened.prototype.inBounds = function() {
     'outside'
   );
 };
-

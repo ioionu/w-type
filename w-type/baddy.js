@@ -6,7 +6,7 @@ GAME.Baddy = function(source) {
   this.YMOD = 0.1;
   this.YBASE = GAME.getHeight() * Math.random();
   this.YPOWER = Math.random()*100;
-  
+
   this.frames = {};
   this.frames.character = [
     PIXI.Texture.fromFrame("baddy01.png"),
@@ -14,7 +14,7 @@ GAME.Baddy = function(source) {
     PIXI.Texture.fromFrame("baddy03.png")
   ];
 
-  this.view = new PIXI.MovieClip(this.frames.character);
+  this.view = new PIXI.extras.MovieClip(this.frames.character);
   this.view.animationSpeed = 0.20;
   this.view.play();
   this.view.anchor.x = this.view.anchor.y = 0.5;
@@ -63,4 +63,3 @@ function addBaddy() {
   stage.addChild(baddies[i-1].view);
 };
 //end baddy
-

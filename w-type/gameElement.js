@@ -86,20 +86,24 @@ GAME.GameElement.prototype.hit = function(damage) {
     //did we kill baddie?
     if(this.type == 'baddyTweened'){
       this.game.mech.score += this.value;
-      console.log("score! " + this.game.mech.score) 
+      this.game.score.updateScore(this.game.mech.score);
     }
 
     //did we be dead?
     if(this.type == 'mech'){
       this.lives--;
-      console.log("lives: " + this.lives);
+      this.game.score.updateLife(this.lives);
     }
     return true;
   } else {
     //createjs.Sound.play("hit");
+    if(this.type == 'mech') {
+      var x = 1+1;
+    }
     return false;
   }
-}
+};
+
 GAME.GameElement.prototype.die = function(){
   //if explode returns false then it did not blow up the element and we need to remove it here
   //TODO: clean up explode() so it does not do this funk
@@ -134,7 +138,7 @@ GAME.GameElement.prototype.explode = function(){
 
 
 GAME.GameElement.prototype.removeFromStage = function(){
-  if(typeof this.game !== 'undefined' && this.view.stage !== null) { 
+  if(typeof this.game !== 'undefined' && this.view.stage !== null) {
     this.game.stage.removeChild(this.view);
   }
 };
@@ -158,4 +162,3 @@ GAME.GameElement.prototype.addLifeBar = function() {
   this.view.addChild( this.life_bar.view );
 }
 // end game element
-

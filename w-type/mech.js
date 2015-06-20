@@ -11,7 +11,7 @@ GAME.Mech = function(params) {
   this.game = params.game;
   this.lives = 3;
   this.score = 0;
-  this.speed = 6; 
+  this.speed = 6;
   this.frames = {};
   this.loadDefaultFrames();
   this.frames.character = [
@@ -19,7 +19,7 @@ GAME.Mech = function(params) {
     PIXI.Texture.fromFrame("mech02.png"),
     PIXI.Texture.fromFrame("mech03.png")
   ];
-  this.view = new PIXI.MovieClip(this.frames.character);
+  this.view = new PIXI.extras.MovieClip(this.frames.character);
   this.view.animationSpeed = 0.20;
   this.view.play();
   this.view.anchor.x = 0.5;
@@ -30,7 +30,7 @@ GAME.Mech = function(params) {
   this.pitch = 0.2; // when mech is moving up or down
   this.fire_next = 0;
 
-  
+
   for(p in params) {
     this[p] = params[p];
   }
@@ -52,14 +52,14 @@ GAME.Mech.prototype.moveUp = function(distance) {
     this.view.position.y -= distance;
   }
   this.view.rotation = this.pitch * -1;
-}
+};
 
 GAME.Mech.prototype.moveDown = function(distance) {
   if(checkBounds(this.x(), this.y() + distance, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
     this.view.position.y += distance;
   }
   this.view.rotation = this.pitch;
-}
+};
 
 
 GAME.Mech.prototype.moveRight = function(distance) {
@@ -90,19 +90,19 @@ GAME.Mech.prototype.update = function(game) {
     'rh': game.h(),
     'm':'inside'
   };
-  
+
   if (this.active) {
     var adj_altitude = false;
     if(k_up) {
       this.moveUp(this.speed);
       adj_altitude = true;
     }
-    
+
     if(k_down) {
       this.moveDown(this.speed);
       adj_altitude = true;
     }
-    
+
     if(k_left) {
       this.moveLeft(this.speed/2);
     }
@@ -111,7 +111,7 @@ GAME.Mech.prototype.update = function(game) {
       this.moveRight(this.speed);
     }
 
-    if(adj_altitude == false) {
+    if(adj_altitude === false) {
       this.view.rotation = 0;
     }
 
@@ -142,7 +142,7 @@ GAME.Mech.prototype.respawn = function() {
     this.active = false;
     this.game.gameOver();
   }
-  
+
 };
 
 GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
@@ -156,7 +156,7 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
   if(A != 0) {
     //console.log(A,a);
     p = getTargetPoint(A,a);
-    b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed 
+    b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed
     p.y = (A > 0) ? this.game.renderer.height + 30 : 0-30;
     p.x += this.x();
     distance = Math.sqrt(a*a + b*b);
@@ -166,7 +166,7 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
     p.x = this.game.renderer.width + 30; //TODO remove hardcode 30
 
     p.y = this.y();
-    distance = p.x - this.x(); 
+    distance = p.x - this.x();
   }
 
 
@@ -185,4 +185,32 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
   //var instance = createjs.Sound.play("fire");
   return bullet;
 };
+
+/*
+ * replace mech with tomb stone
+ * @method tombStone
+ */
+GAME.Mech.prototype.tombStone = function() {
+  this.frames.tomb = [
+    PIXI.Texture.fromImage("sprite/tomb04.png"),
+    PIXI.Texture.fromImage("sprite/tomb03.png"),
+    PIXI.Texture.fromImage("sprite/tomb02.png"),
+    PIXI.Texture.fromImage("sprite/tomb01.png")
+  ];
+
+  this.view.textures = this.frames.tomb;
+  this.view.loop = false;
+  this.view.interactive = true;
+  _this = this;
+  this.view.on('mousedown', function(e){
+    console.log("yo!", _this, e);
+    _this.game.newGame();
+  });
+
+  this.view.gotoAndPlay(0);
+  this.view.onComplete = function(){
+    console.log("i am function");
+  };
+};
+
 //end mech

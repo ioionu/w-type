@@ -11,45 +11,48 @@ GAME.game = function(params) {
   this.height = 600;
   this.sprite_sheet = ['SpriteSheet.json', 'page.jpg'];
   this.audio = [
-    {id: "hit", src:"audio/fx_kick.mp3"}, 
-    {id: "fire", src: "audio/yFX3.mp3"}, 
-    {id: 'die', src: 'audio/tom_01.mp3'} 
+    {id: "hit", src:"audio/fx_kick.mp3"},
+    {id: "fire", src: "audio/yFX3.mp3"},
+    {id: 'die', src: 'audio/tom_01.mp3'}
   ];
 
   this.stars = [];
   this.baddies = [];
   this.bullets = [];
 
-  for(p in params) {
+  for(var p in params) {
     this[p] = params[p];
-  };
+  }
 
   /* make "this" available in this.update() when called from requestAnimFrame()
    * http://stackoverflow.com/questions/20177297/how-to-call-requestanimframe-on-an-object-method
    */
   this.animate = this.animate.bind(this);
   this.init();
-}
+};
 GAME.game.constructor = GAME.game;
 
 /**
  * intialise game by preloading assets
  **/
 GAME.game.prototype.init = function() {
-  this.loader = new PIXI.AssetLoader(this.sprite_sheet);
+  this.loader = new PIXI.loaders.Loader();
+  this.loader.add(this.sprite_sheet);
+  this.loader.e = this;
+  _this = this;
+  this.loader.once('complete', this.start);
   this.loader.load();
 
   //TODO: replace e with bind like i do on animate
-  this.loader.e = this;
-  this.loader.onComplete = this.start; //TODO: less cool function name
-  
-  this.queue = new createjs.LoadQueue();
-  this.queue.installPlugin(createjs.Sound);
-  this.queue.addEventListener("complete", handleComplete);
-  this.queue.loadManifest(this.audio);
-  createjs.Sound.setMute(true); //TODO: fix sound
+  //this.loader.e = this;
+  //this.loader.onComplete = this.start; //TODO: less cool function name
 
-}
+  //this.queue = new createjs.LoadQueue();
+  //this.queue.installPlugin(createjs.Sound);
+  //this.queue.addEventListener("complete", handleComplete);
+  //createjs.Sound.setMute(true); //TODO: fix sound
+
+};
 
 /**
  * when assets are loaded prepare stage
@@ -82,7 +85,7 @@ GAME.game.prototype.start = function(e) {
   // attach render to page
   document.body.appendChild(this.e.renderer.view);
   this.e.baddie_next = 0;
-  
+
   // background image
   var page = new PIXI.Sprite( PIXI.Texture.fromImage('page.jpg') );
   page.width = WIDTH;
@@ -91,16 +94,20 @@ GAME.game.prototype.start = function(e) {
 
   // add stars
   for(var s = 0; s < 25; s++) {
-    var x = this.e.renderer.width; 
+    var x = this.e.renderer.width;
     var y = Math.random() * this.e.renderer.height;
     this.e.addStar();
   }
 
   // add player
-  var params = {game: this.e};
+  var params = {game: this.e, lives: 1};
   this.e.mech = new GAME.Mech(params);
+  this.e.mech.active = false;
   this.e.stage.addChild(this.e.mech.view);
 
+  // add score
+  this.e.score = new GAME.ScoreBoard(0, this.e.mech.lives);
+  this.e.stage.addChild(this.e.score.view);
 
   Hammer(document.getElementById(this.e.renderer.view.id)).on("swipeleft", function() {
       k_left = true;
@@ -137,7 +144,7 @@ GAME.game.prototype.start = function(e) {
       //k_right = k_left = k_up = false;
       //alert('you swiped left!');
   });
-   
+
   //requestAnimFrame( this.e.animate );
   this.e.animate();
 }
@@ -145,28 +152,21 @@ GAME.game.prototype.start = function(e) {
 GAME.game.prototype.animate = function() {
   this.mech.update(this);
   TWEEN.update();
-  // shooth bullet
-/*
-  this.fire_next++;
-  if(k_shoot) {
-    if(this.fire_next > this.firerate){
-      bullet = this.mech.bullet(this.w(), this.h());
-      this.fire(bullet);
-      this.fire_next = 0;
-    }
-  }
-*/
 
   // add bad guy
   //console.log(baddie_next, baddie_rate);
-  if(this.baddie_next > this.baddie_rate) {
+  if(this.baddie_next > this.baddie_rate && this.mech.active) {
     //addBaddy();
     this.createBaddyTweenedSquad()
     this.baddie_next = 0;
+    if (this.baddie_rate >= this.baddie_rate_min) {
+      this.baddie_rate = this.baddie_rate - this.baddie_rate_accel;
+    }
+    console.log(this.baddie_rate);
   } else {
     this.baddie_next++;
   }
-  
+
 
   // test for hits and move baddies
   for(var baddy = 0; baddy < this.baddies.length; baddy++) {
@@ -192,7 +192,7 @@ GAME.game.prototype.animate = function() {
           this.baddies[baddy].hit(damage);
           this.baddies[baddy].recoil(this.bullets[bullet]);
           this.bullets[bullet].die();
-        } 
+        }
         if(this.bullets[bullet].source != this.mech && hitTest(this.bullets[bullet], this.mech)) {
           this.bullets[bullet].die();
           this.mech.hit(damage);
@@ -210,7 +210,7 @@ GAME.game.prototype.animate = function() {
 
   //draw
   this.renderer.render(this.stage);
-  requestAnimFrame( this.animate );
+  window.requestAnimationFrame( this.animate );
 }
 GAME.game.prototype.w = function(width) {
   if(typeof width !== 'undefined'){
@@ -233,8 +233,8 @@ GAME.game.prototype.addStar = function() {
 };
 
 GAME.game.prototype.addBaddyTweened = function(params) {
-  var baddy = new GAME.BaddyTweened(params); 
-  this.baddies.push(baddy); 
+  var baddy = new GAME.BaddyTweened(params);
+  this.baddies.push(baddy);
   this.stage.addChild(baddy.view);
 };
 
@@ -242,7 +242,7 @@ GAME.game.prototype.createBaddyTweenedSquad = function() {
   w = this.w();
   h = this.h();
   path = {
-    x: [w+45 , w * Math.random(), w * Math.random(), -75], //TOTO fix hardcoded last tween poing
+    x: [w+45 , w * Math.random(), w * Math.random(), -75], //TODO fix hardcoded last tween poing
     y: [h * Math.random(), h * Math.random(), h * Math.random()],
     shoot: Math.floor(Math.random() * 50),
     interpolation: TWEEN.Interpolation.CatmullRom,
@@ -255,7 +255,7 @@ GAME.game.prototype.createBaddyTweenedSquad = function() {
       y: path.y,
       delay: i * 1000,
       time: path.time,
-      interpolation: path.interpolation, 
+      interpolation: path.interpolation,
       shoot: path.shoot,
       mech: this.mech,
       game: this
@@ -270,5 +270,18 @@ GAME.game.prototype.fire = function(bullet) {
 
 GAME.game.prototype.gameOver = function() {
   console.log("game over man! game over!!!");
+  this.mech.tombStone();
+
 }
+
+GAME.game.prototype.newGame = function() {
+  //TODO: use newGame() function for first game
+  this.baddies = [];
+  // add player
+  var params = {game: this, lives: 1};
+  this.mech.removeFromStage();
+  this.mech = new GAME.Mech(params);
+  this.stage.addChild(this.mech.view);
+}
+
 //end game

@@ -13,7 +13,7 @@ GAME.Bullet = function(param) {
    ,PIXI.Texture.fromFrame("bullet02.png")
    ,PIXI.Texture.fromFrame("bullet03.png")
   ];
-  this.view = new PIXI.MovieClip(this.frames);
+  this.view = new PIXI.extras.MovieClip(this.frames);
   this.view.animationSpeed = 0.05;
   this.view.play();
   this.view.anchor.x = this.view.anchor.y = 0.5;
@@ -28,9 +28,9 @@ GAME.Bullet = function(param) {
   }
   this.tween = {};
 
-  // bullet will continue to the closeset left or right edge after hitting target x,y  
+  // bullet will continue to the closeset left or right edge after hitting target x,y
   this.finish_point = 0 - 30; //TODO: dont hardcode 30 (get it from width of bullet or make a standard out of bounds distance)
-  
+
   if(param.x2 > param.x1) {
     this.finish_point = param.game.renderer.width + 30;
   }
@@ -93,7 +93,7 @@ GAME.GoodyBullet = function(param) {
   ];
 
   this.game = param.game;
-  this.view = new PIXI.MovieClip(this.frames);
+  this.view = new PIXI.extras.MovieClip(this.frames);
   this.view.animationSpeed = 0.05;
   this.view.play();
   this.view.anchor.x = this.view.anchor.y = 0.5;
@@ -124,5 +124,3 @@ GAME.GoodyBullet = function(param) {
 GAME.GoodyBullet.constructor = GAME.GoodyBullet;
 
 GAME.GoodyBullet.prototype = new GAME.GameElement();
-
-
