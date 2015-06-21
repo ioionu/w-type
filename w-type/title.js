@@ -2,19 +2,34 @@ var GAME = GAME || {};
 
 GAME.Title = function(game) {
   this.game = game;
-  this.view = PIXI.Sprite.fromImage('sprite/newGame01.png');
-  var left = (this.game.width * 0.5);
-  var top = (this.game.height * 0.5);
-  this.game.stage.addChild(this.view);
-  this.view.anchor = new PIXI.Point(0.5, 0.5);
-  this.view.position = new PIXI.Point(left, top);
+  this.view = new PIXI.Container();
 
-  this.view.interactive = true;
+  this.start = PIXI.Sprite.fromImage('sprite/newGame01.png');
+  var left = (this.game.width * 0.5);
+  var top = (this.game.height * 0.3);
+  this.start.anchor = new PIXI.Point(0.5, 0.5);
+  this.start.position = new PIXI.Point(left, top);
+  this.start.interactive = true;
   var _this = this;
-  this.view.on('mousedown', function(e){
+  this.start.on('mousedown', function(e){
     _this.game.newGame();
     _this.hide();
   });
+  this.view.addChild(this.start);
+
+  this.fullscreen = PIXI.Sprite.fromImage('sprite/fullscreen.png');
+  this.fullscreen.anchor = new PIXI.Point(0.5, 0.5);
+  this.fullscreen.position = new PIXI.Point(
+    this.game.width * 0.5,
+    this.game.height * 0.6
+  );
+  this.fullscreen.interactive = true;
+  this.fullscreen.on('mousedown', function(e){
+    _this.game.fullscreen();
+  });
+  this.view.addChild(this.fullscreen);
+
+  this.game.stage.addChild(this.view);
 
   //set title position
 };

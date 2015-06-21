@@ -10,11 +10,7 @@ GAME.game = function(params) {
   this.width = 800;
   this.height = 600;
   this.sprite_sheet = ['SpriteSheet.json', 'page.jpg'];
-  this.audio = [
-    {id: "hit", src:"audio/fx_kick.mp3"},
-    {id: "fire", src: "audio/yFX3.mp3"},
-    {id: 'die', src: 'audio/tom_01.mp3'}
-  ];
+  this.id = "game";
 
   this.stars = [];
   this.baddies = [];
@@ -28,15 +24,8 @@ GAME.game = function(params) {
    * http://stackoverflow.com/questions/20177297/how-to-call-requestanimframe-on-an-object-method
    */
   this.animate = this.animate.bind(this);
-  this.init();
-};
+//  this.init();
 
-GAME.game.constructor = GAME.game;
-
-/**
- * intialise game by preloading assets
- **/
-GAME.game.prototype.init = function() {
   this.loader = new PIXI.loaders.Loader();
   this.loader.add(this.sprite_sheet);
   this.loader.e = this;
@@ -44,16 +33,9 @@ GAME.game.prototype.init = function() {
   this.loader.once('complete', this.start);
   this.loader.load();
 
-  //TODO: replace e with bind like i do on animate
-  //this.loader.e = this;
-  //this.loader.onComplete = this.start; //TODO: less cool function name
-
-  //this.queue = new createjs.LoadQueue();
-  //this.queue.installPlugin(createjs.Sound);
-  //this.queue.addEventListener("complete", handleComplete);
-  //createjs.Sound.setMute(true); //TODO: fix sound
-
 };
+
+GAME.game.constructor = GAME.game;
 
 /**
  * when assets are loaded prepare stage
@@ -62,13 +44,13 @@ GAME.game.prototype.init = function() {
 GAME.game.prototype.start = function(e) {
   this.e.stage = new PIXI.Stage(0x000000);
 
-  WIDTH = 800;
-  HEIGHT = 640;
+  WIDTH = this.e.width;
+  HEIGHT = this.e.height;
   // let pixi choose WebGL or canvas
   this.e.renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
   // set the canvas width and height to fill the screen
-  var screen_width = $(window).width();//800;
-  var screen_height = $(window).height();//600;
+  var screen_width = window.innerWidth;//800;
+  var screen_height = window.innerHeight;//600;
   if(screen_width > screen_height) {
     factor = screen_height / HEIGHT;
   } else {
@@ -76,15 +58,23 @@ GAME.game.prototype.start = function(e) {
   }
   calc_height = HEIGHT * factor;
   calc_width = WIDTH * factor;
-  //console.log(factor, calc_height, screen_height, calc_width, screen_width);
+
 
   this.e.renderer.view.style.display = "block";
-  this.e.renderer.view.style.width = calc_width + "px"; //"100%";
-  this.e.renderer.view.style.height = calc_height + "px"; //"100%";
-  this.e.renderer.view.id = "fuckhead";
+  this.e.renderer.view.style.width = calc_width + "px";
+  this.e.renderer.view.style.height = calc_height + "px";
+  this.e.renderer.view.style.margin = "auto";
+  this.e.renderer.view.id = this.e.id;
+
+  //we need to place canvas in a container to prevent distortion in firefox
+  this.e.container = document.createElement("div");
+  this.e.container.id = this.e.id + "-container";
+  this.e.container.style.width = "100%";
+  this.e.container.style.height = "100%";
 
   // attach render to page
-  document.body.appendChild(this.e.renderer.view);
+  this.e.container.appendChild(this.e.renderer.view);
+  document.body.appendChild(this.e.container);
   this.e.baddie_next = 0;
 
   // background image
@@ -113,45 +103,16 @@ GAME.game.prototype.start = function(e) {
   // add title
   this.e.title = new GAME.Title(this.e);
 
-  Hammer(document.getElementById(this.e.renderer.view.id)).on("swipeleft", function() {
-      k_left = true;
-      k_right = k_up = k_down = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(this.e.renderer.view.id)).on("swiperight", function() {
-      k_right = true;
-      k_left = k_up = k_down = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(this.e.renderer.view.id)).on("swipeup", function() {
-      k_up = true;
-      k_right = k_left = k_down = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(this.e.renderer.view.id)).on("swipedown", function() {
-      k_down = true;
-      k_right = k_left = k_up = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(this.e.renderer.view.id)).on("swipedown", function() {
-      k_down = true;
-      k_right = k_left = k_up = false;
-      //alert('you swiped left!');
-  });
-  Hammer(document.getElementById(this.e.renderer.view.id)).on("tap", function(event) {
-      /*game.fire(
-        game.mech.bullet(this)
-      );
-      */
-     1+1;
-      //k_shoot = true;
-      //k_right = k_left = k_up = false;
-      //alert('you swiped left!');
-  });
-
   //requestAnimFrame( this.e.animate );
   this.e.animate();
-}
+
+  //fullscreen events
+  var _this = this.e;
+  window.onresize = function(e){
+    _this.resize();
+  };
+
+};
 
 GAME.game.prototype.animate = function() {
   this.mech.update(this);
@@ -161,7 +122,7 @@ GAME.game.prototype.animate = function() {
   //console.log(baddie_next, baddie_rate);
   if(this.baddie_next > this.baddie_rate && this.mech.active) {
     //addBaddy();
-    this.createBaddyTweenedSquad()
+    this.createBaddyTweenedSquad();
     this.baddie_next = 0;
     if (this.baddie_rate >= this.baddie_rate_min) {
       this.baddie_rate = this.baddie_rate - this.baddie_rate_accel;
@@ -215,19 +176,19 @@ GAME.game.prototype.animate = function() {
   //draw
   this.renderer.render(this.stage);
   window.requestAnimationFrame( this.animate );
-}
+};
 GAME.game.prototype.w = function(width) {
   if(typeof width !== 'undefined'){
     this.width = width;
   }
-  return this.width
-}
+  return this.width;
+};
 
 GAME.game.prototype.h = function(height) {
   if(typeof height !== 'undefined'){
     this.height = height;
   }
-  return this.height
+  return this.height;
 };
 
 GAME.game.prototype.addStar = function() {
@@ -287,6 +248,42 @@ GAME.game.prototype.newGame = function() {
   this.mech.removeFromStage();
   this.mech = new GAME.Mech(params);
   this.stage.addChild(this.mech.view);
+};
+
+GAME.game.prototype.fullscreen = function() {
+  var element = this.container;
+  if(element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if(element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if(element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if(element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  }
+  this.resize();
+};
+
+GAME.game.prototype.resize = function() {
+  console.log("resize");
+  WIDTH = this.width;
+  HEIGHT = this.height;
+  // let pixi choose WebGL or canvas
+  var screen_width = window.innerWidth;//800;
+  var screen_height = window.innerHeight;//600;
+  if(screen_width > screen_height) {
+    factor = screen_height / HEIGHT;
+  } else {
+    factor = screen_width / WIDTH;
+  }
+  calc_height = HEIGHT * factor;
+  calc_width = WIDTH * factor;
+  //console.log(factor, calc_height, screen_height, calc_width, screen_width);
+
+  this.renderer.view.style.display = "block";
+  this.renderer.view.style.width = calc_width + "px"; //"100%";
+  this.renderer.view.style.height = calc_height + "px"; //"100%";
+
 };
 
 //end game

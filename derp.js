@@ -72,8 +72,6 @@ function getTargetPoint(A,a) {
 
 
 function handleComplete(e) {
-  var instance = createjs.Sound.play("hit");
-  var instance = createjs.Sound.play("fire");
   console.log("doof");
 }
 
