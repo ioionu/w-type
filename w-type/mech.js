@@ -121,6 +121,7 @@ GAME.Mech.prototype.update = function(game) {
         bullet = this.bullet(this.w(), this.h());
         this.game.fire(bullet);
         this.fire_next = 0;
+        k_shoot = false;
       }
     }
 

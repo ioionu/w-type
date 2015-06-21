@@ -99,7 +99,7 @@ function handleKeyDown(e) {
   if(!e){ var e = window.event; }
 
   switch(e.keyCode) {
-    case KEYCODE_SPACE: k_shoot = true; return false;
+    case KEYCODE_SPACE: k_shoot = false; return false;
     case KEYCODE_A: k_left = true; return false;
     case KEYCODE_D: k_right = true; return false;
     case KEYCODE_W: k_up = true; return false;
@@ -112,7 +112,7 @@ function handleKeyUp(e) {
   //cross browser issues exist
   if(!e){ var e = window.event; }
   switch(e.keyCode) {
-    case KEYCODE_SPACE: k_shoot = false; return false; break;
+    case KEYCODE_SPACE: k_shoot = true; return false; break;
     case KEYCODE_A: k_left = false; return false; break;
     case KEYCODE_D: k_right = false; return false; break;
     case KEYCODE_W: k_up = false; return false; break;

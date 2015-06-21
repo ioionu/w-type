@@ -100,11 +100,16 @@ GAME.game.prototype.start = function(e) {
   this.e.score = new GAME.ScoreBoard(0, this.e.mech.lives);
   this.e.stage.addChild(this.e.score.view);
 
+  //top scores
+  this.e.top_scores = new GAME.TopScores(this.e);
+  console.log("top scores", this.e.top_scores.get());
+
   // add title
   this.e.title = new GAME.Title(this.e);
 
   //requestAnimFrame( this.e.animate );
   this.e.animate();
+
 
   //fullscreen events
   var _this = this.e;
@@ -236,6 +241,10 @@ GAME.game.prototype.fire = function(bullet) {
 GAME.game.prototype.gameOver = function() {
   console.log("game over man! game over!!!");
   this.mech.tombStone();
+  if(this.top_scores.check(this.mech.score)) {
+    var name = prompt("Hight Score! name?");
+    this.top_scores.submit({name: name, score: this.mech.score});
+  }
   this.title.show();
 
 };
@@ -243,11 +252,16 @@ GAME.game.prototype.gameOver = function() {
 GAME.game.prototype.newGame = function() {
   //TODO: use newGame() function for first game
   this.baddies = [];
+  this.baddie_rate = 250;
   // add player
   var params = {game: this, lives: 1};
   this.mech.removeFromStage();
   this.mech = new GAME.Mech(params);
   this.stage.addChild(this.mech.view);
+
+  this.score.updateLife(this.mech.lives);
+  this.score.updateScore(0);
+
 };
 
 GAME.game.prototype.fullscreen = function() {
