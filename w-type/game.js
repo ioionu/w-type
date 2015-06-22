@@ -141,14 +141,9 @@ GAME.game.prototype.animate = function() {
   // test for hits and move baddies
   for(var baddy = 0; baddy < this.baddies.length; baddy++) {
     if(this.baddies[baddy].active) {
-      //baddies[baddy].update();
       if(hitTest(this.mech, this.baddies[baddy])) {
-        //console.log("dead");
-        //baddies.splice(baddy, 1);
-        //かみかぜ
         this.mech.hit(20);
         this.baddies[baddy].die();
-	//this.stage.removeChild(baddies[baddy].view);
       }
 
       if(this.baddies[baddy].right() < (this.baddies[baddy].w() * -1)) {
@@ -161,7 +156,9 @@ GAME.game.prototype.animate = function() {
           //console.log("hit!!");
           this.baddies[baddy].hit(damage);
           this.baddies[baddy].recoil(this.bullets[bullet]);
-          this.bullets[bullet].die();
+          if(this.bullets[bullet].type !== 'super') {
+            this.bullets[bullet].die();
+          }
         }
         if(this.bullets[bullet].source != this.mech && hitTest(this.bullets[bullet], this.mech)) {
           this.bullets[bullet].die();

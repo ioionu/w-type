@@ -100,6 +100,7 @@ function handleKeyDown(e) {
 
   switch(e.keyCode) {
     case KEYCODE_SPACE: k_shoot = false; return false;
+    case KEYCODE_SPACE: k_charge = true; return false;
     case KEYCODE_A: k_left = true; return false;
     case KEYCODE_D: k_right = true; return false;
     case KEYCODE_W: k_up = true; return false;

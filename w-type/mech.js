@@ -29,9 +29,12 @@ GAME.Mech = function(params) {
   this.realAnimationSpeed = 0.20;
   this.pitch = 0.2; // when mech is moving up or down
   this.fire_next = 0;
+  this.charge = 0;
+  this.charged = 100;
 
+  this.filter = new PIXI.filters.SepiaFilter();
 
-  for(p in params) {
+  for(var p in params) {
     this[p] = params[p];
   }
 
@@ -61,13 +64,12 @@ GAME.Mech.prototype.moveDown = function(distance) {
   this.view.rotation = this.pitch;
 };
 
-
 GAME.Mech.prototype.moveRight = function(distance) {
   if(checkBounds(this.x() + distance, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
     this.view.position.x += distance;
   }
   this.view.rotation = 0;
-}
+};
 
 GAME.Mech.prototype.moveLeft = function(distance) {
   if(checkBounds(this.x() - distance, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
@@ -76,10 +78,10 @@ GAME.Mech.prototype.moveLeft = function(distance) {
   this.view.rotation = 0;
 };
 
-
 GAME.Mech.prototype.update = function(game) {
   this.view.animationSpeed = this.realAnimationSpeed;
   this.fire_next++;
+  this.charge++;
 
   p = {
     'x': this.view.position.x,
@@ -115,17 +117,26 @@ GAME.Mech.prototype.update = function(game) {
       this.view.rotation = 0;
     }
 
-    // shooth bullet
+    // shoot bullet
     if(k_shoot) {
       if(this.fire_next > this.game.firerate){
-        bullet = this.bullet(this.w(), this.h());
+        var bullet = this.bullet(this.w(), this.h());
+        if(this.charge > this.charged){
+          bullet.super();
+        }
         this.game.fire(bullet);
         this.fire_next = 0;
+        this.charge = 0;
         k_shoot = false;
+        k_charge = false;
       }
     }
 
-
+    if(this.charge > this.charged){
+      this.view.filters = [this.filter];
+    } else {
+      this.view.filters = null;
+    }
   }
 };
 
@@ -148,13 +159,13 @@ GAME.Mech.prototype.respawn = function() {
 
 GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
   //createjs.Sound.play("peow");
-  var x, y, a, A, b, distance;
+  var x, y, b, distance;
   var p = {};
 
   //find target...
   var A = this.r();
   var a = (A < 0) ? this.y() : this.game.renderer.height - this.y();
-  if(A != 0) {
+  if(A !== 0) {
     //console.log(A,a);
     p = getTargetPoint(A,a);
     b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed
@@ -179,13 +190,57 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
     'source': this,
     'damage': 25,
     'distance':distance,
-    'game': this.game
+    'game': this.game,
+    type: 'goodyBullet'
   });
   //this.bullets.push(bullet);
   //this.stage.addChild(bullet.view);
   //var instance = createjs.Sound.play("fire");
   return bullet;
 };
+
+GAME.Mech.prototype.superBullet = function(screen_width, screen_height) {
+  //createjs.Sound.play("peow");
+  var x, y, b, distance;
+  var p = {};
+
+  //find target...
+  var A = this.r();
+  var a = (A < 0) ? this.y() : this.game.renderer.height - this.y();
+  if(A !== 0) {
+    //console.log(A,a);
+    p = getTargetPoint(A,a);
+    b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed
+    p.y = (A > 0) ? this.game.renderer.height + 30 : 0-30;
+    p.x += this.x();
+    distance = Math.sqrt(a*a + b*b);
+  } else {
+    //shoot strait
+    p = {};
+    p.x = this.game.renderer.width + 30; //TODO remove hardcode 30
+
+    p.y = this.y();
+    distance = p.x - this.x();
+  }
+
+
+  bullet = new GAME.GoodyBullet({
+    'x1': this.x(),
+    'y1': this.y(),
+    'x2': p.x,
+    'y2': p.y,
+    'source': this,
+    'damage': 100,
+    distance: distance,
+    game: this.game,
+    type: 'superBullet'
+  });
+  //this.bullets.push(bullet);
+  //this.stage.addChild(bullet.view);
+  //var instance = createjs.Sound.play("fire");
+  return bullet;
+};
+
 
 /*
  * replace mech with tomb stone
