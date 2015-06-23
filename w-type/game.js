@@ -110,6 +110,8 @@ GAME.game.prototype.start = function(e) {
   //requestAnimFrame( this.e.animate );
   this.e.animate();
 
+  //touch events
+  this.e.touch = new GAME.Touch(this.e);
 
   //fullscreen events
   var _this = this.e;
