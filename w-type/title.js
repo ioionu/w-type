@@ -11,7 +11,11 @@ GAME.Title = function(game) {
   this.start.position = new PIXI.Point(left, top);
   this.start.interactive = true;
   var _this = this;
-  this.start.on('mousedown', function(e){
+  this.start.on('click', function(e){
+    _this.game.newGame();
+    _this.hide();
+  });
+  this.start.on('touchstart', function(e){
     _this.game.newGame();
     _this.hide();
   });
@@ -25,6 +29,9 @@ GAME.Title = function(game) {
   );
   this.fullscreen.interactive = true;
   this.fullscreen.on('click', function(e){
+    _this.game.fullscreen();
+  });
+  this.fullscreen.on('touchstart', function(e){
     _this.game.fullscreen();
   });
   this.view.addChild(this.fullscreen);

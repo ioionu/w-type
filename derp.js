@@ -34,15 +34,13 @@ var fire_next;
 
 
 function hitTest(a, b) {
-  if(typeof a != 'undefined' && typeof b != 'undefined') {
-    if(a.active && b.active && a.source != b && b.source != a) {
-      hx = a.x() - b.x();
-      hy = a.y() - b.y();
-      dist = Math.sqrt(hx*hx+hy*hy);
-      width_a = ((a.size()).h)/2;
-      width_b = ((b.size()).h)/2;
-      return dist <= width_a + width_b;
-    }
+  if(a.active && b.active && a.source != b && b.source != a) {
+    hx = a.x() - b.x();
+    hy = a.y() - b.y();
+    dist = Math.sqrt(hx*hx+hy*hy);
+    width_a = ((a.size()).h)/2;
+    width_b = ((b.size()).h)/2;
+    return dist <= width_a + width_b;
   }
   return false;
 }
@@ -132,4 +130,10 @@ function game(){
    baddie_rate_accel: baddie_rate_accel,
    baddie_rate_min: baddie_rate_min
  });
+}
+
+if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
 }

@@ -28,8 +28,8 @@ GAME.Touch = function(game){
     k_down=true;
   });
   this.hammer.on('tap', function(e){
-    console.log("tap", e);
     var half_way = window.innerWidth/2;
+    console.log("tap", half_way, e.center.x, e);
     if(e.center.x < half_way) {
       _this.clear();
     } else {
