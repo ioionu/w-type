@@ -78,24 +78,40 @@ GAME.Mech.prototype.moveLeft = function(distance) {
   this.view.rotation = 0;
 };
 
-GAME.Mech.prototype.moveTowards = function(x, y, distance){
+GAME.Mech.prototype.moveTowards = function(x, y, speed){
   var x1, y1;
-  var x0 = this.view.position.x - this.view.width;
+  var x0 = this.view.position.x;// - this.view.width;
   var y0 = this.view.position.y;
-  //console.log("moveTowards:", x, y, "at:", x0, y0);
+  x += this.view.width;
 
   var diffx = x0 - x;
   diffx = diffx < 0 ? diffx * -1 : diffx;
-  var distancex = diffx < distance ? diffx : distance;
+  speedx = diffx < speed ? diffx : speed;
 
   var diffy = y0 - y;
   diffy = diffy < 0 ? diffy * -1 : diffy;
-  var distancey = diffy < distance ? diffy : distance;
+  speedy = diffy < speed ? diffy : speed;
 
-  if (x0 < x) { this.view.position.x += distancex;}
-  if (x0 > x) { this.view.position.x -= distancex;}
-  if (y0 < y) { this.view.position.y += distancey;}
-  if (y0 > y) { this.view.position.y -= distancey;}
+  if(diffx > 0 || diffy > 0) {
+    //distance from mech to touch
+    var line = Math.sqrt(diffx * diffx + diffy * diffy);
+    var propx = speedx / line;
+    var propy = speedy / line;
+
+    x1 = x0 + propx * (x - x0);
+    y1 = y0 + propy * (y - y0);
+    console.log("current:", x0, "new point:", x1, "target:", x);
+
+    /*
+    if (x0 < x) { this.view.position.x += distancex;}
+    if (x0 > x) { this.view.position.x -= distancex;}
+    if (y0 < y) { this.view.position.y += distancey;}
+    if (y0 > y) { this.view.position.y -= distancey;}
+    */
+    this.view.position.x = x1;
+    this.view.position.y = y1;
+
+  }
 
 
 };
