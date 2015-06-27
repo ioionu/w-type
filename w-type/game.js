@@ -241,7 +241,7 @@ GAME.game.prototype.gameOver = function() {
   console.log("game over man! game over!!!");
   this.mech.tombStone();
   if(this.top_scores.check(this.mech.score)) {
-    var name = prompt("Hight Score! name?");
+    var name = 'AAA';//prompt("Hight Score! name?");
     this.top_scores.submit({name: name, score: this.mech.score});
   }
   this.title.show();

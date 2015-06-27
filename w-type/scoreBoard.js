@@ -12,13 +12,11 @@ GAME.ScoreBoard = function(score, lives) {
 GAME.ScoreBoard.prototype.updateScore = function(score) {
   this.score = score;
   this.update();
-  console.log("xscore: " + this.score);
 };
 
 GAME.ScoreBoard.prototype.updateLife = function(lives) {
   this.lives = lives;
   this.update();
-  console.log("xlives: " + this.lives);
 };
 
 GAME.ScoreBoard.prototype.update = function() {

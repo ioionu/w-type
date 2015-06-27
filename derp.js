@@ -23,7 +23,7 @@ var baddies = [];
 var stars = [];
 var nebula = [];
 var baddies_bullets = [];
-var baddie_rate = 250;
+var baddie_rate = 0;
 var baddie_rate_accel = 10;
 var baddie_rate_min = 50;
 var baddie_next;

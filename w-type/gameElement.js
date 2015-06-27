@@ -7,9 +7,9 @@ GAME.GameElement = function() {
   this.life_full = this.life;
   this.size = function(){
     return {
-      'w': this.view.texture.width
-     ,'h': this.view.texture.height
-    }
+      'w': this.view.texture.width,
+      'h': this.view.texture.height
+    };
   };
 
 };
@@ -17,7 +17,7 @@ GAME.GameElement = function() {
 GAME.GameElement.prototype.loadDefaultFrames = function(x){
   if( typeof this.frames == 'undefined') {
     this.frames = {};
-  };
+  }
   this.frames.explode = [
     PIXI.Texture.fromFrame("boom01.png"),
     PIXI.Texture.fromFrame("boom02.png"),

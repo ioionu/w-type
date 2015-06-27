@@ -78,6 +78,28 @@ GAME.Mech.prototype.moveLeft = function(distance) {
   this.view.rotation = 0;
 };
 
+GAME.Mech.prototype.moveTowards = function(x, y, distance){
+  var x1, y1;
+  var x0 = this.view.position.x - this.view.width;
+  var y0 = this.view.position.y;
+  console.log("moveTowards:", x, y, "at:", x0, y0);
+
+  var diffx = x0 - x;
+  diffx = diffx < 0 ? diffx * -1 : diffx;
+  var distancex = diffx < distance ? diffx : distance;
+
+  var diffy = y0 - y;
+  diffy = diffy < 0 ? diffy * -1 : diffy;
+  var distancey = diffy < distance ? diffy : distance;
+
+  if (x0 < x) { this.view.position.x += distancex;}
+  if (x0 > x) { this.view.position.x -= distancex;}
+  if (y0 < y) { this.view.position.y += distancey;}
+  if (y0 > y) { this.view.position.y -= distancey;}
+
+
+};
+
 GAME.Mech.prototype.update = function(game) {
   this.view.animationSpeed = this.realAnimationSpeed;
   this.fire_next++;
@@ -136,6 +158,11 @@ GAME.Mech.prototype.update = function(game) {
       this.view.filters = [this.filter];
     } else {
       this.view.filters = null;
+    }
+
+    //touch
+    if(this.game.touch.enabled) {
+      this.moveTowards(this.move_x, this.move_y, this.speed);
     }
   }
 };
