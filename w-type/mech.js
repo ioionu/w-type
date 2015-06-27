@@ -82,7 +82,7 @@ GAME.Mech.prototype.moveTowards = function(x, y, distance){
   var x1, y1;
   var x0 = this.view.position.x - this.view.width;
   var y0 = this.view.position.y;
-  console.log("moveTowards:", x, y, "at:", x0, y0);
+  //console.log("moveTowards:", x, y, "at:", x0, y0);
 
   var diffx = x0 - x;
   diffx = diffx < 0 ? diffx * -1 : diffx;
