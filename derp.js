@@ -4,18 +4,6 @@ var stage;
 var renderer;
 var mech;
 
-var KEYCODE_ENTER = 13;   //usefull keycode
-var KEYCODE_SPACE = 32;   //usefull keycode
-var KEYCODE_UP = 38;    //usefull keycode
-var KEYCODE_LEFT = 37;    //usefull keycode
-var KEYCODE_RIGHT = 39;   //usefull keycode
-var KEYCODE_W = 87;     //usefull keycode
-var KEYCODE_A = 65;     //usefull keycode
-var KEYCODE_D = 68;     //usefull keycode
-var KEYCODE_S = 83;     //usefull keycode
-//register key functions
-document.onkeydown = handleKeyDown;
-document.onkeyup = handleKeyUp;
 
 var k_left, k_right, k_up, k_down, k_shoot;
 var bullets = [];
@@ -91,36 +79,6 @@ function checkBounds(x,y,h,w,sw,sh, mode) {
   console.log("derp... checkbounds spacked out");
   return false;
 }
-
-//allow for WASD and arrow control scheme
-function handleKeyDown(e) {
-  //console.log(e.keyCode);
-  //cross browser issues exist
-  if(!e){ var e = window.event; }
-
-  switch(e.keyCode) {
-    case KEYCODE_SPACE: k_shoot = false; return false;
-    case KEYCODE_SPACE: k_charge = true; return false;
-    case KEYCODE_A: k_left = true; return false;
-    case KEYCODE_D: k_right = true; return false;
-    case KEYCODE_W: k_up = true; return false;
-    case KEYCODE_S: k_down = true; return false;
-    case KEYCODE_ENTER:  if(canvas.onclick == handleClick){ handleClick(); }return false;
-  }
-}
-
-function handleKeyUp(e) {
-  //cross browser issues exist
-  if(!e){ var e = window.event; }
-  switch(e.keyCode) {
-    case KEYCODE_SPACE: k_shoot = true; return false; break;
-    case KEYCODE_A: k_left = false; return false; break;
-    case KEYCODE_D: k_right = false; return false; break;
-    case KEYCODE_W: k_up = false; return false; break;
-    case KEYCODE_S: k_down = false; return false; break;
-  }
-}
-
 
 
 function game(){

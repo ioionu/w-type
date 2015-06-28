@@ -11,7 +11,7 @@ GAME.Mech = function(params) {
   this.game = params.game;
   this.lives = 3;
   this.score = 0;
-  this.speed = 6;
+  this.speed = 7;
   this.frames = {};
   this.loadDefaultFrames();
   this.frames.character = [
@@ -31,6 +31,8 @@ GAME.Mech = function(params) {
   this.fire_next = 0;
   this.charge = 0;
   this.charged = 100;
+  this.adj_altitude = false;
+
 
   this.filter = new PIXI.filters.SepiaFilter();
 
@@ -44,10 +46,6 @@ GAME.Mech = function(params) {
 GAME.Mech.constructor = GAME.Mech;
 
 GAME.Mech.prototype = new GAME.GameElement();
-
-GAME.Mech.prototype.derp = function() {
-  console.log("derp");
-};
 
 
 GAME.Mech.prototype.moveUp = function(distance) {
@@ -100,17 +98,9 @@ GAME.Mech.prototype.moveTowards = function(x, y, speed){
 
     x1 = x0 + propx * (x - x0);
     y1 = y0 + propy * (y - y0);
-    console.log("current:", x0, "new point:", x1, "target:", x);
 
-    /*
-    if (x0 < x) { this.view.position.x += distancex;}
-    if (x0 > x) { this.view.position.x -= distancex;}
-    if (y0 < y) { this.view.position.y += distancey;}
-    if (y0 > y) { this.view.position.y -= distancey;}
-    */
     this.view.position.x = x1;
     this.view.position.y = y1;
-
   }
 
 
@@ -132,31 +122,30 @@ GAME.Mech.prototype.update = function(game) {
   };
 
   if (this.active) {
-    var adj_altitude = false;
-    if(k_up) {
+    if(this.game.keyboard.k_up) {
       this.moveUp(this.speed);
-      adj_altitude = true;
+      this.adj_altitude = true;
     }
 
-    if(k_down) {
+    if(this.game.keyboard.k_down) {
       this.moveDown(this.speed);
-      adj_altitude = true;
+      this.adj_altitude = true;
     }
 
-    if(k_left) {
+    if(this.game.keyboard.k_left) {
       this.moveLeft(this.speed/2);
     }
 
-    if(k_right) {
+    if(this.game.keyboard.k_right) {
       this.moveRight(this.speed);
     }
 
-    if(adj_altitude === false) {
+    if(this.adj_altitude === false) {
       this.view.rotation = 0;
     }
 
     // shoot bullet
-    if(k_shoot) {
+    if(this.game.keyboard.k_shoot) {
       if(this.fire_next > this.game.firerate){
         var bullet = this.bullet(this.w(), this.h());
         if(this.charge > this.charged){
@@ -165,8 +154,8 @@ GAME.Mech.prototype.update = function(game) {
         this.game.fire(bullet);
         this.fire_next = 0;
         this.charge = 0;
-        k_shoot = false;
-        k_charge = false;
+        this.game.keyboard.k_shoot = false;
+        this.game.keyboard.k_charge = false;
       }
     }
 

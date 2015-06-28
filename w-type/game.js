@@ -110,6 +110,8 @@ GAME.game.prototype.start = function(e) {
   //requestAnimFrame( this.e.animate );
   this.e.animate();
 
+  //keyboard events
+  this.e.keyboard = new GAME.Keyboard(this.e);
   //touch events
   this.e.touch = new GAME.Touch(this.e);
 
@@ -195,6 +197,14 @@ GAME.game.prototype.h = function(height) {
   return this.height;
 };
 
+GAME.game.prototype.scaledWidth = function() {
+  return this.renderer.view.style.width;
+};
+
+GAME.game.prototype.scaledHeight = function() {
+  return this.renderer.view.style.height;
+};
+
 GAME.game.prototype.addStar = function() {
   var star = new GAME.Star(this.w(),(Math.random()*this.h()));
   this.stars.push(star);
@@ -241,8 +251,7 @@ GAME.game.prototype.gameOver = function() {
   console.log("game over man! game over!!!");
   this.mech.tombStone();
   if(this.top_scores.check(this.mech.score)) {
-    var name = 'AAA';//prompt("Hight Score! name?");
-    this.top_scores.submit({name: name, score: this.mech.score});
+    this.top_scores.showPlayerName();
   }
   this.title.show();
 
@@ -298,5 +307,44 @@ GAME.game.prototype.resize = function() {
   this.renderer.view.style.height = calc_height + "px"; //"100%";
 
 };
+
+GAME.game.prototype.hitTest = function(a, b) {
+  if(a.active && b.active) {
+    if(a.source != b && b.source != a){
+      hx = a.x() - b.x();
+      hy = a.y() - b.y();
+      dist = Math.sqrt(hx*hx+hy*hy);
+      width_a = ((a.size()).h)/2;
+
+      width_b = ((b.size()).h)/2;
+      return dist <= width_a + width_b;
+    }
+  }
+  return false;
+};
+
+GAME.game.prototype.getAngle = function(x1,y1,x2,y2) {
+  return Math.atan2(  (y1-y2) ,(x1-x2)) ;//* 180 / Math.PI;
+};
+
+/* A = the angle of the ship in radians
+ * a = the distance from the top of the renderer
+ */
+GAME.game.prototype.getTargetPoint = function(A,a) {
+  if(A === 0) {
+    return false;
+  }
+  //if A is negative make it possitive
+  A = A < 0 ? A * -1 : A;
+  A = A*2;
+  var C = 90; //TODO use radians not degrees
+  A = A / (Math.PI/180); //convert radians to degree... because im dumb
+  var B = 180 - A - C;
+
+  var b = Math.sin( B * (Math.PI/180) ) * a / Math.sin( A * (Math.PI/180) );
+
+  return {x:b,y:a};
+};
+
 
 //end game
