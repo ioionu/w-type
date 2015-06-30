@@ -44,7 +44,7 @@ GAME.Touch.prototype.touchEnd = function(e){
 
     if(duration < 200) {
       //console.log("touch length", id, this.current_touches[id], e.timeStamp);
-      k_shoot = true;
+      this.k_shoot = true;
     }
   }
 };

@@ -87,6 +87,7 @@ GAME.Mech.prototype.moveTowards = function(x, y, speed){
   speedx = diffx < speed ? diffx : speed;
 
   var diffy = y0 - y;
+  var altitude_distance = diffy;
   diffy = diffy < 0 ? diffy * -1 : diffy;
   speedy = diffy < speed ? diffy : speed;
 
@@ -101,6 +102,14 @@ GAME.Mech.prototype.moveTowards = function(x, y, speed){
 
     this.view.position.x = x1;
     this.view.position.y = y1;
+  }
+
+  var pitch_threshold = 10;
+  if(altitude_distance > pitch_threshold) {
+    this.view.rotation = this.pitch * -1;
+  }
+  if(altitude_distance < (pitch_threshold * -1)) {
+    this.view.rotation = this.pitch;
   }
 
 
@@ -132,6 +141,15 @@ GAME.Mech.prototype.update = function(game) {
       this.adj_altitude = true;
     }
 
+    //touch
+    if(this.game.touch.enabled) {
+      this.moveTowards(this.move_x, this.move_y, this.speed);
+    }
+
+    if(!this.game.keyboard.k_down && !this.game.keyboard.k_up && !this.game.touch.enabled){
+      this.adj_altitude = false;
+    }
+
     if(this.game.keyboard.k_left) {
       this.moveLeft(this.speed/2);
     }
@@ -145,7 +163,7 @@ GAME.Mech.prototype.update = function(game) {
     }
 
     // shoot bullet
-    if(this.game.keyboard.k_shoot) {
+    if(this.game.keyboard.k_shoot || this.game.touch.k_shoot) {
       if(this.fire_next > this.game.firerate){
         var bullet = this.bullet(this.w(), this.h());
         if(this.charge > this.charged){
@@ -156,6 +174,8 @@ GAME.Mech.prototype.update = function(game) {
         this.charge = 0;
         this.game.keyboard.k_shoot = false;
         this.game.keyboard.k_charge = false;
+        this.game.touch.k_shoot = false;
+        this.game.touch.k_charge = false;
       }
     }
 
@@ -165,10 +185,6 @@ GAME.Mech.prototype.update = function(game) {
       this.view.filters = null;
     }
 
-    //touch
-    if(this.game.touch.enabled) {
-      this.moveTowards(this.move_x, this.move_y, this.speed);
-    }
   }
 };
 
@@ -196,6 +212,7 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
 
   //find target...
   var A = this.r();
+  console.log("rotation", A);
   var a = (A < 0) ? this.y() : this.game.renderer.height - this.y();
   if(A !== 0) {
     //console.log(A,a);
