@@ -107,19 +107,21 @@ GAME.game.prototype.start = function(e) {
   // add title
   this.e.title = new GAME.Title(this.e);
 
-  //requestAnimFrame( this.e.animate );
-  this.e.animate();
-
   //keyboard events
-  this.e.keyboard = new GAME.Keyboard(this.e);
-  //touch events
-  this.e.touch = new GAME.Touch(this.e);
+  this.e.inputs = [
+    new GAME.Keyboard(this.e),
+    new GAME.Touch(this.e)
+  ];
+
 
   //fullscreen events
   var _this = this.e;
   window.onresize = function(e){
     _this.resize();
   };
+  //requestAnimFrame( this.e.animate );
+  this.e.animate();
+
 
 };
 
@@ -183,6 +185,17 @@ GAME.game.prototype.animate = function() {
   this.renderer.render(this.stage);
   window.requestAnimationFrame( this.animate );
 };
+
+GAME.game.prototype.enableInput = function(input){
+  for(var i = 0; i < this.inputs.length; i++){
+    if(this.inputs[i] == input) {
+      this.inputs[i].enable();
+    } else {
+      this.inputs[i].disable();
+    }
+  }
+};
+
 GAME.game.prototype.w = function(width) {
   if(typeof width !== 'undefined'){
     this.width = width;

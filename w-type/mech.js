@@ -32,6 +32,13 @@ GAME.Mech = function(params) {
   this.charge = 0;
   this.charged = 100;
   this.adj_altitude = false;
+  this.state = {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+    shoot: false,
+  };
 
 
   this.filter = new PIXI.filters.SepiaFilter();
@@ -47,6 +54,9 @@ GAME.Mech.constructor = GAME.Mech;
 
 GAME.Mech.prototype = new GAME.GameElement();
 
+GAME.Mech.prototype.resetState = function(){
+  this.state = {};
+};
 
 GAME.Mech.prototype.moveUp = function(distance) {
   if(checkBounds(this.x(), this.y() - distance, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
@@ -104,21 +114,28 @@ GAME.Mech.prototype.moveTowards = function(x, y, speed){
     this.view.position.y = y1;
   }
 
-  var pitch_threshold = 10;
+  var pitch_threshold = 5;
+  this.adj_altitude = false;
   if(altitude_distance > pitch_threshold) {
+    console.log("dist", altitude_distance, "threshold", pitch_threshold);
+
     this.view.rotation = this.pitch * -1;
+    this.adj_altitude = true;
   }
   if(altitude_distance < (pitch_threshold * -1)) {
     this.view.rotation = this.pitch;
+    this.adj_altitude = true;
   }
-
-
+  if(altitude_distance <= pitch_threshold && altitude_distance >= 0) {
+    this.view.rotation = 0;
+  }
 };
 
 GAME.Mech.prototype.update = function(game) {
   this.view.animationSpeed = this.realAnimationSpeed;
   this.fire_next++;
   this.charge++;
+
 
   p = {
     'x': this.view.position.x,
@@ -131,60 +148,25 @@ GAME.Mech.prototype.update = function(game) {
   };
 
   if (this.active) {
-    if(this.game.keyboard.k_up) {
-      this.moveUp(this.speed);
-      this.adj_altitude = true;
-    }
 
-    if(this.game.keyboard.k_down) {
-      this.moveDown(this.speed);
-      this.adj_altitude = true;
-    }
-
-    //touch
-    if(this.game.touch.enabled) {
-      this.moveTowards(this.move_x, this.move_y, this.speed);
-    }
-
-    if(!this.game.keyboard.k_down && !this.game.keyboard.k_up && !this.game.touch.enabled){
-      this.adj_altitude = false;
-    }
-
-    if(this.game.keyboard.k_left) {
-      this.moveLeft(this.speed/2);
-    }
-
-    if(this.game.keyboard.k_right) {
-      this.moveRight(this.speed);
-    }
-
-    if(this.adj_altitude === false) {
-      this.view.rotation = 0;
-    }
-
-    // shoot bullet
-    if(this.game.keyboard.k_shoot || this.game.touch.k_shoot) {
-      if(this.fire_next > this.game.firerate){
-        var bullet = this.bullet(this.w(), this.h());
-        if(this.charge > this.charged){
-          bullet.super();
-        }
-        this.game.fire(bullet);
-        this.fire_next = 0;
-        this.charge = 0;
-        this.game.keyboard.k_shoot = false;
-        this.game.keyboard.k_charge = false;
-        this.game.touch.k_shoot = false;
-        this.game.touch.k_charge = false;
+    //get inputs from game
+    var inputs = this.game.inputs;
+    var active_input;
+    for(var i = 0; i < inputs.length; i++){
+      if(inputs[i].enabled){
+        this.state = inputs[i].getState();
+        active_input = inputs[i];
       }
     }
-
+    active_input.update();
     if(this.charge > this.charged){
       this.view.filters = [this.filter];
     } else {
       this.view.filters = null;
     }
 
+
+    //this.resetState();
   }
 };
 
