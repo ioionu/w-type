@@ -53,9 +53,6 @@ GAME.Keyboard.prototype.handleKeyDown = function(e) {
   if(!this.enabled){
     this.game.enableInput(this);
   }
-
-
-  console.log(e.keyCode);
   switch(e.keyCode) {
     case this.KEYCODE_SPACE:
       this.state.shoot = false;

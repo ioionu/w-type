@@ -6,8 +6,8 @@ GAME.Touch = function(game){
   this.move_id = 0;
   this.enabled = true;
   this.state = {
-    targetx: 0,
-    targety: 0,
+    targetx: 100, //TODO: get defult from current mech pos
+    targety: 240,
     touch: false
   };
   this.direction_element = document.getElementById(this.game.id);
@@ -43,7 +43,7 @@ GAME.Touch.prototype.disable = function(){
 GAME.Touch.prototype.update = function(){
   var mech = this.game.mech;
   mech.moveTowards(this.state.targetx, this.state.targety, mech.speed);
-  
+
   if(this.state.shoot) {
     if(mech.fire_next > this.game.firerate){
       var bullet = mech.bullet(mech.w(), mech.h());

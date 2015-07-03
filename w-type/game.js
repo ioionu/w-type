@@ -274,6 +274,10 @@ GAME.game.prototype.gameOver = function() {
 };
 
 GAME.game.prototype.newGame = function() {
+
+  //enable keyboard... bit of a hack, not really needed
+  this.enableInput(this.inputs[0]);
+  
   //TODO: use newGame() function for first game
   this.baddies = [];
   this.baddie_rate = 250;
@@ -285,6 +289,7 @@ GAME.game.prototype.newGame = function() {
 
   this.score.updateLife(this.mech.lives);
   this.score.updateScore(0);
+
 
 };
 
