@@ -104,7 +104,7 @@ GAME.BaddyTweened.prototype.bullet = function() {
 };
 
 GAME.BaddyTweened.prototype.inBounds = function() {
-  return checkBounds(
+  return GAME.game.checkBounds(
     this.view.position.x,
     this.view.position.y,
     this.view.width,

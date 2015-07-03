@@ -148,7 +148,7 @@ GAME.game.prototype.animate = function() {
   for(var baddy in this.baddies) {
     if(this.baddies.hasOwnProperty(baddy)) {
       if(this.baddies[baddy].active) {
-        if(hitTest(this.mech, this.baddies[baddy])) {
+        if(GAME.game.hitTest(this.mech, this.baddies[baddy])) {
           this.mech.hit(20);
           this.baddies[baddy].die();
         }
@@ -159,7 +159,7 @@ GAME.game.prototype.animate = function() {
         }
         for(var bullet = 0; bullet < this.bullets.length; bullet++) {
           damage = this.bullets[bullet].damage;
-          if(hitTest(this.bullets[bullet], this.baddies[baddy])) {
+          if(GAME.game.hitTest(this.bullets[bullet], this.baddies[baddy])) {
             //console.log("hit!!");
             this.baddies[baddy].hit(damage);
             this.baddies[baddy].recoil(this.bullets[bullet]);
@@ -167,7 +167,7 @@ GAME.game.prototype.animate = function() {
               this.bullets[bullet].die();
             }
           }
-          if(this.bullets[bullet].source != this.mech && hitTest(this.bullets[bullet], this.mech)) {
+          if(this.bullets[bullet].source != this.mech && GAME.game.hitTest(this.bullets[bullet], this.mech)) {
             this.bullets[bullet].die();
             this.mech.hit(damage);
             this.mech.recoil(this.bullets[bullet]);
@@ -277,7 +277,7 @@ GAME.game.prototype.newGame = function() {
 
   //enable keyboard... bit of a hack, not really needed
   this.enableInput(this.inputs[0]);
-  
+
   //TODO: use newGame() function for first game
   this.baddies = [];
   this.baddie_rate = 250;
@@ -329,21 +329,6 @@ GAME.game.prototype.resize = function() {
 
 };
 
-GAME.game.prototype.hitTest = function(a, b) {
-  if(a.active && b.active) {
-    if(a.source != b && b.source != a){
-      hx = a.x() - b.x();
-      hy = a.y() - b.y();
-      dist = Math.sqrt(hx*hx+hy*hy);
-      width_a = ((a.size()).h)/2;
-
-      width_b = ((b.size()).h)/2;
-      return dist <= width_a + width_b;
-    }
-  }
-  return false;
-};
-
 GAME.game.prototype.getAngle = function(x1,y1,x2,y2) {
   return Math.atan2(  (y1-y2) ,(x1-x2)) ;//* 180 / Math.PI;
 };
@@ -351,7 +336,7 @@ GAME.game.prototype.getAngle = function(x1,y1,x2,y2) {
 /* A = the angle of the ship in radians
  * a = the distance from the top of the renderer
  */
-GAME.game.prototype.getTargetPoint = function(A,a) {
+GAME.game.getTargetPoint = function(A,a) {
   if(A === 0) {
     return false;
   }
@@ -367,5 +352,33 @@ GAME.game.prototype.getTargetPoint = function(A,a) {
   return {x:b,y:a};
 };
 
+GAME.game.hitTest = function(a, b) {
+  if(a.active && b.active) {
+    if(a.source != b && b.source != a){
+      hx = a.x() - b.x();
+      hy = a.y() - b.y();
+      dist = Math.sqrt(hx*hx+hy*hy);
+      width_a = ((a.size()).h)/2;
+      width_b = ((b.size()).h)/2;
+      return dist <= width_a + width_b;
+    }
+  }
+  return false;
+};
 
+GAME.game.checkBounds = function(x,y,h,w,sw,sh, mode) {
+
+  if(mode == 'inside'){
+
+    if(x - w/2 > 0 && x + w/2 < sw && y - h/2 > 0 && y + h/2 < sh){return true;}
+    else {return false;}
+  }
+  else if(mode == 'outside'){
+
+    if(x + w/2 > 0 && x - w/2 < sw && y + h/2 > 0 && y - h/2 < sh){return true;}
+    else {return false;}
+  }
+  console.log("derp... checkbounds spacked out");
+  return false;
+};
 //end game

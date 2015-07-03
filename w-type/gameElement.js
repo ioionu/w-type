@@ -147,11 +147,11 @@ GAME.GameElement.prototype.removeFromStage = function(){
 GAME.GameElement.prototype.recoil = function(bullet) {
   var recoil = 10;
   if(bullet.x() < this.x()) {
-    if(checkBounds(this.x() + recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+    if(GAME.game.checkBounds(this.x() + recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
       this.x( this.x()+recoil);
     }
   } else {
-    if(checkBounds(this.x() - recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+    if(GAME.game.checkBounds(this.x() - recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
       this.x( this.x()-recoil);
     }
   }

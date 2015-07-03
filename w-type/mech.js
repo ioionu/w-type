@@ -59,28 +59,28 @@ GAME.Mech.prototype.resetState = function(){
 };
 
 GAME.Mech.prototype.moveUp = function(distance) {
-  if(checkBounds(this.x(), this.y() - distance, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+  if(GAME.game.checkBounds(this.x(), this.y() - distance, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
     this.view.position.y -= distance;
   }
   this.view.rotation = this.pitch * -1;
 };
 
 GAME.Mech.prototype.moveDown = function(distance) {
-  if(checkBounds(this.x(), this.y() + distance, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+  if(GAME.game.checkBounds(this.x(), this.y() + distance, this.h(), this.w(), this.game.width, this.game.height, 'inside')){
     this.view.position.y += distance;
   }
   this.view.rotation = this.pitch;
 };
 
 GAME.Mech.prototype.moveRight = function(distance) {
-  if(checkBounds(this.x() + distance, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+  if(GAME.game.checkBounds(this.x() + distance, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
     this.view.position.x += distance;
   }
   this.view.rotation = 0;
 };
 
 GAME.Mech.prototype.moveLeft = function(distance) {
-  if(checkBounds(this.x() - distance, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
+  if(GAME.game.checkBounds(this.x() - distance, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')){
     this.view.position.x -= distance;
   }
   this.view.rotation = 0;
@@ -117,8 +117,6 @@ GAME.Mech.prototype.moveTowards = function(x, y, speed){
   var pitch_threshold = 5;
   this.adj_altitude = false;
   if(altitude_distance > pitch_threshold) {
-    console.log("dist", altitude_distance, "threshold", pitch_threshold);
-
     this.view.rotation = this.pitch * -1;
     this.adj_altitude = true;
   }
@@ -198,7 +196,7 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
   var a = (A < 0) ? this.y() : this.game.renderer.height - this.y();
   if(A !== 0) {
     //console.log(A,a);
-    p = getTargetPoint(A,a);
+    p = GAME.game.getTargetPoint(A,a);
     b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed
     p.y = (A > 0) ? this.game.renderer.height + 30 : 0-30;
     p.x += this.x();
@@ -240,7 +238,7 @@ GAME.Mech.prototype.superBullet = function(screen_width, screen_height) {
   var a = (A < 0) ? this.y() : this.game.renderer.height - this.y();
   if(A !== 0) {
     //console.log(A,a);
-    p = getTargetPoint(A,a);
+    p = GAME.game.getTargetPoint(A,a);
     b = p.x; //stash x as we use it to calculate the side c, and use that to calc speed
     p.y = (A > 0) ? this.game.renderer.height + 30 : 0-30;
     p.x += this.x();

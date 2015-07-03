@@ -1,7 +1,6 @@
 var GAME = GAME || {};
 
 GAME.Touch = function(game){
-  console.log("touch this", game);
   this.game = game;
   this.move_id = 0;
   this.enabled = true;
@@ -66,7 +65,6 @@ GAME.Touch.prototype.touchStart = function(e){
   if(!this.enabled){
     this.game.enableInput(this);
   }
-  console.log('start', e, _this, this);
   this.state.touch = true;
   var id;
   for(var i = 0; i < e.touches.length; i++){
