@@ -145,38 +145,41 @@ GAME.game.prototype.animate = function() {
 
 
   // test for hits and move baddies
-  for(var baddy = 0; baddy < this.baddies.length; baddy++) {
-    if(this.baddies[baddy].active) {
-      if(hitTest(this.mech, this.baddies[baddy])) {
-        this.mech.hit(20);
-        this.baddies[baddy].die();
-      }
+  for(var baddy in this.baddies) {
+    if(this.baddies.hasOwnProperty(baddy)) {
+      if(this.baddies[baddy].active) {
+        if(hitTest(this.mech, this.baddies[baddy])) {
+          this.mech.hit(20);
+          this.baddies[baddy].die();
+        }
 
-      if(this.baddies[baddy].right() < (this.baddies[baddy].w() * -1)) {
-        this.baddies[baddy].die();
-        this.baddies[baddy].removeFromStage();
-      }
-      for(var bullet = 0; bullet < this.bullets.length; bullet++) {
-        damage = this.bullets[bullet].damage;
-        if(hitTest(this.bullets[bullet], this.baddies[baddy])) {
-          //console.log("hit!!");
-          this.baddies[baddy].hit(damage);
-          this.baddies[baddy].recoil(this.bullets[bullet]);
-          if(this.bullets[bullet].type !== 'super') {
+        if(this.baddies[baddy].right() < (this.baddies[baddy].w() * -1)) {
+          this.baddies[baddy].die();
+          this.baddies[baddy].removeFromStage();
+        }
+        for(var bullet = 0; bullet < this.bullets.length; bullet++) {
+          damage = this.bullets[bullet].damage;
+          if(hitTest(this.bullets[bullet], this.baddies[baddy])) {
+            //console.log("hit!!");
+            this.baddies[baddy].hit(damage);
+            this.baddies[baddy].recoil(this.bullets[bullet]);
+            if(this.bullets[bullet].type !== 'super') {
+              this.bullets[bullet].die();
+            }
+          }
+          if(this.bullets[bullet].source != this.mech && hitTest(this.bullets[bullet], this.mech)) {
             this.bullets[bullet].die();
+            this.mech.hit(damage);
+            this.mech.recoil(this.bullets[bullet]);
           }
         }
-        if(this.bullets[bullet].source != this.mech && hitTest(this.bullets[bullet], this.mech)) {
-          this.bullets[bullet].die();
-          this.mech.hit(damage);
-          this.mech.recoil(this.bullets[bullet]);
-        }
-      }
 
-    }
-    if(this.baddies[baddy].remove) {
-      //if this baddy is not active then remove it from stage
-      this.baddies[baddy].removeFromStage();
+      }
+      if(this.baddies[baddy].remove) {
+        //if this baddy is not active then remove it from stage
+        this.baddies[baddy].removeFromStage();
+        delete this.baddies[baddy];
+      }
     }
   }
 
