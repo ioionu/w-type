@@ -1,5 +1,5 @@
 function game(){
- g = new GAME.game({
+ var g = new GAME.game({
    width: 800,
    height: 600,
    firerate: 10,
