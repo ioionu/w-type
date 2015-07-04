@@ -1,5 +1,6 @@
+var g;
 function game(){
- var g = new GAME.game({
+ g = new GAME.game({
    width: 800,
    height: 600,
    firerate: 10,

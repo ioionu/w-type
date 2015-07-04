@@ -3,38 +3,55 @@ var GAME = GAME || {};
 GAME.Title = function(game) {
   this.game = game;
   this.view = new PIXI.Container();
+  this.screens = {
+    title: this.titleScreen(),
+    option: this.optionScreen()
+  };
+  this.view.addChild(this.screens.title);
+  this.view.addChild(this.screens.option);
 
-  this.start = PIXI.Sprite.fromImage('sprite/newGame01.png');
+  this.game.stage.addChild(this.view);
+
+  //set title position
+};
+
+GAME.Title.prototype.titleScreen = function(){
+  var title = new PIXI.Container();
+  title.visible = true;
+
+  var start = PIXI.Sprite.fromImage('sprite/newGame01.png');
   var left = (this.game.width * 0.5);
   var top = (this.game.height * 0.25);
-  this.start.anchor = new PIXI.Point(0.5, 0.5);
-  this.start.position = new PIXI.Point(left, top);
-  this.start.interactive = true;
+  start.anchor = new PIXI.Point(0.5, 0.5);
+  start.position = new PIXI.Point(left, top);
+  start.interactive = true;
   var _this = this;
-  this.start.on('click', function(e){
+  start.on('click', function(e){
     _this.game.newGame();
     _this.hide();
   });
-  this.start.on('touchstart', function(e){
+  start.on('touchstart', function(e){
     _this.game.newGame();
     _this.hide();
   });
-  this.view.addChild(this.start);
+  title.addChild(start);
 
-  this.fullscreen = PIXI.Sprite.fromImage('sprite/fullscreen.png');
-  this.fullscreen.anchor = new PIXI.Point(0.5, 0.5);
-  this.fullscreen.position = new PIXI.Point(
-    this.game.width * 0.5,
-    this.game.height * 0.5
+  var option = PIXI.Sprite.fromImage('sprite/options.png');
+  option.anchor = new PIXI.Point(0.5, 0.5);
+  option.position = new PIXI.Point(
+    (this.game.width * 0.5),
+    (this.game.height * 0.5)
   );
-  this.fullscreen.interactive = true;
-  this.fullscreen.on('click', function(e){
-    _this.game.fullscreen();
+  option.interactive = true;
+  option.on('click', function(e){
+    _this.screens.option.visible=true;
+    _this.screens.title.visible=false;
   });
-  this.fullscreen.on('touchstart', function(e){
-    _this.game.fullscreen();
+  option.on('touchstart', function(e){
+    _this.screens.option.visible=true;
+    _this.screens.title.visible=false;
   });
-  this.view.addChild(this.fullscreen);
+  title.addChild(option);
 
   this.top_scores = new PIXI.Text(this.game.top_scores.getString(), {font : '24px Arial', fill : 0x0000, align : 'center'});
   this.top_scores.anchor = new PIXI.Point(0.5, 0.5);
@@ -42,14 +59,77 @@ GAME.Title = function(game) {
     this.game.width * 0.5,
     this.game.height * 0.75
   );
-  this.view.addChild(this.top_scores);
+  title.addChild(this.top_scores);
+  return title;
 
-  this.game.stage.addChild(this.view);
+};
 
-  //set title position
+GAME.Title.prototype.optionScreen = function() {
+  var option = new PIXI.Container();
+  option.visible = false;
+
+  var fullscreen = PIXI.Sprite.fromImage('sprite/fullscreen.png');
+  fullscreen.anchor = new PIXI.Point(0.5, 0.5);
+  fullscreen.position = new PIXI.Point(
+    this.game.width * 0.5,
+    this.game.height * 0.25
+  );
+  fullscreen.interactive = true;
+  fullscreen.on('click', function(e){
+    _this.game.fullscreen();
+  });
+  fullscreen.on('touchstart', function(e){
+    _this.game.fullscreen();
+  });
+
+  option.addChild(fullscreen);
+
+  //toggle stretch
+  var stretch = PIXI.Sprite.fromImage('sprite/streatch.png');
+  stretch.anchor = new PIXI.Point(0.5, 0.5);
+  stretch.position = new PIXI.Point(
+    this.game.width * 0.5,
+    this.game.height * 0.5
+  );
+  stretch.interactive = true;
+  var _this = this;
+
+  stretch.on('click', function(e){
+    _this.game.toggleStretch();
+    _this.game.resize();
+  });
+  stretch.on('touchstart', function(e){
+    _this.game.toggleStretch();
+    _this.game.resize();
+  });
+  option.addChild(stretch);
+
+  //toggle stretch
+  var back = PIXI.Sprite.fromImage('sprite/back.png');
+  back.anchor = new PIXI.Point(0.5, 0.5);
+  back.position = new PIXI.Point(
+    this.game.width * 0.5,
+    this.game.height * 0.75
+  );
+  back.interactive = true;
+
+  back.on('click', function(e){
+    _this.screens.option.visible=false;
+    _this.screens.title.visible=true;
+  });
+  back.on('touchstart', function(e){
+    _this.screens.option.visible=false;
+    _this.screens.title.visible=true;
+  });
+  option.addChild(back);
+
+
+  return option;
 };
 
 GAME.Title.prototype.show = function() {
+  this.screens.option.visible=false;
+  this.screens.title.visible=true;
   this.view.visible = true;
 };
 

@@ -1,0 +1,26 @@
+{
+  "name": "w-type",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ioionu/w-type",
+  "authors": [
+    "josh <io@ioio.nu>"
+  ],
+  "description": "A simple r-type clone in PIXI.js.",
+  "main": "index.html",
+  "keywords": [
+    "game",
+    "pixi.js"
+  ],
+  "license": "GPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "fastclick": "~1.0.6",
+    "pixi.js": "~3.0.6"
+  }
+}

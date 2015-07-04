@@ -9,6 +9,7 @@ GAME.game = function(params) {
   //TODO: im sure this could do something awesome!
   this.width = 800;
   this.height = 600;
+  this.stretch = true;
   this.sprite_sheet = ['SpriteSheet.json', 'page.jpg'];
   this.id = "game";
 
@@ -309,24 +310,40 @@ GAME.game.prototype.fullscreen = function() {
 
 GAME.game.prototype.resize = function() {
   console.log("resize");
-  WIDTH = this.width;
-  HEIGHT = this.height;
-  // let pixi choose WebGL or canvas
-  var screen_width = window.innerWidth;//800;
-  var screen_height = window.innerHeight;//600;
-  if(screen_width > screen_height) {
-    factor = screen_height / HEIGHT;
+  // do we stretch to fullscreen ot keep aspect ratio?
+  if(this.stretch) {
+    WIDTH = this.width;
+    HEIGHT = this.height;
+    // let pixi choose WebGL or canvas
+    var screen_width = window.innerWidth;//800;
+    var screen_height = window.innerHeight;//600;
+    if(screen_width > screen_height) {
+      factor = screen_height / HEIGHT;
+    } else {
+      factor = screen_width / WIDTH;
+    }
+    //console.log(factor, calc_height, screen_height, calc_width, screen_width);
+
+    this.renderer.view.style.display = "block";
+    calc_height = HEIGHT * factor + "px";
+    calc_width = WIDTH * factor + "px";
   } else {
-    factor = screen_width / WIDTH;
+    calc_height = window.innerHeight + "px";
+    calc_width = "100%";
   }
-  calc_height = HEIGHT * factor;
-  calc_width = WIDTH * factor;
-  //console.log(factor, calc_height, screen_height, calc_width, screen_width);
+  this.renderer.view.style.width = calc_width; //"100%";
+  this.renderer.view.style.height = calc_height; //"100%";
+};
 
-  this.renderer.view.style.display = "block";
-  this.renderer.view.style.width = calc_width + "px"; //"100%";
-  this.renderer.view.style.height = calc_height + "px"; //"100%";
-
+GAME.game.prototype.toggleStretch = function(){
+  if(this.stretch) {
+    this.stretch = false;
+  }
+  else
+  {
+    this.stretch = true;
+  }
+  return this.stretch;
 };
 
 GAME.game.prototype.getAngle = function(x1,y1,x2,y2) {
