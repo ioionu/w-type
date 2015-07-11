@@ -1,7 +1,7 @@
 var g;
 function game(){
  g = new GAME.game({
-   width: 800,
+   width: 1024,
    height: 600,
    firerate: 10,
    baddie_rate: 0,

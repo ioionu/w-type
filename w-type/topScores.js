@@ -108,14 +108,13 @@ GAME.TopScores.prototype.submit = function(score){
 };
 
 GAME.TopScores.prototype.check = function(score){
-  for(var i = 0; i < this.length; i++) {
+  for(var i = 0; i < this.scores.length; i++) {
     if(score >= this.scores[i].score) {
       return i;
     }
   }
   return -1;
 };
-
 
 GAME.TopScores.prototype.get = function(){
   return this.scores;

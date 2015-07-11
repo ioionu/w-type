@@ -1,5 +1,9 @@
 {
   "dependencies": {
     "tween.js": "^0.14.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "uglify": "^0.1.5"
   }
 }

@@ -5,7 +5,7 @@ GAME.ScoreBoard = function(score, lives) {
   this.lives = lives;
 
   value = 'Hello';
-  this.view = new PIXI.Text(value, {font : '24px Arial', fill : 0x0000, align : 'center'});
+  this.view = new PIXI.Text(value, {font : '24px Fixed', fill : 0x0000, align : 'center'});
   this.update();
 };
 

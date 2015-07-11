@@ -114,75 +114,82 @@ GAME.game.prototype.start = function(e) {
     new GAME.Touch(this.e)
   ];
 
-
   //fullscreen events
   var _this = this.e;
   window.onresize = function(e){
     _this.resize();
   };
-  //requestAnimFrame( this.e.animate );
+
+  //not paused
+  this.e.paused = false;
   this.e.animate();
 
 
 };
 
 GAME.game.prototype.animate = function() {
-  this.mech.update(this);
-  TWEEN.update();
+  if(!this.paused) {
+    this.mech.update(this);
+    TWEEN.update();
 
-  // add bad guy
-  //console.log(baddie_next, baddie_rate);
-  if(this.baddie_next > this.baddie_rate && this.mech.active) {
-    //addBaddy();
-    this.createBaddyTweenedSquad();
-    this.baddie_next = 0;
-    if (this.baddie_rate >= this.baddie_rate_min) {
-      this.baddie_rate = this.baddie_rate - this.baddie_rate_accel;
+    // add bad guy
+    //console.log(baddie_next, baddie_rate);
+    if(this.baddie_next > this.baddie_rate && this.mech.active) {
+      //addBaddy();
+      this.createBaddyTweenedSquad();
+      this.baddie_next = 0;
+      if (this.baddie_rate >= this.baddie_rate_min) {
+        this.baddie_rate = this.baddie_rate - this.baddie_rate_accel;
+      }
+      console.log(this.baddie_rate);
+    } else {
+      this.baddie_next++;
     }
-    console.log(this.baddie_rate);
-  } else {
-    this.baddie_next++;
-  }
 
 
-  // test for hits and move baddies
-  for(var baddy in this.baddies) {
-    if(this.baddies.hasOwnProperty(baddy)) {
-      if(this.baddies[baddy].active) {
-        if(GAME.game.hitTest(this.mech, this.baddies[baddy])) {
-          this.mech.hit(20);
-          this.baddies[baddy].die();
-        }
+    // test for hits and move baddies
+    for(var baddy in this.baddies) {
+      if(this.baddies.hasOwnProperty(baddy)) {
+        if(this.baddies[baddy].active) {
+          if(GAME.game.hitTest(this.mech, this.baddies[baddy])) {
+            this.mech.hit(20);
+            this.baddies[baddy].die();
+          }
 
-        if(this.baddies[baddy].right() < (this.baddies[baddy].w() * -1)) {
-          this.baddies[baddy].die();
-          this.baddies[baddy].removeFromStage();
-        }
-        for(var bullet = 0; bullet < this.bullets.length; bullet++) {
-          damage = this.bullets[bullet].damage;
-          if(GAME.game.hitTest(this.bullets[bullet], this.baddies[baddy])) {
-            //console.log("hit!!");
-            this.baddies[baddy].hit(damage);
-            this.baddies[baddy].recoil(this.bullets[bullet]);
-            if(this.bullets[bullet].type !== 'super') {
+          if(this.baddies[baddy].right() < (this.baddies[baddy].w() * -1)) {
+            this.baddies[baddy].die();
+            this.baddies[baddy].removeFromStage();
+          }
+          for(var bullet = 0; bullet < this.bullets.length; bullet++) {
+            damage = this.bullets[bullet].damage;
+            if(GAME.game.hitTest(this.bullets[bullet], this.baddies[baddy])) {
+              //console.log("hit!!");
+              this.baddies[baddy].hit(damage);
+              this.baddies[baddy].recoil(this.bullets[bullet]);
+              if(this.bullets[bullet].type !== 'super') {
+                this.bullets[bullet].die();
+              }
+            }
+            if(this.bullets[bullet].source != this.mech && GAME.game.hitTest(this.bullets[bullet], this.mech)) {
               this.bullets[bullet].die();
+              this.mech.hit(damage);
+              this.mech.recoil(this.bullets[bullet]);
             }
           }
-          if(this.bullets[bullet].source != this.mech && GAME.game.hitTest(this.bullets[bullet], this.mech)) {
-            this.bullets[bullet].die();
-            this.mech.hit(damage);
-            this.mech.recoil(this.bullets[bullet]);
-          }
-        }
 
-      }
-      if(this.baddies[baddy].remove) {
-        //if this baddy is not active then remove it from stage
-        this.baddies[baddy].removeFromStage();
-        delete this.baddies[baddy];
+        }
+        if(this.baddies[baddy].remove) {
+          //if this baddy is not active then remove it from stage
+          this.baddies[baddy].removeFromStage();
+          delete this.baddies[baddy];
+        }
       }
     }
-  }
+  } else {
+    // THIS DOESNT WORK
+    // https://github.com/tweenjs/tween.js/issues/15
+    // TWEEN.stop();
+  }//paused
 
 
   //draw
@@ -198,6 +205,10 @@ GAME.game.prototype.enableInput = function(input){
       this.inputs[i].disable();
     }
   }
+};
+
+GAME.game.prototype.pause = function(){
+  this.paused = this.paused ? false : true;
 };
 
 GAME.game.prototype.w = function(width) {
@@ -267,7 +278,8 @@ GAME.game.prototype.fire = function(bullet) {
 GAME.game.prototype.gameOver = function() {
   console.log("game over man! game over!!!");
   this.mech.tombStone();
-  if(this.top_scores.check(this.mech.score)) {
+  var rank = this.top_scores.check(this.mech.score);
+  if(rank != -1 && rank < 3) {
     this.top_scores.showPlayerName();
   }
   this.title.show();
