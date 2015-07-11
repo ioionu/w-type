@@ -30,7 +30,7 @@ GAME.game = function(params) {
   this.loader = new PIXI.loaders.Loader();
   this.loader.add(this.sprite_sheet);
   this.loader.e = this;
-  _this = this;
+  var _this = this;
   this.loader.once('complete', this.start);
   this.loader.load();
 
@@ -45,20 +45,21 @@ GAME.game.constructor = GAME.game;
 GAME.game.prototype.start = function(e) {
   this.e.stage = new PIXI.Stage(0x000000);
 
-  WIDTH = this.e.width;
-  HEIGHT = this.e.height;
+  var WIDTH = this.e.width;
+  var HEIGHT = this.e.height;
   // let pixi choose WebGL or canvas
   this.e.renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
   // set the canvas width and height to fill the screen
   var screen_width = window.innerWidth;//800;
   var screen_height = window.innerHeight;//600;
+  var factor;
   if(screen_width > screen_height) {
     factor = screen_height / HEIGHT;
   } else {
     factor = screen_width / WIDTH;
   }
-  calc_height = HEIGHT * factor;
-  calc_width = WIDTH * factor;
+  var calc_height = HEIGHT * factor;
+  var calc_width = WIDTH * factor;
 
 
   this.e.renderer.view.style.display = "block";
