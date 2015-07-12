@@ -10,7 +10,10 @@ GAME.game = function(params) {
   this.width = 800;
   this.height = 600;
   this.stretch = true;
-  this.sprite_sheet = ['SpriteSheet.json', 'page.jpg'];
+  this.sprite_sheet = [
+    'img/SpriteSheet.json',
+    'img/page.jpg'
+  ];
   this.id = "game";
 
   this.stars = [];
@@ -80,7 +83,7 @@ GAME.game.prototype.start = function(e) {
   this.e.baddie_next = 0;
 
   // background image
-  var page = new PIXI.Sprite( PIXI.Texture.fromImage('page.jpg') );
+  var page = new PIXI.Sprite( PIXI.Texture.fromImage('img/page.jpg') );
   page.width = WIDTH;
   page.height = HEIGHT;
   this.e.stage.addChild(page);

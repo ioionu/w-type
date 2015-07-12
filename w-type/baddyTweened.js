@@ -10,9 +10,9 @@ GAME.BaddyTweened = function(params) {
 
   this.frames = {};
   this.frames.character = [
-    PIXI.Texture.fromFrame("baddy01.png"),
-    PIXI.Texture.fromFrame("baddy02.png"),
-    PIXI.Texture.fromFrame("baddy03.png")
+    PIXI.Texture.fromFrame("baddy01"),
+    PIXI.Texture.fromFrame("baddy02"),
+    PIXI.Texture.fromFrame("baddy03")
   ];
 
   this.view = new PIXI.extras.MovieClip(this.frames.character);

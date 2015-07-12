@@ -9,9 +9,9 @@ GAME.Bullet = function(param) {
   this.damage = param.damage;
   this.source = param.source;
   this.frames = [
-    PIXI.Texture.fromFrame("bullet01.png"),
-    PIXI.Texture.fromFrame("bullet02.png"),
-    PIXI.Texture.fromFrame("bullet03.png")
+    PIXI.Texture.fromFrame("bullet01"),
+    PIXI.Texture.fromFrame("bullet02"),
+    PIXI.Texture.fromFrame("bullet03")
   ];
   this.view = new PIXI.extras.MovieClip(this.frames);
   this.view.animationSpeed = 0.05;
@@ -92,9 +92,9 @@ GAME.GoodyBullet = function(param) {
   this.damage = param.damage;
   this.source = param.source;
   this.frames = [
-    PIXI.Texture.fromFrame("bullet01.png"),
-    PIXI.Texture.fromFrame("bullet02.png"),
-    PIXI.Texture.fromFrame("bullet03.png")
+    PIXI.Texture.fromFrame("bullet01"),
+    PIXI.Texture.fromFrame("bullet02"),
+    PIXI.Texture.fromFrame("bullet03")
   ];
 
   this.game = param.game;

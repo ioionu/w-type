@@ -19,7 +19,7 @@ GAME.Title.prototype.titleScreen = function(){
   var title = new PIXI.Container();
   title.visible = true;
 
-  var start = PIXI.Sprite.fromImage('sprite/newGame01.png');
+  var start = PIXI.Sprite.fromFrame('newGame01');
   var left = (this.game.width * 0.5);
   var top = (this.game.height * 0.25);
   start.anchor = new PIXI.Point(0.5, 0.5);
@@ -36,7 +36,7 @@ GAME.Title.prototype.titleScreen = function(){
   });
   title.addChild(start);
 
-  var option = PIXI.Sprite.fromImage('sprite/options.png');
+  var option = PIXI.Sprite.fromFrame('options');
   option.anchor = new PIXI.Point(0.5, 0.5);
   option.position = new PIXI.Point(
     (this.game.width * 0.5),
@@ -68,7 +68,7 @@ GAME.Title.prototype.optionScreen = function() {
   var option = new PIXI.Container();
   option.visible = false;
 
-  var fullscreen = PIXI.Sprite.fromImage('sprite/fullscreen.png');
+  var fullscreen = PIXI.Sprite.fromFrame('fullscreen');
   fullscreen.anchor = new PIXI.Point(0.5, 0.5);
   fullscreen.position = new PIXI.Point(
     this.game.width * 0.5,
@@ -85,7 +85,7 @@ GAME.Title.prototype.optionScreen = function() {
   option.addChild(fullscreen);
 
   //toggle stretch
-  var stretch = PIXI.Sprite.fromImage('sprite/streatch.png');
+  var stretch = PIXI.Sprite.fromFrame('streatch');
   stretch.anchor = new PIXI.Point(0.5, 0.5);
   stretch.position = new PIXI.Point(
     this.game.width * 0.5,
@@ -105,7 +105,7 @@ GAME.Title.prototype.optionScreen = function() {
   option.addChild(stretch);
 
   //toggle stretch
-  var back = PIXI.Sprite.fromImage('sprite/back.png');
+  var back = PIXI.Sprite.fromFrame('back');
   back.anchor = new PIXI.Point(0.5, 0.5);
   back.position = new PIXI.Point(
     this.game.width * 0.5,

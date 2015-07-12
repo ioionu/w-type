@@ -19,9 +19,9 @@ GAME.GameElement.prototype.loadDefaultFrames = function(x){
     this.frames = {};
   }
   this.frames.explode = [
-    PIXI.Texture.fromFrame("boom01.png"),
-    PIXI.Texture.fromFrame("boom02.png"),
-    PIXI.Texture.fromFrame("boom03.png")
+    PIXI.Texture.fromFrame("boom01"),
+    PIXI.Texture.fromFrame("boom02"),
+    PIXI.Texture.fromFrame("boom03")
   ];
 };
 

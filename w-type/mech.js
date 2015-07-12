@@ -15,9 +15,9 @@ GAME.Mech = function(params) {
   this.frames = {};
   this.loadDefaultFrames();
   this.frames.character = [
-    PIXI.Texture.fromFrame("mech01.png"),
-    PIXI.Texture.fromFrame("mech02.png"),
-    PIXI.Texture.fromFrame("mech03.png")
+    PIXI.Texture.fromFrame("mech01"),
+    PIXI.Texture.fromFrame("mech02"),
+    PIXI.Texture.fromFrame("mech03")
   ];
   this.view = new PIXI.extras.MovieClip(this.frames.character);
   this.view.animationSpeed = 0.20;
@@ -277,10 +277,10 @@ GAME.Mech.prototype.superBullet = function(screen_width, screen_height) {
  */
 GAME.Mech.prototype.tombStone = function() {
   this.frames.tomb = [
-    PIXI.Texture.fromImage("sprite/tomb04.png"),
-    PIXI.Texture.fromImage("sprite/tomb03.png"),
-    PIXI.Texture.fromImage("sprite/tomb02.png"),
-    PIXI.Texture.fromImage("sprite/tomb01.png")
+    PIXI.Texture.fromFrame("tomb04"),
+    PIXI.Texture.fromFrame("tomb03"),
+    PIXI.Texture.fromFrame("tomb02"),
+    PIXI.Texture.fromFrame("tomb01")
   ];
 
   this.view.textures = this.frames.tomb;

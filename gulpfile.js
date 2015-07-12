@@ -1,5 +1,9 @@
-var gulp = require('gulp'), ccat = require('gulp-concat'), uglify = require('gulp-uglify');
-
+var gulp = require('gulp'),
+  ccat = require('gulp-concat'),
+  uglify = require('gulp-uglify'),
+  sprite = require('pm-spritesheet'),
+  shell = require('gulp-shell'),
+  spritesmith = require('gulp.spritesmith');
 
 gulp.task('prep-js', function(){
   return gulp.src([
@@ -30,4 +34,29 @@ gulp.task('prep-html', function(){
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['prep-js', 'prep-html'], function() {});
+gulp.task('prep-sprite', shell.task([
+  'pm run spritesheet'
+]));
+
+gulp.task('copy-sprite', function(){
+  return gulp.src('SpriteSheet.*')
+    .pipe(gulp.dest('img/'));
+});
+
+gulp.task('sprite', function () {
+  return gulp.src('assets/sprite/*.png')
+    .pipe(spritesmith({
+      imgName: "SpriteSheet.png",
+      cssName: "SpriteSheet.json",
+      algorithm: 'binary-tree',
+        cssTemplate: require('spritesmith-texturepacker') // <-- this right here
+      }))
+    .pipe(gulp.dest('./img/'));
+});
+
+gulp.task('default', [
+  'prep-js',
+  'prep-html',
+  'sprite',
+  'copy-sprite',
+], function() {});
