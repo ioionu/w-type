@@ -93,13 +93,13 @@ GAME.Mech.prototype.moveTowards = function(x, y, speed){
   x += this.view.width;
 
   var diffx = x0 - x;
-  diffx = diffx < 0 ? diffx * -1 : diffx;
-  speedx = diffx < speed ? diffx : speed;
+  var diffx = diffx < 0 ? diffx * -1 : diffx;
+  var speedx = diffx < speed ? diffx : speed;
 
   var diffy = y0 - y;
   var altitude_distance = diffy;
   diffy = diffy < 0 ? diffy * -1 : diffy;
-  speedy = diffy < speed ? diffy : speed;
+  var speedy = diffy < speed ? diffy : speed;
 
   if(diffx > 0 || diffy > 0) {
     //distance from mech to touch
@@ -135,7 +135,7 @@ GAME.Mech.prototype.update = function(game) {
   this.charge++;
 
 
-  p = {
+  var p = {
     'x': this.view.position.x,
     'y': this.view.position.y,
     'w': this.view.width,
@@ -211,7 +211,7 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
   }
 
 
-  bullet = new GAME.GoodyBullet({
+  var bullet = new GAME.GoodyBullet({
     'x1': this.x(),
     'y1': this.y(),
     'x2': p.x,
@@ -286,7 +286,7 @@ GAME.Mech.prototype.tombStone = function() {
   this.view.textures = this.frames.tomb;
   this.view.loop = false;
   this.view.interactive = true;
-  _this = this;
+  var _this = this;
   this.view.on('mousedown', function(e){
     _this.game.newGame();
   });

@@ -88,7 +88,7 @@ GAME.BaddyTweened.prototype.updateLife = function() {
 
 GAME.BaddyTweened.prototype.bullet = function() {
   if(this.loaded && this.active) {
-    params = {
+    var params = {
       'x1': this.x(),
       'y1': this.y(),
       'x2': this.target.x(),
@@ -98,7 +98,7 @@ GAME.BaddyTweened.prototype.bullet = function() {
       'game': this.game
     };
     this.loaded = false;
-    bullet = new GAME.Bullet(params) ;
+    var bullet = new GAME.Bullet(params) ;
     this.game.fire(bullet);
   }
 };

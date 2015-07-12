@@ -165,7 +165,7 @@ GAME.game.prototype.animate = function() {
             this.baddies[baddy].removeFromStage();
           }
           for(var bullet = 0; bullet < this.bullets.length; bullet++) {
-            damage = this.bullets[bullet].damage;
+            var damage = this.bullets[bullet].damage;
             if(GAME.game.hitTest(this.bullets[bullet], this.baddies[baddy])) {
               //console.log("hit!!");
               this.baddies[baddy].hit(damage);
@@ -250,9 +250,9 @@ GAME.game.prototype.addBaddyTweened = function(params) {
 };
 
 GAME.game.prototype.createBaddyTweenedSquad = function() {
-  w = this.w();
-  h = this.h();
-  path = {
+  var w = this.w();
+  var h = this.h();
+  var path = {
     x: [w+45 , w * Math.random(), w * Math.random(), -75], //TODO fix hardcoded last tween poing
     y: [h * Math.random(), h * Math.random(), h * Math.random()],
     shoot: Math.floor(Math.random() * 50),
@@ -388,11 +388,11 @@ GAME.game.getTargetPoint = function(A,a) {
 GAME.game.hitTest = function(a, b) {
   if(a.active && b.active) {
     if(a.source != b && b.source != a){
-      hx = a.x() - b.x();
-      hy = a.y() - b.y();
-      dist = Math.sqrt(hx*hx+hy*hy);
-      width_a = ((a.size()).h)/2;
-      width_b = ((b.size()).h)/2;
+      var hx = a.x() - b.x();
+      var hy = a.y() - b.y();
+      var dist = Math.sqrt(hx*hx+hy*hy);
+      var width_a = ((a.size()).h)/2;
+      var width_b = ((b.size()).h)/2;
       return dist <= width_a + width_b;
     }
   }

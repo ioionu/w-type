@@ -34,16 +34,12 @@ gulp.task('prep-html', function(){
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('prep-sprite', shell.task([
-  'pm run spritesheet'
-]));
-
 gulp.task('copy-sprite', function(){
-  return gulp.src('SpriteSheet.*')
-    .pipe(gulp.dest('img/'));
+  return gulp.src(['img/SpriteSheet.json', 'img/SpriteSheet.png', 'img/page.jpg'])
+    .pipe(gulp.dest('dist/img/'));
 });
 
-gulp.task('sprite', function () {
+gulp.task('prep-sprite', function () {
   return gulp.src('assets/sprite/*.png')
     .pipe(spritesmith({
       imgName: "SpriteSheet.png",
@@ -57,6 +53,6 @@ gulp.task('sprite', function () {
 gulp.task('default', [
   'prep-js',
   'prep-html',
-  'sprite',
+  'prep-sprite',
   'copy-sprite',
 ], function() {});
