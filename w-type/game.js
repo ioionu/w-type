@@ -326,10 +326,12 @@ GAME.game.prototype.fullscreen = function() {
 
 GAME.game.prototype.resize = function() {
   console.log("resize");
+  var calc_height, calc_width, factor;
+
   // do we stretch to fullscreen ot keep aspect ratio?
   if(this.stretch) {
-    WIDTH = this.width;
-    HEIGHT = this.height;
+    var WIDTH = this.width;
+    var HEIGHT = this.height;
     // let pixi choose WebGL or canvas
     var screen_width = window.innerWidth;//800;
     var screen_height = window.innerHeight;//600;

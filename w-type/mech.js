@@ -93,7 +93,7 @@ GAME.Mech.prototype.moveTowards = function(x, y, speed){
   x += this.view.width;
 
   var diffx = x0 - x;
-  var diffx = diffx < 0 ? diffx * -1 : diffx;
+  diffx = diffx < 0 ? diffx * -1 : diffx;
   var speedx = diffx < speed ? diffx : speed;
 
   var diffy = y0 - y;

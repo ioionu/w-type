@@ -24,7 +24,7 @@ gulp.task('prep-js', function(){
     'w-type/touchControl.js',
     'w-type/keyboardControl.js',
     'js/w-type.js'])
-    .pipe(ccat('concat.js'))
+    .pipe(ccat('w-type.js'))
     //.pipe(uglify())
     .pipe(gulp.dest('dist'));
 });
@@ -50,9 +50,15 @@ gulp.task('prep-sprite', function () {
     .pipe(gulp.dest('./img/'));
 });
 
+gulp.task('prep-cordova', function(){
+  return gulp.src(['index-cordova.js', 'index-cordova.html'])
+    .pipe(gulp.dest('dist'));
+});
+
 gulp.task('default', [
   'prep-js',
   'prep-html',
   'prep-sprite',
+  'prep-cordova',
   'copy-sprite',
 ], function() {});
