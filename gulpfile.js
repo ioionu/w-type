@@ -44,7 +44,7 @@ gulp.task('prep-sprite', function () {
     .pipe(spritesmith({
       imgName: "SpriteSheet.png",
       cssName: "SpriteSheet.json",
-      algorithm: 'binary-tree',
+      algorithm: 'diagonal',
         cssTemplate: require('spritesmith-texturepacker') // <-- this right here
       }))
     .pipe(gulp.dest('./img/'));
