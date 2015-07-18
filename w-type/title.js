@@ -53,7 +53,7 @@ GAME.Title.prototype.titleScreen = function(){
   });
   title.addChild(option);
 
-  this.top_scores = new PIXI.Text(this.game.top_scores.getString(), {font : '24px Arial', fill : 0x0000, align : 'center'});
+  this.top_scores = new PIXI.Text(this.game.top_scores.getString(), {font : '24px MisakiGothic', fill : 0xFFFFFF, align : 'center'});
   this.top_scores.anchor = new PIXI.Point(0.5, 0.5);
   this.top_scores.position = new PIXI.Point(
     this.game.width * 0.5,

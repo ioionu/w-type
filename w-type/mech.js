@@ -217,7 +217,7 @@ GAME.Mech.prototype.bullet = function(screen_width, screen_height) {
     'x2': p.x,
     'y2': p.y,
     'source': this,
-    'damage': 25,
+    'damage': 50,
     'distance':distance,
     'game': this.game,
     type: 'goodyBullet'

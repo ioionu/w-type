@@ -80,6 +80,7 @@ GAME.TopScores.prototype.playerName = function(){
   form_inner.style.width = this.game.scaledWidth();
   form_inner.style.height = this.game.scaledHeight();
   form_inner.style.margin = 'auto';
+  form_inner.style.backgroundColor = 'rgba(0,0,0,0.75)';
 
   form_inner.appendChild(form_text);
   form_inner.appendChild(form_cancel);

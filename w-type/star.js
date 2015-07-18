@@ -7,10 +7,10 @@ var GAME = GAME || {};
  * */
 GAME.Star = function(x,y) {
   this.view = new PIXI.Graphics();
-  this.view.beginFill(0xCCCCCC);
+  this.view.beginFill(0xFFFFFF);
   // set a fill and line style
-  this.view.beginFill(0xCCCCCC);
-  this.view.lineStyle(1, 0x333333, 1);
+  this.view.beginFill(0xFFFFFF);
+  this.view.lineStyle(1, 0xFFFFFF, 1);
   //this.view.lineStyle(2, 0x0000FF, 1);
   this.view.drawRect(0,0,1,1);
   //this.view.anchor.x = this.view.anchor.y = 0.5;
@@ -49,5 +49,3 @@ GAME.Star = function(x,y) {
 GAME.Star.constructor = GAME.Star;
 
 GAME.Star.prototype = new GAME.GameElement();
-
-

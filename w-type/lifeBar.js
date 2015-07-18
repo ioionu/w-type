@@ -29,8 +29,8 @@ GAME.LifeBar.prototype.draw = function() {
   this.view.lineStyle( 0, 0xFFFFFF, 1);
   this.view.beginFill(0xFFFFFF);
   this.view.drawRect(this.x,this.y,this.width,3);
-  this.view.lineStyle( 0, 0xFF0000, 1);
-  this.view.beginFill(0xFF0000);
+  this.view.lineStyle( 0, 0xCCCCCC, 1);
+  this.view.beginFill(0x333333);
   this.view.drawRect(this.x+1,this.y+1,this.life/this.life_full*this.width,1);
   //this.view.drawRect(this.x+1,this.y,this.width,3);
   this.interpolation = TWEEN.Interpolation.Bezier;
@@ -45,5 +45,5 @@ GAME.LifeBar.prototype.draw = function() {
       this.view.alpha = this.a;
     })
     .start();
-    
+
 };
