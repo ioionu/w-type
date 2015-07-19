@@ -277,10 +277,11 @@ GAME.Mech.prototype.superBullet = function(screen_width, screen_height) {
  */
 GAME.Mech.prototype.tombStone = function() {
   this.frames.tomb = [
-    PIXI.Texture.fromFrame("tomb04"),
-    PIXI.Texture.fromFrame("tomb03"),
+    PIXI.Texture.fromFrame("tomb01"),
     PIXI.Texture.fromFrame("tomb02"),
-    PIXI.Texture.fromFrame("tomb01")
+    PIXI.Texture.fromFrame("tomb03"),
+    PIXI.Texture.fromFrame("tomb04"),
+    PIXI.Texture.fromFrame("tomb05")
   ];
 
   this.view.textures = this.frames.tomb;
