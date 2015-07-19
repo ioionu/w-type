@@ -103,6 +103,8 @@ GAME.game.prototype.start = function(e) {
 
   // add score
   this.e.score = new GAME.ScoreBoard(0, this.e.mech.lives);
+  this.e.score.view.position.x = "5";
+  this.e.score.view.position.y = "5";
   this.e.stage.addChild(this.e.score.view);
 
   //top scores

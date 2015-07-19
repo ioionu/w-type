@@ -3,6 +3,7 @@ var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   sprite = require('pm-spritesheet'),
   shell = require('gulp-shell'),
+  rename = require('gulp-rename'),
   spritesmith = require('gulp.spritesmith');
 
 gulp.task('prep-js', function(){
@@ -10,6 +11,7 @@ gulp.task('prep-js', function(){
     'js/tween.min.js',
     'bower_components/fastclick/lib/fastclick.js',
     'bower_components/pixi.js/bin/pixi.js',
+    'node_modules/sprintf-js/dist/sprintf.min.js',
     'w-type/game.js',
     'w-type/gameElement.js',
     'w-type/scoreBoard.js',
@@ -31,6 +33,7 @@ gulp.task('prep-js', function(){
 
 gulp.task('prep-html', function(){
   return gulp.src('base_html.html')
+    .pipe(rename('index.html'))
     .pipe(gulp.dest('dist'));
 });
 
@@ -55,10 +58,22 @@ gulp.task('prep-cordova', function(){
     .pipe(gulp.dest('dist'));
 });
 
+gulp.task('copy-style', function(){
+  return gulp.src(['assets/misaki/**/*'], {base: 'assets'})
+    .pipe(gulp.dest('style'));
+});
+
+gulp.task('build-style', function(){
+  return gulp.src(['assets/misaki/**/*'], {base: 'assets'})
+    .pipe(gulp.dest('dist/style'));
+});
+
 gulp.task('default', [
   'prep-js',
   'prep-html',
   'prep-sprite',
   'prep-cordova',
   'copy-sprite',
+  'copy-style',
+  'build-style'
 ], function() {});

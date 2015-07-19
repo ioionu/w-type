@@ -2,22 +2,22 @@
     "frames": {
         "back": {
             "frame": {
-                "x": 2357,
-                "y": 1578,
-                "w": 245,
-                "h": 103
+                "x": 1444,
+                "y": 1169,
+                "w": 152,
+                "h": 79
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 245,
-                "h": 103
+                "w": 152,
+                "h": 79
             },
             "sourceSize": {
-                "w": 245,
-                "h": 103
+                "w": 152,
+                "h": 79
             }
         },
         "baddy01": {
@@ -222,22 +222,22 @@
         },
         "fullscreen": {
             "frame": {
-                "x": 1444,
-                "y": 1169,
-                "w": 178,
-                "h": 100
+                "x": 2483,
+                "y": 1620,
+                "w": 274,
+                "h": 82
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 178,
-                "h": 100
+                "w": 274,
+                "h": 82
             },
             "sourceSize": {
-                "w": 178,
-                "h": 100
+                "w": 274,
+                "h": 82
             }
         },
         "mech01": {
@@ -302,62 +302,82 @@
         },
         "newGame01": {
             "frame": {
-                "x": 2112,
-                "y": 1475,
-                "w": 245,
-                "h": 103
+                "x": 1803,
+                "y": 1338,
+                "w": 218,
+                "h": 73
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 245,
-                "h": 103
+                "w": 218,
+                "h": 73
             },
             "sourceSize": {
-                "w": 245,
-                "h": 103
+                "w": 218,
+                "h": 73
             }
         },
         "options": {
             "frame": {
-                "x": 1867,
-                "y": 1372,
-                "w": 245,
-                "h": 103
+                "x": 1596,
+                "y": 1248,
+                "w": 207,
+                "h": 90
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 245,
-                "h": 103
+                "w": 207,
+                "h": 90
             },
             "sourceSize": {
-                "w": 245,
-                "h": 103
+                "w": 207,
+                "h": 90
             }
         },
         "streatch": {
             "frame": {
-                "x": 1622,
-                "y": 1269,
-                "w": 245,
-                "h": 103
+                "x": 2221,
+                "y": 1537,
+                "w": 262,
+                "h": 83
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 245,
-                "h": 103
+                "w": 262,
+                "h": 83
             },
             "sourceSize": {
-                "w": 245,
-                "h": 103
+                "w": 262,
+                "h": 83
+            }
+        },
+        "title": {
+            "frame": {
+                "x": 2021,
+                "y": 1411,
+                "w": 200,
+                "h": 126
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 126
+            },
+            "sourceSize": {
+                "w": 200,
+                "h": 126
             }
         },
         "tomb01": {
@@ -446,8 +466,8 @@
         "image": "SpriteSheet.png",
         "format": "RGBA8888",
         "size": {
-            "w": 2602,
-            "h": 1681
+            "w": 2757,
+            "h": 1702
         },
         "scale": 1
     }

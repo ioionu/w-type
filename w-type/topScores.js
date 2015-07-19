@@ -123,8 +123,14 @@ GAME.TopScores.prototype.get = function(){
 
 GAME.TopScores.prototype.getString = function(){
   var top_string = "Top Scores\n";
+  var scores_line, line_number, line_name, line_scores;
   for(var i = 0; i < this.length; i++){
-    top_string += (i+1) + " " + this.scores[i].name + " " + this.scores[i].score + "\n";
+    //TODO: switch to es6 string template
+    line_number = (i+1);
+    line_name = this.scores[i].name;
+    line_scores = parseInt(this.scores[i].score);
+    scores_line = sprintf("%'03s %' 3s : %'09d\n", line_number, line_name, line_scores);
+    top_string += scores_line;
   }
   return top_string;
 };

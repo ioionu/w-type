@@ -10,8 +10,8 @@ GAME.Bullet = function(param) {
   this.source = param.source;
   this.frames = [
     PIXI.Texture.fromFrame("bullet01"),
-    PIXI.Texture.fromFrame("bullet02"),
-    PIXI.Texture.fromFrame("bullet03")
+    //PIXI.Texture.fromFrame("bullet02"),
+    //PIXI.Texture.fromFrame("bullet03")
   ];
   this.view = new PIXI.extras.MovieClip(this.frames);
   this.view.animationSpeed = 0.05;
@@ -23,7 +23,7 @@ GAME.Bullet = function(param) {
   this.game = param.game;
 
   this.interpolation = TWEEN.Interpolation.Bezier;
-  if(typeof param.interpolation == 'None') {
+  if(typeof param.interpolation === 'None') {
     this.interpolation = param.interpolation;
   }
   this.tween = {};
@@ -93,8 +93,8 @@ GAME.GoodyBullet = function(param) {
   this.source = param.source;
   this.frames = [
     PIXI.Texture.fromFrame("bullet01"),
-    PIXI.Texture.fromFrame("bullet02"),
-    PIXI.Texture.fromFrame("bullet03")
+    //PIXI.Texture.fromFrame("bullet02"),
+    //PIXI.Texture.fromFrame("bullet03")
   ];
 
   this.game = param.game;
