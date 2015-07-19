@@ -19,9 +19,26 @@ GAME.Title.prototype.titleScreen = function(){
   var title = new PIXI.Container();
   title.visible = true;
 
+  var logo = PIXI.Sprite.fromFrame('title');
+  var left = (this.game.width * 0.5);
+  var top = (this.game.height * 0.20);
+  logo.anchor = new PIXI.Point(0.5, 0.5);
+  logo.position = new PIXI.Point(left, top);
+  logo.interactive = true;
+  var _this = this;
+  logo.on('click', function(e){
+    _this.game.newGame();
+    _this.hide();
+  });
+  logo.on('touchstart', function(e){
+    _this.game.newGame();
+    _this.hide();
+  });
+  title.addChild(logo);
+
   var start = PIXI.Sprite.fromFrame('newGame01');
   var left = (this.game.width * 0.5);
-  var top = (this.game.height * 0.25);
+  var top = (this.game.height * 0.40);
   start.anchor = new PIXI.Point(0.5, 0.5);
   start.position = new PIXI.Point(left, top);
   start.interactive = true;
@@ -40,7 +57,7 @@ GAME.Title.prototype.titleScreen = function(){
   option.anchor = new PIXI.Point(0.5, 0.5);
   option.position = new PIXI.Point(
     (this.game.width * 0.5),
-    (this.game.height * 0.5)
+    (this.game.height * 0.6)
   );
   option.interactive = true;
   option.on('click', function(e){
@@ -53,13 +70,32 @@ GAME.Title.prototype.titleScreen = function(){
   });
   title.addChild(option);
 
-  this.top_scores = new PIXI.Text(this.game.top_scores.getString(), {font : '24px misakiminchoregular', fill : 0xFFFFFF, align : 'left', padding: 3});
+  var top_score_string = this.game.top_scores.getString();
+  this.top_scores = new PIXI.Text(top_score_string, {font : '24px misakiminchoregular', fill : 0xFFFFFF, align : 'left', padding: 3});
   this.top_scores.anchor = new PIXI.Point(0.5, 0.5);
   this.top_scores.position = new PIXI.Point(
     this.game.width * 0.5,
-    this.game.height * 0.75
+    this.game.height * 0.80
   );
   title.addChild(this.top_scores);
+
+  var copyright_string = "Copyright 2015 Joshua McCluskey\nFork me on github https://github.com/ioionu/w-type";
+  var copyright = new PIXI.Text(copyright_string, {font : '24px misakiminchoregular', fill : 0xFFFFFF, align : 'center', padding: 3});
+  copyright.anchor = new PIXI.Point(0.5, 0.5);
+  copyright.position = new PIXI.Point(
+    this.game.width * 0.5,
+    this.game.height * 0.95
+  );
+
+  copyright.interactive = true;
+  copyright.on('click', function(e){
+    window.open("https://github.com/ioionu/w-type");
+  });
+  copyright.on('touchstart', function(e){
+    window.open("https://github.com/ioionu/w-type");
+  });
+  
+  title.addChild(copyright);
   return title;
 
 };
