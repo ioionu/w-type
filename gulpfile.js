@@ -28,7 +28,8 @@ gulp.task('prep-js', function(){
     'js/w-type.js'])
     .pipe(ccat('w-type.js'))
     //.pipe(uglify())
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('dist-android'));
 });
 
 gulp.task('prep-html', function(){
@@ -39,7 +40,8 @@ gulp.task('prep-html', function(){
 
 gulp.task('copy-sprite', function(){
   return gulp.src(['img/SpriteSheet.json', 'img/SpriteSheet.png', 'img/page.jpg'])
-    .pipe(gulp.dest('dist/img/'));
+  .pipe(gulp.dest('dist/img/'))
+  .pipe(gulp.dest('dist-android/img/'));
 });
 
 gulp.task('prep-sprite', function () {
@@ -53,19 +55,28 @@ gulp.task('prep-sprite', function () {
     .pipe(gulp.dest('./img/'));
 });
 
-gulp.task('prep-cordova', function(){
-  return gulp.src(['index-cordova.js', 'index-cordova.html'])
-    .pipe(gulp.dest('dist'));
-});
-
 gulp.task('copy-style', function(){
   return gulp.src(['assets/misaki/**/*'], {base: 'assets'})
     .pipe(gulp.dest('style'));
 });
 
-gulp.task('build-style', function(){
+gulp.task('copy-fonts', function(){
   return gulp.src(['assets/misaki/**/*'], {base: 'assets'})
-    .pipe(gulp.dest('dist/style'));
+  .pipe(gulp.dest('dist/style'))
+  .pipe(gulp.dest('dist-android/style'));
+});
+
+gulp.task('prep-cordova', ['prep-js', 'copy-sprite', 'copy-fonts', 'copy-cordova-index', 'copy-cordova-js'], function(){});
+
+gulp.task('copy-cordova-index', function(){
+  return gulp.src(['index-cordova.html'])
+    .pipe(rename('index.html'))
+    .pipe(gulp.dest('dist-android'));
+});
+
+gulp.task('copy-cordova-js', function(){
+  return gulp.src(['index-cordova.js'])
+    .pipe(gulp.dest('dist-android'));
 });
 
 gulp.task('default', [
