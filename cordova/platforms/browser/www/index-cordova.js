@@ -137,7 +137,8 @@ function waitForWebfonts(fonts, callback) {
                         clearInterval(interval);
                     }
                     if(loadedFonts == fonts.length) {
-                        callback();
+                        AndroidFullScreen.immersiveMode(callback, callback);
+                        // callback();
                         return true;
                     }
                 }
