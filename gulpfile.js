@@ -1,12 +1,12 @@
 var gulp = require('gulp'),
   ccat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
-  sprite = require('pm-spritesheet'),
   shell = require('gulp-shell'),
   rename = require('gulp-rename'),
   spritesmith = require('gulp.spritesmith');
+const { series } = require('gulp');
 
-gulp.task('prep-js', function(){
+function concatJs() {
   return gulp.src([
     'js/tween.min.js',
     'bower_components/fastclick/lib/fastclick.js',
@@ -29,8 +29,8 @@ gulp.task('prep-js', function(){
     .pipe(ccat('w-type.js'))
     //.pipe(uglify())
     .pipe(gulp.dest('dist'))
-    .pipe(gulp.dest('dist-android'));
-});
+    .pipe(gulp.dest('cordova/www/'));
+}
 
 gulp.task('prep-html', function(){
   return gulp.src('base_html.html')
@@ -66,7 +66,14 @@ gulp.task('copy-fonts', function(){
   .pipe(gulp.dest('dist-android/style'));
 });
 
-gulp.task('prep-cordova', ['prep-js', 'copy-sprite', 'copy-fonts', 'copy-cordova-index', 'copy-cordova-js'], function(){});
+
+const x = 1+1;
+gulp.task(
+  'prep-cordova',
+  function(){
+    console.log('prep cordova', ['prep-js', 'copy-sprite', 'copy-fonts', 'copy-cordova-index', 'copy-cordova-js']);
+  }
+);
 
 gulp.task('copy-cordova-index', function(){
   return gulp.src(['index-cordova.html'])
@@ -79,12 +86,26 @@ gulp.task('copy-cordova-js', function(){
     .pipe(gulp.dest('dist-android'));
 });
 
-gulp.task('default', [
-  'prep-js',
-  'prep-html',
-  'prep-sprite',
-  'prep-cordova',
-  'copy-sprite',
-  'copy-style',
-  'build-style'
-], function() {});
+gulp.task('default', function() {
+  const runme = [
+    'prep-js',
+    'prep-html',
+    'prep-sprite',
+    'prep-cordova',
+    'copy-sprite',
+    'copy-style',
+    'build-style'
+  ];
+  console.log(gulp.task);
+  gulp.series()
+});
+
+function xx(){return console.log('derpo')};
+
+function defaultTask() {
+  console.log("i am derp");
+  
+  return gulp.series(xx);
+}
+
+exports.default = concatJs;

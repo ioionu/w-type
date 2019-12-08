@@ -55,15 +55,16 @@ GAME.game.prototype.start = function(e) {
   // set the canvas width and height to fill the screen
   var screen_width = window.innerWidth;//800;
   var screen_height = window.innerHeight;//600;
-  var factor;
-  if(screen_width > screen_height) {
-    factor = screen_height / HEIGHT;
-  } else {
-    factor = screen_width / WIDTH;
+  var ratio_width = screen_width / WIDTH;
+  var ratio_height = screen_height / HEIGHT;
+  if(ratio_width > ratio_height) {
+    var calc_width = WIDTH * ratio_height;
+    var calc_height = screen_height;
   }
-  var calc_height = HEIGHT * factor;
-  var calc_width = WIDTH * factor;
-
+  else {
+    var calc_height = HEIGHT * ratio_width;
+    var calc_width = screen_width;
+  }
 
   this.e.renderer.view.style.display = "block";
   this.e.renderer.view.style.width = calc_width + "px";
@@ -419,3 +420,5 @@ GAME.game.checkBounds = function(x,y,h,w,sw,sh, mode) {
   return false;
 };
 //end game
+
+// export default GAME;

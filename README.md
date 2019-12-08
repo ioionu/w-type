@@ -1,10 +1,20 @@
-w-type
-======
+# w-type
 
 A simple r-type clone in PIXI.js.
 
-Libraries
-=========
+* Sorry, bit of a mess atm. Clean up in progress. *
+
+### Build
+
+## Android
+
+`gulp`
+
+`cd cordova`
+
+`cordova build android`
+
+## Libraries
 
 Pixi.js — A 2D JavaScript Renderer
 
