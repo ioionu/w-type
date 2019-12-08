@@ -1,33 +1,30 @@
 var gulp = require('gulp'),
-  ccat = require('gulp-concat'),
-  uglify = require('gulp-uglify'),
-  shell = require('gulp-shell'),
+  concat = require('gulp-concat'),
   rename = require('gulp-rename'),
   spritesmith = require('gulp.spritesmith');
 const { series } = require('gulp');
 
 function concatJs() {
   return gulp.src([
-    'js/tween.min.js',
+    'node_modules/tween.js/index.js',
     'bower_components/fastclick/lib/fastclick.js',
     'bower_components/pixi.js/bin/pixi.js',
     'node_modules/sprintf-js/dist/sprintf.min.js',
-    'w-type/game.js',
-    'w-type/gameElement.js',
-    'w-type/scoreBoard.js',
-    'w-type/topScores.js',
-    'w-type/lifeBar.js',
-    'w-type/mech.js',
-    'w-type/baddy.js',
-    'w-type/baddyTweened.js',
-    'w-type/bullet.js',
-    'w-type/star.js',
-    'w-type/title.js',
-    'w-type/touchControl.js',
-    'w-type/keyboardControl.js',
-    'js/w-type.js'])
-    .pipe(ccat('w-type.js'))
-    //.pipe(uglify())
+    'src/w-type/game.js',
+    'src/w-type/gameElement.js',
+    'src/w-type/scoreBoard.js',
+    'src/w-type/topScores.js',
+    'src/w-type/lifeBar.js',
+    'src/w-type/mech.js',
+    'src/w-type/baddy.js',
+    'src/w-type/baddyTweened.js',
+    'src/w-type/bullet.js',
+    'src/w-type/star.js',
+    'src/w-type/title.js',
+    'src/w-type/touchControl.js',
+    'src/w-type/keyboardControl.js',
+    'src/js/w-type.js'])
+    .pipe(concat('w-type.js'))
     .pipe(gulp.dest('dist'))
     .pipe(gulp.dest('cordova/www/'));
 }
@@ -78,11 +75,6 @@ gulp.task(
 gulp.task('copy-cordova-index', function(){
   return gulp.src(['index-cordova.html'])
     .pipe(rename('index.html'))
-    .pipe(gulp.dest('dist-android'));
-});
-
-gulp.task('copy-cordova-js', function(){
-  return gulp.src(['index-cordova.js'])
     .pipe(gulp.dest('dist-android'));
 });
 

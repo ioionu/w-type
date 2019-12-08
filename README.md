@@ -2,7 +2,7 @@
 
 A simple r-type clone in PIXI.js.
 
-* Sorry, bit of a mess atm. Clean up in progress. *
+** Sorry, bit of a mess atm. Clean up in progress. **
 
 ### Build
 
