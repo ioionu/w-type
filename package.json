@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@tweenjs/tween.js": "^18.4.2",
+    "pixi.js": "^5",
     "sprintf-js": "^1.0.3"
   },
   "devDependencies": {
@@ -8,6 +9,12 @@
     "@babel/preset-env": "^7.7.4",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "file-loader": "^5.0.2",
     "gulp": "^4.0.0",
     "gulp-concat": "^2.6.0",
@@ -17,7 +24,7 @@
     "gulp.spritesmith": "^3.8.2",
     "html-webpack-plugin": "^3.2.0",
     "img-loader": "^3.0.1",
-    "spritesmith": "^4",
+    "spritesmith": "^3",
     "spritesmith-texturepacker": "^1.0.0",
     "tween.js": "^0.14.0",
     "uglify": "^0.1.5",

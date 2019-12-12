@@ -1,6 +1,8 @@
+import Game from './w-type/Game.js';
+
 var g;
 function game(){
- g = new GAME.game({
+ g = new Game({
    width: 1024,
    height: 600,
    firerate: 10,
