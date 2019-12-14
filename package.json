@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@tweenjs/tween.js": "^18.4.2",
-    "pixi.js": "^5",
+    "pixi.js": "^5.2.0",
     "sprintf-js": "^1.0.3"
   },
   "devDependencies": {
@@ -13,6 +13,7 @@
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "file-loader": "^5.0.2",
@@ -24,6 +25,8 @@
     "gulp.spritesmith": "^3.8.2",
     "html-webpack-plugin": "^3.2.0",
     "img-loader": "^3.0.1",
+    "prettier": "^1.19.1",
+    "prettier-eslint": "^9.0.1",
     "spritesmith": "^3",
     "spritesmith-texturepacker": "^1.0.0",
     "tween.js": "^0.14.0",
@@ -35,7 +38,7 @@
     "webpack-merge": "^4.2.2"
   },
   "scripts": {
-    "build-dev": "gulp",
+    "build-dev": "./node_modules/webpack/bin/webpack.js -c webpack.config.dev.js",
     "build-android": "cd cordova && cordova build browser"
   }
 }

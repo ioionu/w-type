@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import GameElement from './GameElement';
 import Game from './Game';
 import LifeBar from './LifeBar';
+import Bullet from './Bullet';
 
 class Baddy extends GameElement {
   constructor() {
@@ -13,9 +14,9 @@ class Baddy extends GameElement {
 
     this.frames = {};
     this.frames.character = [
-      PIXI.Texture.fromFrame("baddy01"),
-      PIXI.Texture.fromFrame("baddy02"),
-      PIXI.Texture.fromFrame("baddy03")
+      PIXI.Texture.fromFrame('baddy01'),
+      PIXI.Texture.fromFrame('baddy02'),
+      PIXI.Texture.fromFrame('baddy03'),
     ];
 
     this.view = new PIXI.extras.MovieClip(this.frames.character);
@@ -28,7 +29,7 @@ class Baddy extends GameElement {
     this.addLifeBar();
     this.loadDefaultFrames();
     this.sound = {};
-    this.sound.die = "die";
+    this.sound.die = 'die';
   }
 
   updateLife() {
@@ -42,7 +43,7 @@ class Baddy extends GameElement {
     this.YPOWER -= this.YPOWER * (this.YMOD/100);
     if ( this.x() === 600 ) {
       params = {x1: this.x(), y1: this.y(), x2: mech.x(), y2: mech.y(), source: this, damage: 10};
-      i = bullets.push( new GAME.Bullet(params));
+      i = bullets.push( new Bullet(params));
       stage.addChild(bullets[i-1].view);
     }
   }
@@ -55,7 +56,7 @@ class Baddy extends GameElement {
       this.view.height,
       renderer.width,
       renderer.height,
-      'outside'
+      'outside',
     );
   }
 }

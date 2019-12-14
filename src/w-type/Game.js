@@ -1,14 +1,20 @@
 import * as PIXI from 'pixi.js';
 import TWEEN from '@tweenjs/tween.js';
 import Mech from './Mech';
-// var GAME = GAME || {};
+import ScoreBoard from './ScoreBoard';
+import TopScores from './TopScores';
+import Star from './Star';
+import Title from './Title';
+import Keyboard from './Keyboard';
+import Touch from './Touch';
+import BaddyTweened from './BaddyTweened';
 
 /**
  * Construct a game
  * @constructor
  * @param {object} params - width and height and m0ar!
  */
-class Game {
+export default class Game {
   constructor(params) {
     this.width = 800;
     this.height = 600;
@@ -33,12 +39,14 @@ class Game {
     this.animate = this.animate.bind(this);
     //  this.init();
 
-    this.loader = new PIXI.loaders.Loader();
-    this.loader.add(this.sprite_sheet);
-    this.loader.e = this;
-    const _this = this;
-    this.loader.once('complete', this.start);
-    this.loader.load();
+    this.app = new PIXI.Application({backgroundColor: 0x000000});
+
+    this.app.loader.add(this.sprite_sheet)
+    .load(()=>{
+      const _this = this;
+      this.app.loader.e = this;
+      this.start();
+    });
   }
 
 
@@ -46,42 +54,39 @@ class Game {
    * when assets are loaded prepare stage
    * @param {GAME.game} game object
    */
-  start(e) {
-    this.e.stage = new PIXI.Stage(0x000000);
+  start() {
 
-    const WIDTH = this.e.width;
-    const HEIGHT = this.e.height;
     // let pixi choose WebGL or canvas
-    this.e.renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
+    this.app.renderer = PIXI.autoDetectRenderer(this.width, this.height);
     // set the canvas width and height to fill the screen
     const screen_width = window.innerWidth;// 800;
     const screen_height = window.innerHeight;// 600;
-    const ratio_width = screen_width / WIDTH;
-    const ratio_height = screen_height / HEIGHT;
+    const ratio_width = screen_width / this.width;
+    const ratio_height = screen_height / this.height;
     if (ratio_width > ratio_height) {
-      var calc_width = WIDTH * ratio_height;
+      var calc_width = this.width * ratio_height;
       var calc_height = screen_height;
     } else {
-      var calc_height = HEIGHT * ratio_width;
+      var calc_height = this.height * ratio_width;
       var calc_width = screen_width;
     }
 
-    this.e.renderer.view.style.display = 'block';
-    this.e.renderer.view.style.width = `${calc_width }px`;
-    this.e.renderer.view.style.height = `${calc_height }px`;
-    this.e.renderer.view.style.margin = 'auto';
-    this.e.renderer.view.id = this.e.id;
+    this.app.renderer.view.style.display = 'block';
+    this.app.renderer.view.style.width = `${calc_width }px`;
+    this.app.renderer.view.style.height = `${calc_height }px`;
+    this.app.renderer.view.style.margin = 'auto';
+    this.app.renderer.view.id = this.id;
 
     // we need to place canvas in a container to prevent distortion in firefox
-    this.e.container = document.createElement('div');
-    this.e.container.id = `${this.e.id }-container`;
-    this.e.container.style.width = '100%';
-    this.e.container.style.height = '100%';
+    this.container = document.createElement('div');
+    this.container.id = `${this.id }-container`;
+    this.container.style.width = '100%';
+    this.container.style.height = '100%';
 
     // attach render to page
-    this.e.container.appendChild(this.e.renderer.view);
-    document.body.appendChild(this.e.container);
-    this.e.baddie_next = 0;
+    this.container.appendChild(this.app.view);
+    document.body.appendChild(this.container);
+    this.baddie_next = 0;
 
     // background image
     const page = new PIXI.Sprite(PIXI.Texture.fromImage('img/page.jpg'));
@@ -109,16 +114,16 @@ class Game {
     this.e.stage.addChild(this.e.score.view);
 
     // top scores
-    this.e.top_scores = new GAME.TopScores(this.e);
+    this.e.top_scores = new TopScores(this.e);
     console.log('top scores', this.e.top_scores.get());
 
     // add title
-    this.e.title = new GAME.Title(this.e);
+    this.e.title = new Title(this.e);
 
     // keyboard events
     this.e.inputs = [
-      new GAME.Keyboard(this.e),
-      new GAME.Touch(this.e),
+      new Keyboard(this.e),
+      new Touch(this.e),
     ];
 
     // fullscreen events
@@ -238,13 +243,13 @@ class Game {
   }
 
   addStar() {
-    const star = new GAME.Star(this.w(), (Math.random() * this.h()));
+    const star = new Star(this.w(), (Math.random() * this.h()));
     this.stars.push(star);
     this.stage.addChild(star.view);
   }
 
   addBaddyTweened(params) {
-    const baddy = new GAME.BaddyTweened(params);
+    const baddy = new BaddyTweened(params);
     this.baddies.push(baddy);
     this.stage.addChild(baddy.view);
   }
@@ -299,7 +304,7 @@ class Game {
     // add player
     const params = { game: this, lives: 1 };
     this.mech.removeFromStage();
-    this.mech = new GAME.Mech(params);
+    this.mech = new Mech(params);
     this.stage.addChild(this.mech.view);
 
     this.score.updateLife(this.mech.lives);
@@ -399,7 +404,6 @@ class Game {
   static checkBounds(x,y,h,w,sw,sh, mode) {
 
     if(mode === 'inside'){
-
       if (x - w/2 > 0 && x + w/2 < sw && y - h/2 > 0 && y + h/2 < sh) {
         return true;
       }
@@ -414,5 +418,3 @@ class Game {
     return false;
   }
 }
-
-export default Game;
