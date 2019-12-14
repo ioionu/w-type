@@ -14,9 +14,9 @@ class Baddy extends GameElement {
 
     this.frames = {};
     this.frames.character = [
-      PIXI.Texture.fromFrame('baddy01'),
-      PIXI.Texture.fromFrame('baddy02'),
-      PIXI.Texture.fromFrame('baddy03'),
+      PIXI.Texture.from('baddy01'),
+      PIXI.Texture.from('baddy02'),
+      PIXI.Texture.from('baddy03'),
     ];
 
     this.view = new PIXI.extras.MovieClip(this.frames.character);

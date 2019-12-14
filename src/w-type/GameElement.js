@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import LifeBar from './LifeBar';
 
 class GameElement {
   constructor() {
@@ -16,13 +17,13 @@ class GameElement {
   }
 
   loadDefaultFrames(x) {
-    if ( typeof this.frames === 'undefined') {
+    if (typeof this.frames === 'undefined') {
       this.frames = {};
     }
     this.frames.explode = [
-      PIXI.Texture.fromFrame('boom01'),
-      PIXI.Texture.fromFrame('boom02'),
-      PIXI.Texture.fromFrame('boom03'),
+      PIXI.Texture.from('boom01'),
+      PIXI.Texture.from('boom02'),
+      PIXI.Texture.from('boom03'),
     ];
   }
 
@@ -159,7 +160,7 @@ class GameElement {
   }
 
   addLifeBar() {
-    this.life_bar = new GAME.LifeBar({life_full:this.life_full, life: this.life});
+    this.life_bar = new LifeBar({life_full:this.life_full, life: this.life});
     this.view.addChild( this.life_bar.view );
   }
 }

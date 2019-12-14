@@ -11,7 +11,7 @@ export default class Title {
     this.view.addChild(this.screens.title);
     this.view.addChild(this.screens.option);
 
-    this.game.stage.addChild(this.view);
+    this.game.app.stage.addChild(this.view);
 
     //set title position
   }
@@ -20,7 +20,7 @@ export default class Title {
     var title = new PIXI.Container();
     title.visible = true;
 
-    var logo = PIXI.Sprite.fromFrame('title');
+    var logo = PIXI.Sprite.from('title');
     var left = (this.game.width * 0.5);
     var top = (this.game.height * 0.20);
     logo.anchor = new PIXI.Point(0.5, 0.5);
@@ -37,7 +37,7 @@ export default class Title {
     });
     title.addChild(logo);
 
-    var start = PIXI.Sprite.fromFrame('newGame01');
+    var start = PIXI.Sprite.from('newGame01');
     var left = (this.game.width * 0.5);
     var top = (this.game.height * 0.40);
     start.anchor = new PIXI.Point(0.5, 0.5);
@@ -54,7 +54,7 @@ export default class Title {
     });
     title.addChild(start);
 
-    var option = PIXI.Sprite.fromFrame('options');
+    var option = PIXI.Sprite.from('options');
     option.anchor = new PIXI.Point(0.5, 0.5);
     option.position = new PIXI.Point(
       (this.game.width * 0.5),
@@ -105,7 +105,7 @@ export default class Title {
     var option = new PIXI.Container();
     option.visible = false;
 
-    var fullscreen = PIXI.Sprite.fromFrame('fullscreen');
+    var fullscreen = PIXI.Sprite.from('fullscreen');
     fullscreen.anchor = new PIXI.Point(0.5, 0.5);
     fullscreen.position = new PIXI.Point(
       this.game.width * 0.5,
@@ -122,7 +122,7 @@ export default class Title {
     option.addChild(fullscreen);
 
     //toggle stretch
-    var stretch = PIXI.Sprite.fromFrame('streatch');
+    var stretch = PIXI.Sprite.from('streatch');
     stretch.anchor = new PIXI.Point(0.5, 0.5);
     stretch.position = new PIXI.Point(
       this.game.width * 0.5,
@@ -142,7 +142,7 @@ export default class Title {
     option.addChild(stretch);
 
     //toggle stretch
-    var back = PIXI.Sprite.fromFrame('back');
+    var back = PIXI.Sprite.from('back');
     back.anchor = new PIXI.Point(0.5, 0.5);
     back.position = new PIXI.Point(
       this.game.width * 0.5,

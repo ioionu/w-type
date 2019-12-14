@@ -57,7 +57,7 @@ export default class Game {
   start() {
 
     // let pixi choose WebGL or canvas
-    this.app.renderer = PIXI.autoDetectRenderer(this.width, this.height);
+    this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
     // set the canvas width and height to fill the screen
     const screen_width = window.innerWidth;// 800;
     const screen_height = window.innerHeight;// 600;
@@ -66,16 +66,17 @@ export default class Game {
     if (ratio_width > ratio_height) {
       var calc_width = this.width * ratio_height;
       var calc_height = screen_height;
-    } else {
+    }
+    else {
       var calc_height = this.height * ratio_width;
       var calc_width = screen_width;
     }
 
-    this.app.renderer.view.style.display = 'block';
-    this.app.renderer.view.style.width = `${calc_width }px`;
-    this.app.renderer.view.style.height = `${calc_height }px`;
-    this.app.renderer.view.style.margin = 'auto';
-    this.app.renderer.view.id = this.id;
+    this.renderer.view.style.display = 'block';
+    this.renderer.view.style.width = `${calc_width }px`;
+    this.renderer.view.style.height = `${calc_height }px`;
+    this.renderer.view.style.margin = 'auto';
+    this.renderer.view.id = this.id;
 
     // we need to place canvas in a container to prevent distortion in firefox
     this.container = document.createElement('div');
@@ -89,52 +90,52 @@ export default class Game {
     this.baddie_next = 0;
 
     // background image
-    const page = new PIXI.Sprite(PIXI.Texture.fromImage('img/page.jpg'));
-    page.width = WIDTH;
-    page.height = HEIGHT;
-    this.e.stage.addChild(page);
+    const page = new PIXI.Sprite.from('img/page.jpg');
+    page.width = this.width;
+    page.height = this.height;
+    this.app.stage.addChild(page);
 
     // add stars
     for (let s = 0; s < 25; s++) {
-      const x = this.e.renderer.width;
-      const y = Math.random() * this.e.renderer.height;
-      this.e.addStar();
+      const x = this.renderer.width;
+      const y = Math.random() * this.renderer.height;
+      this.addStar();
     }
 
     // add player
-    const params = { game: this.e, lives: 1 };
-    this.e.mech = new Mech(params);
-    this.e.mech.active = false;
-    this.e.stage.addChild(this.e.mech.view);
+    const params = { game: this, lives: 1 };
+    this.mech = new Mech(params);
+    this.mech.active = false;
+    this.app.stage.addChild(this.mech.view);
 
     // add score
-    this.e.score = new ScoreBoard(0, this.e.mech.lives);
-    this.e.score.view.position.x = '5';
-    this.e.score.view.position.y = '5';
-    this.e.stage.addChild(this.e.score.view);
+    this.score = new ScoreBoard(0, this.mech.lives);
+    this.score.view.position.x = '5';
+    this.score.view.position.y = '5';
+    this.app.stage.addChild(this.score.view);
 
     // top scores
-    this.e.top_scores = new TopScores(this.e);
-    console.log('top scores', this.e.top_scores.get());
+    this.top_scores = new TopScores(this);
+    console.log('top scores', this.top_scores.get());
 
     // add title
-    this.e.title = new Title(this.e);
+    this.title = new Title(this);
 
     // keyboard events
-    this.e.inputs = [
-      new Keyboard(this.e),
-      new Touch(this.e),
+    this.inputs = [
+      new Keyboard(this),
+      new Touch(this),
     ];
 
     // fullscreen events
-    const _this = this.e;
+    const _this = this;
     window.onresize((e) => {
       _this.resize();
     });
 
     // not paused
-    this.e.paused = false;
-    this.e.animate();
+    this.paused = false;
+    this.animate();
   }
 
   animate() {
@@ -202,7 +203,7 @@ export default class Game {
 
 
     // draw
-    this.renderer.render(this.stage);
+    this.renderer.render(this.app.stage);
     window.requestAnimationFrame(this.animate);
   }
 
@@ -245,7 +246,7 @@ export default class Game {
   addStar() {
     const star = new Star(this.w(), (Math.random() * this.h()));
     this.stars.push(star);
-    this.stage.addChild(star.view);
+    this.app.stage.addChild(star.view);
   }
 
   addBaddyTweened(params) {

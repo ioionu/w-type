@@ -21,11 +21,11 @@ export default class Mech extends GameElement {
     this.frames = {};
     this.loadDefaultFrames();
     this.frames.character = [
-      PIXI.Texture.fromFrame('mech01'),
-      PIXI.Texture.fromFrame('mech02'),
-      PIXI.Texture.fromFrame('mech03'),
+      PIXI.Texture.from('mech01'),
+      PIXI.Texture.from('mech02'),
+      PIXI.Texture.from('mech03'),
     ];
-    this.view = new PIXI.extras.MovieClip(this.frames.character);
+    this.view = new PIXI.AnimatedSprite(this.frames.character);
     this.view.animationSpeed = 0.20;
     this.view.play();
     this.view.anchor.x = 0.5;
@@ -47,7 +47,7 @@ export default class Mech extends GameElement {
     };
 
 
-    this.filter = new PIXI.filters.SepiaFilter();
+    this.filter = new PIXI.filters.ColorMatrixFilter();
 
     for (let p in params) {
       this[p] = params[p];
@@ -275,11 +275,11 @@ y1;
   */
   tombStone() {
     this.frames.tomb = [
-      PIXI.Texture.fromFrame('tomb01'),
-      PIXI.Texture.fromFrame('tomb02'),
-      PIXI.Texture.fromFrame('tomb03'),
-      PIXI.Texture.fromFrame('tomb04'),
-      PIXI.Texture.fromFrame('tomb05'),
+      PIXI.Texture.from('tomb01'),
+      PIXI.Texture.from('tomb02'),
+      PIXI.Texture.from('tomb03'),
+      PIXI.Texture.from('tomb04'),
+      PIXI.Texture.from('tomb05'),
     ];
 
     this.view.textures = this.frames.tomb;

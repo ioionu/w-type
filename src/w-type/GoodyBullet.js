@@ -13,9 +13,9 @@ export default class GoodyBullet extends GameElement {
     this.damage = param.damage;
     this.source = param.source;
     this.frames = [
-      PIXI.Texture.fromFrame('bullet01'),
-      // PIXI.Texture.fromFrame("bullet02"),
-      // PIXI.Texture.fromFrame("bullet03")
+      PIXI.Texture.from('bullet01'),
+      // PIXI.Texture.from("bullet02"),
+      // PIXI.Texture.from("bullet03")
     ];
 
     this.game = param.game;
