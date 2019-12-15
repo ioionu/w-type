@@ -19,7 +19,7 @@ class Baddy extends GameElement {
       PIXI.Texture.from('baddy03'),
     ];
 
-    this.view = new PIXI.extras.MovieClip(this.frames.character);
+    this.view = new PIXI.AnimatedSprite(this.frames.character);
     this.view.animationSpeed = 0.20;
     this.view.play();
     this.view.anchor.x = this.view.anchor.y = 0.5;

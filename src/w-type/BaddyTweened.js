@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import TWEEN from '@tweenjs/tween.js';
 import GameElement from './GameElement';
 import Game from './Game';
 import LifeBar from './LifeBar';
@@ -6,6 +7,7 @@ import Bullet from './Bullet';
 
 export default class BaddyTweened extends GameElement {
   constructor(params) {
+    super();
     this.type = 'baddyTweened';
     this.SPEED = 1;
     this.YMOD = 0.1;
@@ -20,7 +22,7 @@ export default class BaddyTweened extends GameElement {
       PIXI.Texture.from('baddy03'),
     ];
 
-    this.view = new PIXI.extras.MovieClip(this.frames.character);
+    this.view = new PIXI.AnimatedSprite(this.frames.character);
     this.view.animationSpeed = 0.20;
     this.view.play();
     this.view.anchor.x = this.view.anchor.y = 0.5;
@@ -48,40 +50,36 @@ export default class BaddyTweened extends GameElement {
       this.path[key] = params[key];
     }
 
+    const baddy = this;
+    const xCoord = {x: this.path.x[0]};
     this.tween = {};
-    this.tween.x = new TWEEN.Tween({
-      x: this.path.x[0],
-      baddy: this,
-    })
+    this.tween.x = new TWEEN.Tween(xCoord)
       .to({ x: this.path.x.slice(1) }, this.path.time)
       .delay(this.path.delay)
       .easing(this.path.easing)
       .interpolation(this.path.interpolation)
-      .onUpdate(function () {
-        this.baddy.x(this.x);
+      .onUpdate(() => {
+        baddy.x(xCoord.x);
         // console.log(arguments[0]);
         // console.log(this.baddy.path.shoot, Math.floor( arguments[0] * 100 ));
-        if (this.baddy.path.shoot == Math.floor(arguments[0] * 100)) {
+        if (baddy.path.shoot === Math.floor(arguments[0] * 100)) {
           // console.log(this.baddy.path.shoot, Math.floor( arguments[0] * 100 ));
-          this.baddy.bullet();
+          baddy.bullet();
         }
       })
       .start();
 
-    this.tween.y = new TWEEN.Tween({
-      y: this.path.y[0],
-      baddy: this,
-    })
-      .to({ y: this.path.y.slice(1) }, this.path.time)
-      .delay(this.path.delay)
-      .easing(this.path.easing)
-      .interpolation(this.path.interpolation)
-      .onUpdate(function () {
-        this.baddy.y(this.y);
+    const yCoord = {y: this.path.y[0]};
+    this.tween.y = new TWEEN.Tween(yCoord)
+      .to({ y: baddy.path.y.slice(1) }, baddy.path.time)
+      .delay(baddy.path.delay)
+      .easing(baddy.path.easing)
+      .interpolation(baddy.path.interpolation)
+      .onUpdate(() => {
+        baddy.y(yCoord.y);
       })
       .start();
   }
-
 
   updateLife() {
     this.view.addChild(new LifeBar().view);

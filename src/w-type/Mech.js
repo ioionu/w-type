@@ -46,7 +46,6 @@ export default class Mech extends GameElement {
       shoot: false,
     };
 
-
     this.filter = new PIXI.filters.ColorMatrixFilter();
 
     for (let p in params) {
@@ -89,8 +88,7 @@ export default class Mech extends GameElement {
   }
 
   moveTowards(x, y, speed) {
-    let x1; var 
-y1;
+    let x1; var y1;
     let x0 = this.view.position.x;// - this.view.width;
     let y0 = this.view.position.y;
     x += this.view.width;

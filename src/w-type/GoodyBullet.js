@@ -19,7 +19,7 @@ export default class GoodyBullet extends GameElement {
     ];
 
     this.game = param.game;
-    this.view = new PIXI.extras.MovieClip(this.frames);
+    this.view = new PIXI.AnimatedSprite(this.frames);
     this.view.animationSpeed = 0.05;
     this.view.play();
     this.view.anchor.x = this.view.anchor.y = 0.5;

@@ -162,7 +162,7 @@ export default class Game {
       for (const baddy in this.baddies) {
         if (this.baddies.hasOwnProperty(baddy)) {
           if (this.baddies[baddy].active) {
-            if (hitTest(this.mech, this.baddies[baddy])) {
+            if (Game.hitTest(this.mech, this.baddies[baddy])) {
               this.mech.hit(20);
               this.baddies[baddy].die();
             }
@@ -173,7 +173,7 @@ export default class Game {
             }
             for (let bullet = 0; bullet < this.bullets.length; bullet++) {
               const { damage } = this.bullets[bullet];
-              if (hitTest(this.bullets[bullet], this.baddies[baddy])) {
+              if (Game.hitTest(this.bullets[bullet], this.baddies[baddy])) {
                 // console.log("hit!!");
                 this.baddies[baddy].hit(damage);
                 this.baddies[baddy].recoil(this.bullets[bullet]);
@@ -181,7 +181,7 @@ export default class Game {
                   this.bullets[bullet].die();
                 }
               }
-              if (this.bullets[bullet].source != this.mech && hitTest(this.bullets[bullet], this.mech)) {
+              if (this.bullets[bullet].source != this.mech && Game.hitTest(this.bullets[bullet], this.mech)) {
                 this.bullets[bullet].die();
                 this.mech.hit(damage);
                 this.mech.recoil(this.bullets[bullet]);
@@ -252,7 +252,7 @@ export default class Game {
   addBaddyTweened(params) {
     const baddy = new BaddyTweened(params);
     this.baddies.push(baddy);
-    this.stage.addChild(baddy.view);
+    this.app.stage.addChild(baddy.view);
   }
 
   createBaddyTweenedSquad() {
@@ -282,7 +282,7 @@ export default class Game {
 
   fire(bullet) {
     this.bullets.push(bullet);
-    this.stage.addChild(bullet.view);
+    this.app.stage.addChild(bullet.view);
   }
 
   gameOver() {
@@ -306,7 +306,7 @@ export default class Game {
     const params = { game: this, lives: 1 };
     this.mech.removeFromStage();
     this.mech = new Mech(params);
-    this.stage.addChild(this.mech.view);
+    this.app.stage.addChild(this.mech.view);
 
     this.score.updateLife(this.mech.lives);
     this.score.updateScore(0);

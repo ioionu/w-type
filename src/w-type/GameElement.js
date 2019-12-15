@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import LifeBar from './LifeBar';
+import Game from './Game';
 
 class GameElement {
   constructor() {
@@ -141,7 +142,7 @@ class GameElement {
 
   removeFromStage() {
     if (typeof this.game !== 'undefined' && this.view.stage !== null) {
-      this.game.stage.removeChild(this.view);
+      this.game.app.stage.removeChild(this.view);
     }
   }
 
@@ -149,11 +150,11 @@ class GameElement {
   recoil(bullet) {
     var recoil = 10;
     if (bullet.x() < this.x()) {
-      if (GAME.game.checkBounds(this.x() + recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')) {
+      if (Game.checkBounds(this.x() + recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')) {
         this.x( this.x()+recoil);
       }
     } else {
-      if (GAME.game.checkBounds(this.x() - recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')) {
+      if (Game.checkBounds(this.x() - recoil, this.y(), this.h(), this.w(), this.game.width, this.game.height, 'inside')) {
         this.x( this.x()-recoil);
       }
     }
