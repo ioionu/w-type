@@ -33,20 +33,21 @@ export default class GoodyBullet extends GameElement {
     this.colloide = true;
     this.tween_speed = param.distance * this.BULLET_SPEED;
 
-    this.tween = new TWEEN.Tween({
+    const bullet = this;
+    const coords = {
       x: this.x(),
       y: this.y(),
-      bullet: this,
-    })
-      .to({ x: this.target.x, y: this.target.y }, this.tween_speed)
+    };
+    this.tween = new TWEEN.Tween(coords)
+      .to({ x: bullet.target.x, y: bullet.target.y }, bullet.tween_speed)
       .delay(0)
       .easing(TWEEN.Easing.Linear.None)
-      .onUpdate(function () {
-        this.bullet.x(this.x);
-        this.bullet.y(this.y);
+      .onUpdate(() => {
+        bullet.x(coords.x);
+        bullet.y(coords.y);
       })
-      .onComplete(function () {
-        this.bullet.die();
+      .onComplete(() => {
+        bullet.die();
       })
       .start();
   }

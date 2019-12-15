@@ -24,6 +24,7 @@ export default class Game {
       'img/page.jpg',
     ];
     this.id = 'game';
+    this.firerate = params.firerate;
 
     this.stars = [];
     this.baddies = [];
