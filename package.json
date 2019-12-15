@@ -38,7 +38,7 @@
     "webpack-merge": "^4.2.2"
   },
   "scripts": {
-    "build-dev": "./node_modules/webpack/bin/webpack.js -c webpack.config.dev.js",
+    "build-dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.dev.js",
     "build-android": "cd cordova && cordova build browser"
   }
 }

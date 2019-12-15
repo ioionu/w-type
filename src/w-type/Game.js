@@ -72,11 +72,11 @@ export default class Game {
       var calc_width = screen_width;
     }
 
-    this.renderer.view.style.display = 'block';
-    this.renderer.view.style.width = `${calc_width }px`;
-    this.renderer.view.style.height = `${calc_height }px`;
-    this.renderer.view.style.margin = 'auto';
-    this.renderer.view.id = this.id;
+    this.app.view.style.display = 'block';
+    this.app.view.style.width = `${calc_width }px`;
+    this.app.view.style.height = `${calc_height }px`;
+    this.app.view.style.margin = 'auto';
+    this.app.view.id = this.id;
 
     // we need to place canvas in a container to prevent distortion in firefox
     this.container = document.createElement('div');
@@ -129,8 +129,8 @@ export default class Game {
 
     // fullscreen events
     const _this = this;
-    window.onresize((e) => {
-      _this.resize();
+    window.addEventListener('resize', (e) => {
+      this.resize();
     });
 
     // not paused
@@ -244,7 +244,7 @@ export default class Game {
   }
 
   addStar() {
-    const star = new Star(this.w(), (Math.random() * this.h()));
+    const star = new Star(this.w()+1, (Math.random() * this.h()));
     this.stars.push(star);
     this.app.stage.addChild(star.view);
   }

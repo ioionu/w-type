@@ -33,17 +33,16 @@ export default class Star extends GameElement {
     this.view.position.y = y;
 
 
-    this.tween = new TWEEN.Tween({
-      x:this.x(),
-      star: this
-    })
+    const coords = {x: 805};
+    const star = this;
+    this.tween = new TWEEN.Tween(coords)
       .to({x:-2}, Math.random() * 9000 + 1000)
       .delay(Math.random() * 10000)
       .repeat(Infinity)
       .easing(TWEEN.Easing.Linear.None)
-      .onUpdate( function(){
+      .onUpdate(() => {
         //console.log(this.x, this.star.view.position.y, this.star.x());
-        this.star.x( this.x );
+        star.x(coords.x);
       })
       .start();
 
