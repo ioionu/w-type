@@ -7,7 +7,12 @@ export default class ScoreBoard {
 
     const value = 'Hello';
     this.view = new PIXI.Text(value, {
-      font: '24px misakiminchoregular', fill: 0xFFFFFF, align: 'center', lineHeight: '50', padding: 5,
+      fontFamily: 'misakiminchoregular',
+      fontSize: '24pt',
+      align: 'center',
+      lineHeight: '50',
+      padding: 5,
+      fill: 'white',
     });
     this.update();
   }

@@ -58,24 +58,25 @@ export default class Game {
   start() {
 
     // let pixi choose WebGL or canvas
-    this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
+    // this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
     // set the canvas width and height to fill the screen
-    const screen_width = window.innerWidth;// 800;
-    const screen_height = window.innerHeight;// 600;
-    const ratio_width = screen_width / this.width;
-    const ratio_height = screen_height / this.height;
-    if (ratio_width > ratio_height) {
-      var calc_width = this.width * ratio_height;
-      var calc_height = screen_height;
+    const screenWidth = window.innerWidth;// 800;
+    const screenHeight = window.innerHeight;// 600;
+    const ratioWidth = screenWidth / this.width;
+    const ratioHeight = screenHeight / this.height;
+    let calcWidth; let calcHeight;
+    if (ratioWidth > ratioHeight) {
+      calcWidth = this.width * ratioHeight;
+      calcHeight = screenHeight;
     }
     else {
-      var calc_height = this.height * ratio_width;
-      var calc_width = screen_width;
+      calcHeight = this.height * ratioWidth;
+      calcWidth = screenWidth;
     }
 
     this.app.view.style.display = 'block';
-    this.app.view.style.width = `${calc_width }px`;
-    this.app.view.style.height = `${calc_height }px`;
+    this.app.view.style.width = `${calcWidth}px`;
+    this.app.view.style.height = `${calcHeight}px`;
     this.app.view.style.margin = 'auto';
     this.app.view.id = this.id;
 
@@ -98,8 +99,8 @@ export default class Game {
 
     // add stars
     for (let s = 0; s < 25; s++) {
-      const x = this.renderer.width;
-      const y = Math.random() * this.renderer.height;
+      const x = this.app.view.width;
+      const y = Math.random() * this.app.view.height;
       this.addStar();
     }
 
@@ -204,7 +205,7 @@ export default class Game {
 
 
     // draw
-    this.renderer.render(this.app.stage);
+    // this.renderer.render(this.app.stage);
     window.requestAnimationFrame(this.animate);
   }
 
@@ -237,11 +238,11 @@ export default class Game {
   }
 
   scaledWidth() {
-    return this.renderer.view.style.width;
+    return this.app.view.style.width;
   }
 
   scaledHeight() {
-    return this.renderer.view.style.height;
+    return this.app.view.style.height;
   }
 
   addStar() {
@@ -346,15 +347,15 @@ export default class Game {
       }
       // console.log(factor, calc_height, screen_height, calc_width, screen_width);
 
-      this.renderer.view.style.display = 'block';
-      calc_height = `${HEIGHT * factor }px`;
-      calc_width = `${WIDTH * factor }px`;
+      this.app.renderer.view.style.display = 'block';
+      calc_height = `${HEIGHT * factor}px`;
+      calc_width = `${WIDTH * factor}px`;
     } else {
-      calc_height = `${window.innerHeight }px`;
+      calc_height = `${window.innerHeight}px`;
       calc_width = '100%';
     }
-    this.renderer.view.style.width = calc_width; // "100%";
-    this.renderer.view.style.height = calc_height; // "100%";
+    this.app.renderer.view.style.width = calc_width; // "100%";
+    this.app.renderer.view.style.height = calc_height; // "100%";
   }
 
   toggleStretch() {

@@ -88,7 +88,7 @@ export default class TopScores {
     form_inner.appendChild(form_button);
     form_container.appendChild(form_inner);
 
-    let container_name = `${this.game.id  }-container`;
+    let container_name = `${this.game.id}-container`;
 
     this.form_text = form_text;
     this.form_container = form_container;

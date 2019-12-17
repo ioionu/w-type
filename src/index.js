@@ -2,7 +2,7 @@ import Game from './w-type/Game.js';
 
 let g;
 function game() {
-  g = new Game({
+  new Game({
     width: 1024,
     height: 600,
     firerate: 10,
@@ -11,4 +11,9 @@ function game() {
     baddie_rate_min: 50,
   });
 }
-game();
+if (document.readyState !== 'loading') {
+  game();
+} else {
+  document.addEventListener('DOMContentLoaded', game);
+}
+

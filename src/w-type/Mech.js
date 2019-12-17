@@ -189,18 +189,18 @@ export default class Mech extends GameElement {
     // find target...
     let A = this.r();
     console.log('rotation', A);
-    let a = (A < 0) ? this.y() : this.game.renderer.height - this.y();
+    let a = (A < 0) ? this.y() : this.game.app.renderer.height - this.y();
     if (A !== 0) {
       // console.log(A,a);
       p = Game.getTargetPoint(A, a);
       b = p.x; // stash x as we use it to calculate the side c, and use that to calc speed
-      p.y = (A > 0) ? this.game.renderer.height + 30 : 0 - 30;
+      p.y = (A > 0) ? this.game.app.renderer.height + 30 : 0 - 30;
       p.x += this.x();
       distance = Math.sqrt(a * a + b * b);
     } else {
       // shoot strait
       p = {};
-      p.x = this.game.renderer.width + 30; // TODO remove hardcode 30
+      p.x = this.game.app.renderer.width + 30; // TODO remove hardcode 30
 
       p.y = this.y();
       distance = p.x - this.x();
@@ -231,12 +231,12 @@ export default class Mech extends GameElement {
 
     // find target...
     let A = this.r();
-    let a = (A < 0) ? this.y() : this.game.renderer.height - this.y();
+    let a = (A < 0) ? this.y() : this.game.app.renderer.height - this.y();
     if (A !== 0) {
       // console.log(A,a);
       p = Game.getTargetPoint(A, a);
       b = p.x; // stash x as we use it to calculate the side c, and use that to calc speed
-      p.y = (A > 0) ? this.game.renderer.height + 30 : 0 - 30;
+      p.y = (A > 0) ? this.game.app.renderer.height + 30 : 0 - 30;
       p.x += this.x();
       distance = Math.sqrt(a * a + b * b);
     } else {

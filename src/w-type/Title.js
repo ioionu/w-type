@@ -11,12 +11,14 @@ export default class Title {
     this.view.addChild(this.screens.title);
     this.view.addChild(this.screens.option);
 
-    this.game.app.stage.addChild(this.view);
+    this.game.app.
+    
+    stage.addChild(this.view);
 
     //set title position
   }
 
-  titleScreen(){
+  titleScreen() {
     var title = new PIXI.Container();
     title.visible = true;
 
@@ -72,7 +74,16 @@ export default class Title {
     title.addChild(option);
 
     var top_score_string = this.game.top_scores.getString();
-    this.top_scores = new PIXI.Text(top_score_string, {font : '24px misakiminchoregular', fill : 0xFFFFFF, align : 'left', padding: 3});
+    this.top_scores = new PIXI.Text(
+      top_score_string,
+      {
+        fontFamily: 'misakiminchoregular',
+        fontSize: '24px',
+        fill: 0xFFFFFF,
+        align: 'left',
+        padding: 3,
+      }
+    );
     this.top_scores.anchor = new PIXI.Point(0.5, 0.5);
     this.top_scores.position = new PIXI.Point(
       this.game.width * 0.5,
@@ -80,8 +91,16 @@ export default class Title {
     );
     title.addChild(this.top_scores);
 
-    var copyright_string = "Copyright 2015 Joshua McCluskey\nFork me on github https://github.com/ioionu/w-type";
-    var copyright = new PIXI.Text(copyright_string, {font : '24px misakiminchoregular', fill : 0xFFFFFF, align : 'center', padding: 3});
+    const copyright_string = "Copyright 2015 Joshua McCluskey\nFork me on github https://github.com/ioionu/w-type";
+    const copyright = new PIXI.Text(
+      copyright_string,
+      {
+        fontFamily : 'misakiminchoregular',
+        fonstSize: '24px',
+        fill : 0xFFFFFF,
+        align : 'center',
+        padding: 3,
+      });
     copyright.anchor = new PIXI.Point(0.5, 0.5);
     copyright.position = new PIXI.Point(
       this.game.width * 0.5,
