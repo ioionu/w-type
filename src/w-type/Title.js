@@ -78,7 +78,7 @@ export default class Title {
       top_score_string,
       {
         fontFamily: 'misakiminchoregular',
-        fontSize: '24px',
+        fontSize: '30px',
         fill: 0xFFFFFF,
         align: 'left',
         padding: 3,
@@ -91,12 +91,12 @@ export default class Title {
     );
     title.addChild(this.top_scores);
 
-    const copyright_string = "Copyright 2015 Joshua McCluskey\nFork me on github https://github.com/ioionu/w-type";
+    const copyright_string = "Copyright 2019 Joshua McCluskey\nFork me on github https://github.com/ioionu/w-type";
     const copyright = new PIXI.Text(
       copyright_string,
       {
         fontFamily : 'misakiminchoregular',
-        fonstSize: '24px',
+        fonstSize: '30px',
         fill : 0xFFFFFF,
         align : 'center',
         padding: 3,

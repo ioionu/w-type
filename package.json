@@ -39,6 +39,7 @@
   },
   "scripts": {
     "build-dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.dev.js",
+    "build": "./node_modules/webpack/bin/webpack.js --config webpack.config.prod.js",
     "build-android": "cd cordova && cordova build browser"
   }
 }
