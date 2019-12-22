@@ -38,7 +38,7 @@ export default class Bullet extends GameElement {
     this.finish_point = 0 - this.view.width;
 
     if (param.x2 > param.x1) {
-      this.finish_point = param.game.renderer.width + this.view.width;
+      this.finish_point = param.game.app.renderer.width + this.view.width;
     }
 
     // first point on bullets bezier path will be this far out in front of the origin
@@ -47,33 +47,34 @@ export default class Bullet extends GameElement {
       this.first_point_distance *= -1;
     }
 
-    this.tween.x = new TWEEN.Tween({
+    const bullet = this;
+
+    const coord = {
       x: this.x(),
-      target_x: this.x2,
-      bullet: this,
-    })
+    };
+    this.tween.x = new TWEEN.Tween(coord)
       .to({ x: [this.x() + this.first_point_distance, param.x2, this.finish_point] }, 1500)
       .delay(0)
       .easing(TWEEN.Easing.Linear.None)
       .interpolation(this.interpolation)
-      .onUpdate(function () {
-        this.bullet.x(this.x);
+      .onUpdate(() => {
+        bullet.x(coord.x);
       })
-      .onComplete(function () {
-        this.bullet.die();
+      .onComplete(() => {
+        bullet.die();
       })
       .start();
 
-    this.tween.y = new TWEEN.Tween({
+    const yCoord = {
       y: this.y(),
-      target_y: this.y2,
-      bullet: this,
-    })
+    };
+
+    this.tween.y = new TWEEN.Tween(yCoord)
       .to({ y: [this.y(), param.y2, param.y2] }, 1500)
       .easing(TWEEN.Easing.Quadratic.InOut)
       .interpolation(this.interpolation)
-      .onUpdate(function () {
-        this.bullet.y(this.y);
+      .onUpdate(() => {
+        bullet.y(yCoord.y);
       })
       .start();
   }

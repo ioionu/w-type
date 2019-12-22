@@ -14,6 +14,7 @@ export default class BaddyTweened extends GameElement {
     this.YPOWER = Math.random() * 100;
     this.strength = 10;
     this.value = 1;
+    this.dob = new Date();
 
     this.frames = {};
     this.frames.character = [
@@ -58,12 +59,10 @@ export default class BaddyTweened extends GameElement {
       .delay(this.path.delay)
       .easing(this.path.easing)
       .interpolation(this.path.interpolation)
-      .onUpdate(() => {
+      .onUpdate((frame) => {
         baddy.x(xCoord.x);
-        // console.log(arguments[0]);
-        // console.log(this.baddy.path.shoot, Math.floor( arguments[0] * 100 ));
-        if (baddy.path.shoot === Math.floor(arguments[0] * 100)) {
-          // console.log(this.baddy.path.shoot, Math.floor( arguments[0] * 100 ));
+        const age = Math.floor((new Date() - baddy.dob) / 100);
+        if (baddy.path.shoot + (baddy.path.delay / 100) === age) {
           baddy.bullet();
         }
       })
