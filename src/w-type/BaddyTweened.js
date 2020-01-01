@@ -18,9 +18,9 @@ export default class BaddyTweened extends GameElement {
 
     this.frames = {};
     this.frames.character = [
-      PIXI.Texture.from('baddy01'),
-      PIXI.Texture.from('baddy02'),
-      PIXI.Texture.from('baddy03'),
+      PIXI.Texture.from('baddy01.png'),
+      PIXI.Texture.from('baddy02.png'),
+      PIXI.Texture.from('baddy03.png'),
     ];
 
     this.view = new PIXI.AnimatedSprite(this.frames.character);
@@ -47,12 +47,15 @@ export default class BaddyTweened extends GameElement {
     this.path.delay = 0;
     this.path.shoot = 50; // time in tween * 100 that baddy will shoot
 
-    for (let key in params) {
-      this.path[key] = params[key];
-    }
+    this.path = {
+      ...this.path,
+      ...params,
+    };
 
     const baddy = this;
-    const xCoord = {x: this.path.x[0]};
+    const xCoord = {
+      x: this.path.x[0],
+    };
     this.tween = {};
     this.tween.x = new TWEEN.Tween(xCoord)
       .to({ x: this.path.x.slice(1) }, this.path.time)

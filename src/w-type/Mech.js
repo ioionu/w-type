@@ -21,9 +21,7 @@ export default class Mech extends GameElement {
     this.frames = {};
     this.loadDefaultFrames();
     this.frames.character = [
-      PIXI.Texture.from('mech01'),
-      PIXI.Texture.from('mech02'),
-      PIXI.Texture.from('mech03'),
+      PIXI.Texture.from('mech.png'),
     ];
     this.view = new PIXI.AnimatedSprite(this.frames.character);
     this.view.animationSpeed = 0.20;
@@ -45,8 +43,10 @@ export default class Mech extends GameElement {
       right: false,
       shoot: false,
     };
+    this.scale = new PIXI.Point(.5, .5);
 
     this.filter = new PIXI.filters.ColorMatrixFilter();
+    // this.view.scale = this.scale;
 
     for (let p in params) {
       this[p] = params[p];
@@ -148,7 +148,7 @@ export default class Mech extends GameElement {
 
     if (this.active) {
       // get inputs from game
-      let {inputs} = this.game;
+      let { inputs } = this.game;
       let active_input;
       for (let i = 0; i < inputs.length; i++) {
         if (inputs[i].enabled) {
@@ -158,8 +158,11 @@ export default class Mech extends GameElement {
       }
       active_input.update();
       if (this.charge > this.charged) {
+        this.filter.negative();
+        this.scale.set(2, 2);
         this.view.filters = [this.filter];
       } else {
+        this.scale.set(1, 1);
         this.view.filters = null;
       }
     }

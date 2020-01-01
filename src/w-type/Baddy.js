@@ -14,9 +14,9 @@ class Baddy extends GameElement {
 
     this.frames = {};
     this.frames.character = [
-      PIXI.Texture.from('baddy01'),
-      PIXI.Texture.from('baddy02'),
-      PIXI.Texture.from('baddy03'),
+      PIXI.Texture.from('baddy01.png'),
+      PIXI.Texture.from('baddy02.png'),
+      PIXI.Texture.from('baddy03.png'),
     ];
 
     this.view = new PIXI.AnimatedSprite(this.frames.character);

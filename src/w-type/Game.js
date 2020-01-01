@@ -22,6 +22,7 @@ export default class Game {
     this.sprite_sheet = [
       'img/SpriteSheet.json',
       'img/page.jpg',
+      'img/mech.png',
     ];
     this.id = 'game';
     this.firerate = params.firerate;
@@ -40,6 +41,7 @@ export default class Game {
     this.animate = this.animate.bind(this);
     //  this.init();
 
+    PIXI.settings.SPRITE_MAX_TEXTURES = Math.min(PIXI.settings.SPRITE_MAX_TEXTURES, 16);
     this.app = new PIXI.Application({backgroundColor: 0x000000});
 
     this.app.loader.add(this.sprite_sheet)
