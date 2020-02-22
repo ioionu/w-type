@@ -1,4 +1,14 @@
+import webfontloader from "webfontloader";
 import Game from './w-type/Game.js';
+
+
+const WebFontConfig = {
+  custom: {
+    families: ['misakiminchoregular'],
+    urls: ['/style/misaki/stylesheet.css']
+  }
+};
+webfontloader.load(WebFontConfig);
 
 let g;
 function game() {
@@ -11,9 +21,12 @@ function game() {
     baddie_rate_min: 50,
   });
 }
-if (document.readyState !== 'loading') {
+if (document.fonts.ready === 'loaded') {
   game();
 } else {
-  document.addEventListener('DOMContentLoaded', game);
+  // document.addEventListener('DOMContentLoaded', game);
+  document.fonts.ready.then(() => {
+    console.log("fuck shit");
+    game();
+  });
 }
-

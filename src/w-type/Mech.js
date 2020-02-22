@@ -21,7 +21,9 @@ export default class Mech extends GameElement {
     this.frames = {};
     this.loadDefaultFrames();
     this.frames.character = [
-      PIXI.Texture.from('mech.png'),
+      PIXI.Texture.from('mech01.png'),
+      PIXI.Texture.from('mech02.png'),
+      PIXI.Texture.from('mech03.png'),
     ];
     this.view = new PIXI.AnimatedSprite(this.frames.character);
     this.view.animationSpeed = 0.20;
@@ -30,6 +32,8 @@ export default class Mech extends GameElement {
     this.view.anchor.y = 0.5;
     this.view.position.y = 240;
     this.view.position.x = 100;
+    // this.view.width = 175;
+    // this.view.height = 50;
     this.realAnimationSpeed = 0.20;
     this.pitch = 0.2; // when mech is moving up or down
     this.fire_next = 0;
@@ -43,7 +47,7 @@ export default class Mech extends GameElement {
       right: false,
       shoot: false,
     };
-    this.scale = new PIXI.Point(.5, .5);
+    this.scale = new PIXI.Point(.25, .25);
 
     this.filter = new PIXI.filters.ColorMatrixFilter();
     // this.view.scale = this.scale;
