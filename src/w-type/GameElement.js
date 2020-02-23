@@ -9,12 +9,10 @@ class GameElement {
     this.life = 100;
     this.life_full = this.life;
     this.onDie = null;
-    this.size = function () {
-      return {
-        'w': this.view.texture.width,
-        'h': this.view.texture.height,
-      };
-    };
+    this.size = () => ({
+      w: this.view.texture.width,
+      h: this.view.texture.height,
+    });
 
   }
 
@@ -118,12 +116,12 @@ class GameElement {
       this.view.gotoAndPlay(0);
       this.view.loop = false;
       this.view.game_element = this;
-      const game_element = this;
+      const gameElement = this;
       this.view.onComplete = () => {
-        if (typeof game_element !== 'undefined') {
-          game_element.remove = true;
-          if (typeof game_element.respawn !== 'undefined') {
-            game_element.respawn();
+        if (typeof gameElement !== 'undefined') {
+          gameElement.remove = true;
+          if (typeof gameElement.respawn !== 'undefined') {
+            gameElement.respawn();
           }
         }
       };
@@ -132,13 +130,11 @@ class GameElement {
     return false;
   }
 
-
   removeFromStage() {
     if (typeof this.game !== 'undefined' && this.view.stage !== null) {
       this.game.app.stage.removeChild(this.view);
     }
   }
-
 
   recoil(bullet) {
     const recoil = 10;
@@ -165,7 +161,7 @@ class GameElement {
   addLifeBar() {
     this.life_bar = new LifeBar({
       life_full: this.life_full,
-      life: this.life
+      life: this.life,
     });
     this.view.addChild(this.life_bar.view);
   }

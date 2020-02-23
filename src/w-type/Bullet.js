@@ -59,6 +59,7 @@ export default class Bullet extends GameElement {
       .easing(TWEEN.Easing.Linear.None)
       .interpolation(this.interpolation)
       .onUpdate(() => {
+        this.view.rotation = (bullet.x() < coord.x) ? 0 : 3.1415;
         bullet.x(coord.x);
       })
       .onComplete(() => {

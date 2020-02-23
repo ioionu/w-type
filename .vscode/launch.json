@@ -12,9 +12,17 @@
       "url": "http://localhost:9000/",
       "pathMappings": [
         {
+          "url": "webpack:///src/index.js",
+          "path": "${workspaceFolder}/src/index.js"
+        },
+        {
           "url": "webpack:///src/w-type",
           "path": "${workspaceFolder}/src/w-type"
         },
+        {
+          "url": "webpack:///src/index.js",
+          "path": "${workspaceFolder}/src/index.js"
+        }
       ]
     }
   ]

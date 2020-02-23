@@ -26,14 +26,13 @@ export default class BaddyTweened extends GameElement {
     this.view = new PIXI.AnimatedSprite(this.frames.character);
     this.view.animationSpeed = 0.20;
     this.view.play();
-    this.view.anchor.x = this.view.anchor.y = 0.5;
+    this.view.anchor.x = 0.5;
+    this.view.anchor.y = 0.5;
     this.view.position.x = params.x[0];
     this.view.position.y = params.y[0];
 
     this.addLifeBar();
     this.loadDefaultFrames();
-    this.sound = {};
-    this.sound.die = 'die';
 
     this.target = params.mech;
     this.game = params.game;
@@ -85,7 +84,6 @@ export default class BaddyTweened extends GameElement {
 
   updateLife() {
     this.view.addChild(new LifeBar().view);
-    // life_bar.scale.x = this.life / this.life_full;
   }
 
   bullet() {
@@ -101,7 +99,7 @@ export default class BaddyTweened extends GameElement {
       };
       this.loaded = false;
       const bullet = new Bullet(params);
-      bullet.view.rotation = 3.1415;
+      // bullet.view.rotation = 3.1415;
       bullet.view.scale = new PIXI.Point(0.5, 0.5);
       this.game.fire(bullet);
     }
