@@ -22,10 +22,11 @@ export default class GoodyBullet extends GameElement {
     this.view = new PIXI.AnimatedSprite(this.frames);
     this.view.animationSpeed = 0.05;
     this.view.play();
-    this.view.anchor.x = this.view.anchor.y = 0.5;
+    this.view.anchor.x = 0.5;
+    this.view.anchor.y = 0.5;
     this.view.position.x = param.x1;
     this.view.position.y = param.y1;
-    this.view.scale = new PIXI.Point(2, 0.5);
+    this.view.scale = new PIXI.Point(0.5, 0.5);
     this.target = {
       x: param.x2,
       y: param.y2,
@@ -54,7 +55,7 @@ export default class GoodyBullet extends GameElement {
 
   super() {
     this.type = 'super';
-    this.view.scale = new PIXI.Point(5, 3);
+    this.view.scale = new PIXI.Point(1, 1);
     this.colloide = false;
     this.damage = 100;
   }

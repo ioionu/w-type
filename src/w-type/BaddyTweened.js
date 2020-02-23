@@ -90,7 +90,7 @@ export default class BaddyTweened extends GameElement {
 
   bullet() {
     if (this.loaded && this.active) {
-      let params = {
+      const params = {
         x1: this.x(),
         y1: this.y(),
         x2: this.target.x(),
@@ -100,7 +100,9 @@ export default class BaddyTweened extends GameElement {
         game: this.game,
       };
       this.loaded = false;
-      let bullet = new Bullet(params);
+      const bullet = new Bullet(params);
+      bullet.view.rotation = 3.1415;
+      bullet.view.scale = new PIXI.Point(0.5, 0.5);
       this.game.fire(bullet);
     }
   }

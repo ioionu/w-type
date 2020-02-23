@@ -15,9 +15,9 @@ export default class Mech extends GameElement {
     this.type = 'mech';
 
     this.game = params.game;
-    this.lives = 3;
+    this.lives = 0;
     this.score = 0;
-    this.speed = 7;
+    this.speed = 15;
     this.frames = {};
     this.loadDefaultFrames();
     this.frames.character = [
@@ -47,9 +47,10 @@ export default class Mech extends GameElement {
       right: false,
       shoot: false,
     };
-    this.scale = new PIXI.Point(.25, .25);
+    this.scale = new PIXI.Point(0.5, 0.5);
 
-    this.filter = new PIXI.filters.ColorMatrixFilter();
+    this.is_dead = true;
+
     // this.view.scale = this.scale;
 
     for (let p in params) {
@@ -57,6 +58,23 @@ export default class Mech extends GameElement {
     }
 
     this.addLifeBar();
+    this.addCharge();
+  }
+
+  addCharge() {
+    this.charge_frame = new PIXI.AnimatedSprite([
+      PIXI.Texture.from('charge01.png'),
+      PIXI.Texture.from('charge02.png'),
+      PIXI.Texture.from('charge03.png'),
+    ]);
+    this.charge_frame.animationSpeed = 0.10;
+    this.charge_frame.play();
+    this.charge_frame.anchor.x = 0.5;
+    this.charge_frame.anchor.y = 0.5;
+    this.charge_frame.visible = false;
+    // this.charge_frame.position.y = 240;
+    // this.charge_frame.position.x = 100;
+    this.view.addChild(this.charge_frame);
   }
 
   resetState() {
@@ -162,12 +180,10 @@ export default class Mech extends GameElement {
       }
       active_input.update();
       if (this.charge > this.charged) {
-        this.filter.negative();
-        this.scale.set(2, 2);
-        this.view.filters = [this.filter];
+        this.charge_frame.visible = true;
       } else {
         this.scale.set(1, 1);
-        this.view.filters = null;
+        this.charge_frame.visible = false;
       }
     }
   }
@@ -179,23 +195,34 @@ export default class Mech extends GameElement {
       this.view.gotoAndPlay(0);
       this.view.loop = true;
       this.active = true;
+      this.is_dead = false;
       this.life = 100;
       this.life_bar.update(this.life);
-      console.log('respawn');
-    } else {
-      this.active = false;
-      this.game.gameOver();
+      this.showLifeBar();
+    }
+    else {
+      if (!this.is_dead) {
+        // this.active = false;
+        this.is_dead = true;
+        this.game.gameOver();
+        this.tombStone();
+        this.hideLifeBar();
+      }
     }
   }
 
+  gameOver() {
+    this.game.gameOver();
+    this.tombStone();
+  }
+
   bullet(screen_width, screen_height) {
-    // createjs.Sound.play("peow");
-    let x; var y; var b; var distance;
+    let b;
+    let distance;
     let p = {};
 
     // find target...
     let A = this.r();
-    console.log('rotation', A);
     let a = (A < 0) ? this.y() : this.game.app.renderer.height - this.y();
     if (A !== 0) {
       // console.log(A,a);
@@ -221,7 +248,7 @@ export default class Mech extends GameElement {
       y2: p.y,
       source: this,
       damage: 50,
-      distance: distance,
+      distance,
       game: this.game,
       type: 'goodyBullet',
     });
@@ -279,26 +306,23 @@ export default class Mech extends GameElement {
   * @method tombStone
   */
   tombStone() {
+    this.charge_frame.visible = false;
     this.frames.tomb = [
-      PIXI.Texture.from('tomb01'),
-      PIXI.Texture.from('tomb02'),
-      PIXI.Texture.from('tomb03'),
-      PIXI.Texture.from('tomb04'),
-      PIXI.Texture.from('tomb05'),
+      PIXI.Texture.from('tomb01.png'),
+      PIXI.Texture.from('tomb02.png'),
+      PIXI.Texture.from('tomb03.png'),
+      PIXI.Texture.from('tomb04.png'),
+      PIXI.Texture.from('tomb05.png'),
     ];
 
     this.view.textures = this.frames.tomb;
     this.view.loop = false;
     this.view.interactive = true;
-    let _this = this;
-    this.view.on('mousedown', (e) => {
-      _this.game.newGame();
+    this.view.on('mousedown', () => {
+      this.game.newGame();
     });
 
     this.view.gotoAndPlay(0);
-    this.view.onComplete = function () {
-      console.log('i am function');
-    };
   }
 }
 

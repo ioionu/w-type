@@ -1,7 +1,7 @@
 import webfontloader from "webfontloader";
 import Game from './w-type/Game.js';
 
-
+// See https://stackoverflow.com/questions/19002850/custom-font-in-pixi-js.
 const WebFontConfig = {
   custom: {
     families: ['misakiminchoregular'],

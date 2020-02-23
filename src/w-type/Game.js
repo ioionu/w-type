@@ -291,7 +291,6 @@ export default class Game {
 
   gameOver() {
     console.log('game over man! game over!!!');
-    this.mech.tombStone();
     const rank = this.top_scores.check(this.mech.score);
     if (rank !== -1 && rank < 3) {
       this.top_scores.showPlayerName();

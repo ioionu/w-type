@@ -14,13 +14,14 @@ export default class Bullet extends GameElement {
     this.source = param.source;
     this.frames = [
       PIXI.Texture.from('bullet01.png'),
-      // PIXI.Texture.from("bullet02"),
-      // PIXI.Texture.from("bullet03")
+      PIXI.Texture.from("bullet02.png"),
+      PIXI.Texture.from("bullet03.png")
     ];
     this.view = new PIXI.AnimatedSprite(this.frames);
     this.view.animationSpeed = 0.05;
     this.view.play();
-    this.view.anchor.x = this.view.anchor.y = 0.5;
+    this.view.anchor.x = 0.5;
+    this.view.anchor.y = 0.5;
     this.view.position.x = param.x1;
     this.view.position.y = param.y1;
 
