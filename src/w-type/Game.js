@@ -318,7 +318,12 @@ export default class Game {
   fullscreen() {
     const element = this.container;
     if (element.requestFullscreen) {
-      element.requestFullscreen();
+      if (!document.fullscreenElement) {
+        element.requestFullscreen();
+      }
+      else {
+        document.exitFullscreen();
+      }
     } else if (element.mozRequestFullScreen) {
       element.mozRequestFullScreen();
     } else if (element.webkitRequestFullscreen) {
