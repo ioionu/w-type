@@ -26,7 +26,7 @@ export default class Mech extends GameElement {
       PIXI.Texture.from('mech03.png'),
     ];
     this.view = new PIXI.AnimatedSprite(this.frames.character);
-    this.view.animationSpeed = 0.20;
+    this.view.animationSpeed = 0.01;
     this.view.play();
     this.view.anchor.x = 0.5;
     this.view.anchor.y = 0.5;
@@ -34,11 +34,11 @@ export default class Mech extends GameElement {
     this.view.position.x = 100;
     // this.view.width = 175;
     // this.view.height = 50;
-    this.realAnimationSpeed = 0.20;
+    this.realAnimationSpeed = 1.20;
     this.pitch = 0.2; // when mech is moving up or down
     this.fire_next = 0;
     this.charge = 0;
-    this.charged = 100;
+    this.charged = 40;
     this.adj_altitude = false;
     this.state = {
       up: false,

@@ -159,7 +159,9 @@ export default class Keyboard {
         }
         this.game.fire(bullet);
         mech.fire_next = 0;
-        mech.charge = 0;
+
+        // Recharge speed.
+        mech.charge = 25;
         mech.state.shoot = false;
         mech.state.charge = false;
         this.state.shoot = false;

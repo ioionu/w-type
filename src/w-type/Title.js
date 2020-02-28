@@ -113,7 +113,6 @@ export default class Title {
   }
 
   show() {
-    this.screens.option.visible = false;
     this.screens.title.visible = true;
     this.view.visible = true;
   }

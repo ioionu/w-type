@@ -45,11 +45,10 @@ export default class Game {
     this.app = new PIXI.Application({backgroundColor: 0x000000});
 
     this.app.loader.add(this.sprite_sheet)
-    .load(()=>{
-      const _this = this;
-      this.app.loader.e = this;
-      this.start();
-    });
+      .load(() => {
+        this.app.loader.e = this;
+        this.start();
+      });
   }
 
 
@@ -84,7 +83,7 @@ export default class Game {
 
     // we need to place canvas in a container to prevent distortion in firefox
     this.container = document.createElement('div');
-    this.container.id = `${this.id }-container`;
+    this.container.id = `${this.id}-container`;
     this.container.style.width = '100%';
     this.container.style.height = '100%';
 
