@@ -78,8 +78,8 @@ export default class Touch {
   touchEnd(e) {
     // console.log('end', e, this);
     // this.touch.enabled = false;
-    let id; var 
-duration;
+    let id;
+    var duration;
     for (let i = 0; i < e.changedTouches.length; i++) {
       id = e.changedTouches[i].identifier;
       duration = e.timeStamp - this.current_touches[id];
@@ -95,9 +95,9 @@ duration;
   }
 
   touchMove(e) {
-    let offset_left = this.game.renderer.view.offsetLeft;
-    let offset_top = this.game.renderer.view.offsetTop;
-    let ratio = this.game.height / parseInt(this.game.renderer.view.style.height);
+    let offset_left = this.game.app.view.offsetLeft;
+    let offset_top = this.game.app.view.offsetTop;
+    let ratio = this.game.height / parseInt(this.game.app.view.style.height);
     let x = (e.touches.item(this.move_id).clientX - offset_left) * ratio;
     let y = (e.touches.item(this.move_id).clientY - offset_top) * ratio;
     this.state.targetx = x;

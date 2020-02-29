@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "run": "cordova run browser",
     "build-dev": "cordova build browser --debug",
+    "build-apk": "cordova build android",
     "serve": "cordova serve"
   },
   "keywords": [

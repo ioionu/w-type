@@ -17,7 +17,7 @@
        under the License.
  */
 
-package io.cordova.hellocordova;
+package nu.ioio.w_type;
 
 import android.os.Bundle;
 import org.apache.cordova.*;

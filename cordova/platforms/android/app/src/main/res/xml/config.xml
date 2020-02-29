@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="nu.ioio.w-type" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <feature name="Whitelist">
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
@@ -10,14 +10,14 @@
     <feature name="AndroidFullScreen">
         <param name="android-package" value="com.mesmotronic.plugins.FullScreenPlugin" />
     </feature>
-    <name>HelloCordova</name>
+    <name>w-type</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        A simple R-Type clone.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="io@ioio.nu" href="https://ioio.nu">
+        Joshua McCluskey
     </author>
-    <content src="index.html" />
+    <content src="index-cordova.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
