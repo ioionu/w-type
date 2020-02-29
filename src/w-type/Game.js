@@ -22,7 +22,6 @@ export default class Game {
     this.sprite_sheet = [
       'img/SpriteSheet.json',
       'img/page.jpg',
-      'img/mech.png',
     ];
     this.id = 'game';
     this.firerate = params.firerate;
@@ -76,8 +75,8 @@ export default class Game {
     }
 
     this.app.view.style.display = 'block';
-    this.app.view.style.width = `${calcWidth}px`;
-    this.app.view.style.height = `${calcHeight}px`;
+    // this.app.view.style.width = `${calcWidth}px`;
+    // this.app.view.style.height = `${calcHeight}px`;
     this.app.view.style.margin = 'auto';
     this.app.view.id = this.id;
 
@@ -90,6 +89,7 @@ export default class Game {
     // attach render to page
     this.container.appendChild(this.app.view);
     document.body.appendChild(this.container);
+    this.resize();
     this.baddie_next = 0;
 
     // background image
@@ -131,7 +131,6 @@ export default class Game {
     ];
 
     // fullscreen events
-    const _this = this;
     window.addEventListener('resize', (e) => {
       this.resize();
     });
@@ -338,12 +337,13 @@ export default class Game {
   }
 
   resize() {
-    console.log('resize');
-    let calc_height; let calc_width; let
-      factor;
+    console.log('resize', this.stretch);
+    let calc_height;
+    let calc_width;
+    let factor;
 
     // do we stretch to fullscreen ot keep aspect ratio?
-    if (this.stretch) {
+    if (!this.stretch) {
       const WIDTH = this.width;
       const HEIGHT = this.height;
       // let pixi choose WebGL or canvas

@@ -1,7 +1,7 @@
 {
-  "name": "helloworld",
-  "displayName": "HelloCordova",
-  "version": "1.0.0",
+  "name": "r-type",
+  "displayName": "r-type",
+  "version": "2.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "run": "cordova run browser",
     "build-dev": "cordova build browser --debug",
     "build-apk": "cordova build android",
-    "serve": "cordova serve"
+    "serve": "cordova serve",
+    "reinstall-apk": "adb uninstall nu.ioio.w_type && adb install platforms/android/app/build/outputs/apk/debug/app-debug.apk"
   },
   "keywords": [
     "ecosystem:cordova"

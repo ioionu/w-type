@@ -38,7 +38,7 @@ export default class Touch {
   }
 
   update() {
-    let {mech} = this.game;
+    const { mech } = this.game;
     mech.moveTowards(this.state.targetx, this.state.targety, mech.speed);
 
     if (this.state.shoot) {

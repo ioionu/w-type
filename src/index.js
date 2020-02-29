@@ -13,7 +13,7 @@ webfontloader.load(WebFontConfig);
 function game() {
   const game = new Game({
     width: 1024,
-    height: 600,
+    height: 768,
     firerate: 10,
     baddie_rate: 0,
     baddie_rate_accel: 10,
