@@ -53,7 +53,7 @@ export default class Mech extends GameElement {
 
     // this.view.scale = this.scale;
 
-    for (let p in params) {
+    for (const p in params) {
       this[p] = params[p];
     }
 
@@ -110,25 +110,25 @@ export default class Mech extends GameElement {
   }
 
   moveTowards(x, y, speed) {
-    let x1; var y1;
-    let x0 = this.view.position.x;// - this.view.width;
-    let y0 = this.view.position.y;
+    let x1; let y1;
+    const x0 = this.view.position.x;// - this.view.width;
+    const y0 = this.view.position.y;
     x += this.view.width;
 
     let diffx = x0 - x;
     diffx = diffx < 0 ? diffx * -1 : diffx;
-    let speedx = diffx < speed ? diffx : speed;
+    const speedx = diffx < speed ? diffx : speed;
 
     let diffy = y0 - y;
-    let altitude_distance = diffy;
+    const altitude_distance = diffy;
     diffy = diffy < 0 ? diffy * -1 : diffy;
-    let speedy = diffy < speed ? diffy : speed;
+    const speedy = diffy < speed ? diffy : speed;
 
     if (diffx > 0 || diffy > 0) {
       // distance from mech to touch
-      let line = Math.sqrt(diffx * diffx + diffy * diffy);
-      let propx = speedx / line;
-      let propy = speedy / line;
+      const line = Math.sqrt(diffx * diffx + diffy * diffy);
+      const propx = speedx / line;
+      const propy = speedy / line;
 
       x1 = x0 + propx * (x - x0);
       y1 = y0 + propy * (y - y0);
@@ -137,7 +137,7 @@ export default class Mech extends GameElement {
       this.view.position.y = y1;
     }
 
-    let pitch_threshold = 5;
+    const pitch_threshold = 5;
     this.adj_altitude = false;
     if (altitude_distance > pitch_threshold) {
       this.view.rotation = this.pitch * -1;
@@ -158,7 +158,7 @@ export default class Mech extends GameElement {
     this.charge++;
 
 
-    let p = {
+    const p = {
       x: this.view.position.x,
       y: this.view.position.y,
       w: this.view.width,
@@ -170,7 +170,7 @@ export default class Mech extends GameElement {
 
     if (this.active) {
       // get inputs from game
-      let { inputs } = this.game;
+      const { inputs } = this.game;
       let active_input;
       for (let i = 0; i < inputs.length; i++) {
         if (inputs[i].enabled) {
@@ -199,15 +199,12 @@ export default class Mech extends GameElement {
       this.life = 100;
       this.life_bar.update(this.life);
       this.showLifeBar();
-    }
-    else {
-      if (!this.is_dead) {
-        // this.active = false;
-        this.is_dead = true;
-        this.game.gameOver();
-        this.tombStone();
-        this.hideLifeBar();
-      }
+    } else if (!this.is_dead) {
+      // this.active = false;
+      this.is_dead = true;
+      this.game.gameOver();
+      this.tombStone();
+      this.hideLifeBar();
     }
   }
 
@@ -216,14 +213,21 @@ export default class Mech extends GameElement {
     this.tombStone();
   }
 
+  /**
+   * Construct a player 1 bullet.
+   *
+   * @param {*} screen_width
+   * @param {*} screen_height
+   * @return GoodyBullet
+   */
   bullet(screen_width, screen_height) {
     let b;
     let distance;
     let p = {};
 
     // find target...
-    let A = this.r();
-    let a = (A < 0) ? this.y() : this.game.app.renderer.height - this.y();
+    const A = this.r();
+    const a = (A < 0) ? this.y() : this.game.app.renderer.height - this.y();
     if (A !== 0) {
       // console.log(A,a);
       p = Game.getTargetPoint(A, a);
@@ -260,12 +264,12 @@ export default class Mech extends GameElement {
 
   superBullet(screen_width, screen_height) {
     // createjs.Sound.play("peow");
-    let x; var y; var b; var distance;
+    let x; let y; let b; let distance;
     let p = {};
 
     // find target...
-    let A = this.r();
-    let a = (A < 0) ? this.y() : this.game.app.renderer.height - this.y();
+    const A = this.r();
+    const a = (A < 0) ? this.y() : this.game.app.renderer.height - this.y();
     if (A !== 0) {
       // console.log(A,a);
       p = Game.getTargetPoint(A, a);

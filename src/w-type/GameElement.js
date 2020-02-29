@@ -76,16 +76,13 @@ class GameElement {
   hit(damage) {
     this.life = (this.life - damage < 0) ? 0 : this.life - damage;
     if (typeof this.life_bar !== 'undefined') {
-      this.life_bar.update( this.life ); /* ugh... now i understand why js is...
-                                                                  * TODO: look at crreating a life() function in baddy
-                                                                  * or do use _super fu http://ejohn.org/blog/simple-javascript-inheritance/
-                                                                  */
+      this.life_bar.update(this.life);
     }
-    // console.log("hit", this.life);
+
     if (this.life <= 0) {
       this.die();
 
-      // did we kill baddie?
+      // Did we kill baddie?
       if (this.type === 'baddyTweened') {
         this.game.mech.score += this.value;
         this.game.score.updateScore(this.game.mech.score);

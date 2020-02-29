@@ -262,12 +262,16 @@ export default class Game {
     const w = this.w();
     const h = this.h();
     const path = {
-      x: [w + 45, w * Math.random(), w * Math.random(), -75], // TODO fix hardcoded last tween poing
+
+      // TODO fix hardcoded last tween poing
+      x: [w + 45, w * Math.random(), w * Math.random(), -75], 
       y: [h * Math.random(), h * Math.random(), h * Math.random()],
       shoot: Math.floor(Math.random() * 50),
       interpolation: TWEEN.Interpolation.CatmullRom,
-      time: 10500,
+      time: 9500,
     };
+
+    const squadSize = (Math.floor(Math.random() * 5)) + 2;
 
     for (let i = 0; i < 4; i++) {
       this.addBaddyTweened({
@@ -303,7 +307,7 @@ export default class Game {
 
     // TODO: use newGame() function for first game
     this.baddies = [];
-    this.baddie_rate = 250;
+    this.baddie_rate = 100;
     // add player
     const params = { game: this, lives: 1 };
     this.mech.removeFromStage();

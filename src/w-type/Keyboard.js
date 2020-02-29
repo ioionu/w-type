@@ -122,39 +122,42 @@ export default class Keyboard {
   }
 
   update() {
-    var mech = this.game.mech;
+    const { mech } = this.game;
 
-    if(this.state.up) {
+    if (this.state.up) {
       mech.moveUp(mech.speed);
       mech.adj_altitude = true;
     }
 
-    if(this.state.down) {
+    if (this.state.down) {
       mech.moveDown(mech.speed);
       mech.adj_altitude = true;
     }
 
-    else if(!this.state.down && !this.state.up) {
+    else if (!this.state.down && !this.state.up) {
       mech.adj_altitude = false;
     }
 
-    if(this.state.left) {
-      mech.moveLeft(mech.speed/2);
+    if (this.state.left) {
+      mech.moveLeft(mech.speed / 2);
     }
 
-    if(this.state.right) {
+    if (this.state.right) {
       mech.moveRight(mech.speed);
     }
 
-    if(mech.adj_altitude === false) {
+    if (mech.adj_altitude === false) {
       mech.view.rotation = 0;
     }
 
-    // shoot bullet
-    if(this.state.shoot) {
-      if(mech.fire_next > this.game.firerate) {
-        var bullet = mech.bullet(mech.w(), mech.h());
-        if(mech.charge > mech.charged) {
+    // Shoot bullet.
+    // TODO: move to function on mech.
+    if (this.state.shoot) {
+      if (mech.fire_next > this.game.firerate) {
+        const bullet = mech.bullet(mech.w(), mech.h());
+
+        // Fire the actual super bullet.
+        if (mech.charge > mech.charged) {
           bullet.super();
         }
         this.game.fire(bullet);
@@ -162,6 +165,7 @@ export default class Keyboard {
 
         // Recharge speed.
         mech.charge = 25;
+
         mech.state.shoot = false;
         mech.state.charge = false;
         this.state.shoot = false;
