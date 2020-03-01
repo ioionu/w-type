@@ -7,7 +7,7 @@
     <author email="io@ioio.nu" href="https://ioio.nu">
         Joshua McCluskey
     </author>
-    <content src="index-cordova.html" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

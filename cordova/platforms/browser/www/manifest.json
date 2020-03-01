@@ -7,5 +7,5 @@
   "description": "A simple R-Type clone.",
   "author": "Joshua McCluskey",
   "icons": [],
-  "start_url": "index-cordova.html"
+  "start_url": "index.html"
 }

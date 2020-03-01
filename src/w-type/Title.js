@@ -13,23 +13,22 @@ export default class Title {
   }
 
   titleScreen() {
-    var title = new PIXI.Container();
+    const title = new PIXI.Container();
     title.visible = true;
 
-    var logo = PIXI.Sprite.from('title.png');
-    var left = (this.game.width * 0.5);
-    var top = (this.game.height * 0.20);
+    const logo = PIXI.Sprite.from('title.png');
+    const left = (this.game.width * 0.5);
+    const top = (this.game.height * 0.20);
     logo.anchor = new PIXI.Point(0.5, 0.5);
     logo.position = new PIXI.Point(left, top);
     logo.interactive = true;
-    var _this = this;
-    logo.on('click', function(e){
-      _this.game.newGame();
-      _this.hide();
+    logo.on('click', () => {
+      this.game.newGame();
+      this.hide();
     });
-    logo.on('touchstart', function(e){
-      _this.game.newGame();
-      _this.hide();
+    logo.on('touchstart', () =>{
+      this.game.newGame();
+      this.hide();
     });
     title.addChild(logo);
 
@@ -50,20 +49,23 @@ export default class Title {
     });
     title.addChild(start);
 
-    const option = PIXI.Sprite.from('fullscreen.png');
-    option.anchor = new PIXI.Point(0.5, 0.5);
-    option.position = new PIXI.Point(
-      (this.game.width * 0.9),
-      (this.game.height * 0.1)
-    );
-    option.interactive = true;
-    option.on('click', (e) => {
-      this.game.fullscreen();
-    });
-    option.on('touchstart', (e) => {
-      this.game.fullscreen();
-    });
-    title.addChild(option);
+    // We dont need a fullscreen button on mobile.
+    if (!('cordova' in window)) {
+      const option = PIXI.Sprite.from('fullscreen.png');
+      option.anchor = new PIXI.Point(0.5, 0.5);
+      option.position = new PIXI.Point(
+        (this.game.width * 0.9),
+        (this.game.height * 0.1)
+      );
+      option.interactive = true;
+      option.on('click', () => {
+        this.game.fullscreen();
+      });
+      option.on('touchstart', () => {
+        this.game.fullscreen();
+      });
+      title.addChild(option);
+    }
 
     const top_score_string = this.game.top_scores.getString();
     this.top_scores = new PIXI.Text(

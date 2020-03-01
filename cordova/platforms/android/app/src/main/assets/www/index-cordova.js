@@ -16,29 +16,39 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        // game();
-    }
+const app = {
+  // Application Constructor
+  initialize: () => {
+    app.bindEvents();
+  },
+  // Bind Event Listeners
+  //
+  // Bind any events that are required on startup. Common events are:
+  // 'load', 'deviceready', 'offline', and 'online'.
+  bindEvents: () => {
+    document.addEventListener('deviceready', app.onDeviceReady, false);
+  },
+  // deviceready Event Handler
+  //
+  // The scope of 'this' is the event. In order to call the 'receivedEvent'
+  // function, we must explicitly call 'app.receivedEvent(...);'
+  onDeviceReady: () => {
+    app.receivedEvent('deviceready');
+  },
+  // Update DOM on a Received Event
+  receivedEvent: (id) => {
+    // game();
+
+    window.screen.orientation.lock('landscape');
+
+    AndroidFullScreen.isImmersiveModeSupported(
+      () => AndroidFullScreen.immersiveMode(
+        () => console.log('entering full screen'),
+        (error) => console.log('error entering immersive mode', error)
+      ),
+      (error) => console.log('error immersive mode not supported', error)
+    );
+  }
 };
 
 app.initialize();
