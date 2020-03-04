@@ -2,17 +2,33 @@
 
 A simple r-type clone in PIXI.js.
 
-** Sorry, bit of a mess atm. Clean up in progress. **
+https://play.google.com/store/apps/details?id=com.sydneywebdev.wtype
 
-### Build
+Sorry, its a bit of a mess atm. Clean up in progress.
+
+## Build
+
+`npm run build-dev`
 
 ## Android
 
-`gulp`
+### Build Dev
+
+`npm run build-cordova`
 
 `cd cordova`
 
-`cordova build android`
+`npm run build-apk`
+
+### Build Prod
+
+Create `cordova/build.json` file as per https://cordova.apache.org/docs/en/latest/reference/cordova-cli/index.html#cordova-build-command
+
+`cordova build android --release -- --buildConfig=build.json`
+
+Convience method for reinstalling build:
+
+`npm run reinstall-apk`
 
 ## Libraries
 

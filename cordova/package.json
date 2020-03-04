@@ -10,7 +10,7 @@
     "build-dev": "cordova build browser --debug",
     "build-apk": "cordova build android",
     "serve": "cordova serve",
-    "reinstall-apk": "adb uninstall nu.ioio.w_type && adb install platforms/android/app/build/outputs/apk/debug/app-debug.apk"
+    "reinstall-apk": "adb uninstall com.sydneywebdev.wtype && adb install platforms/android/app/build/outputs/apk/debug/app-debug.apk"
   },
   "keywords": [
     "ecosystem:cordova"
