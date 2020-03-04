@@ -26,7 +26,7 @@ Create `cordova/build.json` file as per https://cordova.apache.org/docs/en/lates
 
 `cordova build android --release -- --buildConfig=build.json`
 
-Convience method for reinstalling build:
+Convenience method for reinstalling build:
 
 `npm run reinstall-apk`
 
