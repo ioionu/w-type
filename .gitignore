@@ -3,5 +3,6 @@
 dist/*
 node_modules/*
 build.json
+.vscode
 
 /cordova/platforms
