@@ -32,13 +32,12 @@ export default class Mech extends GameElement {
     this.view.anchor.y = 0.5;
     this.view.position.y = 240;
     this.view.position.x = 100;
-    // this.view.width = 175;
-    // this.view.height = 50;
-    this.realAnimationSpeed = 1.20;
+
+    this.realAnimationSpeed = 0.1;
     this.pitch = 0.2; // when mech is moving up or down
     this.fire_next = 0;
     this.charge = 0;
-    this.charged = 40;
+    this.charged = ('charged' in this.game) ? this.game.charged : 50;
     this.adj_altitude = false;
     this.state = {
       up: false,
@@ -51,8 +50,7 @@ export default class Mech extends GameElement {
 
     this.is_dead = true;
 
-    // this.view.scale = this.scale;
-
+    // TODO: remove this.
     for (const p in params) {
       this[p] = params[p];
     }
@@ -113,14 +111,16 @@ export default class Mech extends GameElement {
     let x1; let y1;
     const x0 = this.view.position.x;// - this.view.width;
     const y0 = this.view.position.y;
-    x += this.view.width;
+
+    // Offset the xcoord so that it is not under the finder.
+    x += this.view.width / 2;
 
     let diffx = x0 - x;
     diffx = diffx < 0 ? diffx * -1 : diffx;
     const speedx = diffx < speed ? diffx : speed;
 
     let diffy = y0 - y;
-    const altitude_distance = diffy;
+    const altitudeDistance = diffy;
     diffy = diffy < 0 ? diffy * -1 : diffy;
     const speedy = diffy < speed ? diffy : speed;
 
@@ -137,25 +137,25 @@ export default class Mech extends GameElement {
       this.view.position.y = y1;
     }
 
-    const pitch_threshold = 5;
+    const pitchThreshold = 5;
     this.adj_altitude = false;
-    if (altitude_distance > pitch_threshold) {
+    if (altitudeDistance > pitchThreshold) {
       this.view.rotation = this.pitch * -1;
       this.adj_altitude = true;
     }
-    if (altitude_distance < (pitch_threshold * -1)) {
+    if (altitudeDistance < (pitchThreshold * -1)) {
       this.view.rotation = this.pitch;
       this.adj_altitude = true;
     }
-    if (altitude_distance <= pitch_threshold && altitude_distance >= 0) {
+    if (altitudeDistance <= pitchThreshold && altitudeDistance >= 0) {
       this.view.rotation = 0;
     }
   }
 
   update(game) {
     this.view.animationSpeed = this.realAnimationSpeed;
-    this.fire_next++;
-    this.charge++;
+    this.fire_next += 1;
+    this.charge += 1;
 
 
     const p = {
@@ -171,14 +171,14 @@ export default class Mech extends GameElement {
     if (this.active) {
       // get inputs from game
       const { inputs } = this.game;
-      let active_input;
+      let activeInput;
       for (let i = 0; i < inputs.length; i++) {
         if (inputs[i].enabled) {
           this.state = inputs[i].getState();
-          active_input = inputs[i];
+          activeInput = inputs[i];
         }
       }
-      active_input.update();
+      activeInput.update();
       if (this.charge > this.charged) {
         this.charge_frame.visible = true;
       } else {
@@ -220,7 +220,7 @@ export default class Mech extends GameElement {
    * @param {*} screen_height
    * @return GoodyBullet
    */
-  bullet(screen_width, screen_height) {
+  bullet() {
     let b;
     let distance;
     let p = {};
@@ -262,8 +262,7 @@ export default class Mech extends GameElement {
     return bullet;
   }
 
-  superBullet(screen_width, screen_height) {
-    // createjs.Sound.play("peow");
+  superBullet() {
     let x; let y; let b; let distance;
     let p = {};
 

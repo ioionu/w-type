@@ -45780,20 +45780,20 @@ module.exports = function (module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webfontloader */ "./node_modules/webfontloader/webfontloader.js");
 /* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webfontloader__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _w_type_Game_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./w-type/Game.js */ "./src/w-type/Game.js");
+/* harmony import */ var _w_type_Game__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./w-type/Game */ "./src/w-type/Game.js");
 
  // See https://stackoverflow.com/questions/19002850/custom-font-in-pixi-js.
 
 const WebFontConfig = {
   custom: {
     families: ['misakiminchoregular'],
-    urls: ['/style/misaki/stylesheet.css']
+    urls: ['style/misaki/stylesheet.css']
   }
 };
 webfontloader__WEBPACK_IMPORTED_MODULE_0___default.a.load(WebFontConfig);
 
 function game() {
-  const game = new _w_type_Game_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
+  const g = new _w_type_Game__WEBPACK_IMPORTED_MODULE_1__["default"]({
     width: 1024,
     height: 768,
     firerate: 10,
@@ -45848,7 +45848,7 @@ class BaddyTweened extends _GameElement__WEBPACK_IMPORTED_MODULE_2__["default"] 
     this.SPEED = 1;
     this.YMOD = 0.1;
     this.YPOWER = Math.random() * 100;
-    this.strength = 10;
+    this.strength = 20;
     this.value = 1;
     this.dob = new Date();
     this.frames = {};
@@ -45881,7 +45881,7 @@ class BaddyTweened extends _GameElement__WEBPACK_IMPORTED_MODULE_2__["default"] 
     this.tween = {};
     this.tween.x = new _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_1__["default"].Tween(xCoord).to({
       x: this.path.x.slice(1)
-    }, this.path.time).delay(this.path.delay).easing(this.path.easing).interpolation(this.path.interpolation).onUpdate(frame => {
+    }, this.path.time).delay(this.path.delay).easing(this.path.easing).interpolation(this.path.interpolation).onUpdate(() => {
       baddy.x(xCoord.x);
       const age = Math.floor((new Date() - baddy.dob) / 100);
 
@@ -46062,13 +46062,21 @@ class Game {
     this.stretch = true;
     this.sprite_sheet = ['img/SpriteSheet.json', 'img/page.jpg'];
     this.id = 'game';
-    this.firerate = params.firerate;
+    this.firerate = params.firerate; // Baddie spawn rate (per score). See GameElement.hit().
+
+    this.baddie_rate_default = 200;
+    this.baddie_rate_change = 10;
+    this.baddie_rate_min = 80;
     this.stars = [];
     this.baddies = [];
-    this.bullets = []; // for(var p in params) {
-    //   this[p] = params[p];
-    // }
+    this.bullets = []; // After super bullet set charge to.
 
+    this.chargeSpeed = 0; // When super bullet fires.
+
+    this.charged = 70;
+    this.lives = 2; // Increase baddie rate and add extra life.
+
+    this.levelUp = 50;
     /* make "this" available in this.update() when called from requestAnimFrame()
     * http://stackoverflow.com/questions/20177297/how-to-call-requestanimframe-on-an-object-method
     */
@@ -46111,9 +46119,7 @@ class Game {
       calcWidth = screenWidth;
     }
 
-    this.app.view.style.display = 'block'; // this.app.view.style.width = `${calcWidth}px`;
-    // this.app.view.style.height = `${calcHeight}px`;
-
+    this.app.view.style.display = 'block';
     this.app.view.style.margin = 'auto';
     this.app.view.id = this.id; // we need to place canvas in a container to prevent distortion in firefox
 
@@ -46133,15 +46139,13 @@ class Game {
     this.app.stage.addChild(page); // add stars
 
     for (let s = 0; s < 25; s++) {
-      const x = this.app.view.width;
-      const y = Math.random() * this.app.view.height;
       this.addStar();
     } // add player
 
 
     const params = {
       game: this,
-      lives: 1
+      lives: 2
     };
     this.mech = new _Mech__WEBPACK_IMPORTED_MODULE_2__["default"](params);
     this.mech.active = false;
@@ -46159,7 +46163,7 @@ class Game {
 
     this.inputs = [new _Keyboard__WEBPACK_IMPORTED_MODULE_7__["default"](this), new _Touch__WEBPACK_IMPORTED_MODULE_8__["default"](this)]; // fullscreen events
 
-    window.addEventListener('resize', e => {
+    window.addEventListener('resize', () => {
       this.resize();
     }); // not paused
 
@@ -46168,83 +46172,76 @@ class Game {
   }
 
   animate() {
-    if (!this.paused) {
-      this.mech.update(this);
-      _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_1__["default"].update(); // add bad guy
-      // console.log(baddie_next, baddie_rate);
+    this.mech.update(this);
+    _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_1__["default"].update(); // add bad guy
+    // console.log(baddie_next, baddie_rate);
 
-      if (this.baddie_next > this.baddie_rate && this.mech.active) {
-        // addBaddy();
-        this.createBaddyTweenedSquad();
-        this.baddie_next = 0;
+    if (this.baddie_next > this.baddie_rate && this.mech.active) {
+      // addBaddy();
+      this.createBaddyTweenedSquad();
+      this.baddie_next = 0;
+      console.log(this.baddie_rate);
+    } else {
+      this.baddie_next++;
+    } // test for hits and move baddies
 
-        if (this.baddie_rate >= this.baddie_rate_min) {
-          this.baddie_rate = this.baddie_rate - this.baddie_rate_accel;
+
+    this.baddies.forEach(baddy => {
+      if (baddy.active) {
+        if (Game.hitTest(this.mech, baddy)) {
+          this.mech.hit(30);
+          baddy.die();
         }
 
-        console.log(this.baddie_rate);
-      } else {
-        this.baddie_next++;
-      } // test for hits and move baddies
+        if (baddy.right() < baddy.w() * -1) {
+          baddy.die();
+          baddy.removeFromStage();
+        }
 
+        this.bullets.forEach(bullet => {
+          const {
+            damage
+          } = bullet;
 
-      for (const baddy in this.baddies) {
-        if (this.baddies.hasOwnProperty(baddy)) {
-          if (this.baddies[baddy].active) {
-            if (Game.hitTest(this.mech, this.baddies[baddy])) {
-              this.mech.hit(20);
-              this.baddies[baddy].die();
-            }
+          if (Game.hitTest(bullet, baddy)) {
+            // console.log("hit!!");
+            baddy.hit(damage);
+            baddy.recoil(bullet);
 
-            if (this.baddies[baddy].right() < this.baddies[baddy].w() * -1) {
-              this.baddies[baddy].die();
-              this.baddies[baddy].removeFromStage();
-            }
-
-            for (let bullet = 0; bullet < this.bullets.length; bullet++) {
-              const {
-                damage
-              } = this.bullets[bullet];
-
-              if (Game.hitTest(this.bullets[bullet], this.baddies[baddy])) {
-                // console.log("hit!!");
-                this.baddies[baddy].hit(damage);
-                this.baddies[baddy].recoil(this.bullets[bullet]);
-
-                if (this.bullets[bullet].type !== 'super') {
-                  this.bullets[bullet].die();
-                }
-              }
-
-              if (this.bullets[bullet].source != this.mech && Game.hitTest(this.bullets[bullet], this.mech)) {
-                this.bullets[bullet].die();
-                this.mech.hit(damage);
-                this.mech.recoil(this.bullets[bullet]);
-              }
+            if (bullet.type !== 'super') {
+              bullet.die();
             }
           }
 
-          if (this.baddies[baddy].remove) {
-            // if this baddy is not active then remove it from stage
-            this.baddies[baddy].removeFromStage();
-            delete this.baddies[baddy];
-          }
-        }
+          if (bullet.source !== this.mech && Game.hitTest(bullet, this.mech)) {
+            bullet.die();
+            this.mech.hit(damage);
+            this.mech.recoil(bullet);
+          } // Test for bullet collision.
+
+
+          this.bullets.forEach(bullet2 => {
+            if (bullet !== bullet2 && bullet2.source !== this.mech && Game.hitTest(bullet, bullet2)) {
+              bullet2.die();
+            }
+          });
+        });
       }
-    } else {} // THIS DOESNT WORK
-    // https://github.com/tweenjs/tween.js/issues/15
-    // TWEEN.stop();
-    // paused
-    // draw
-    // this.renderer.render(this.app.stage);
 
+      if (baddy.remove) {
+        // if this baddy is not active then remove it from stage
+        baddy.removeFromStage();
+        this.baddies = this.baddies.filter(target => target !== baddy);
+      }
+    });
+    this.bullets = this.bullets.filter(bullet => bullet.active); // draw
 
     window.requestAnimationFrame(this.animate);
   }
 
   enableInput(input) {
     for (let i = 0; i < this.inputs.length; i++) {
-      if (this.inputs[i] == input) {
+      if (this.inputs[i] === input) {
         this.inputs[i].enable();
       } else {
         this.inputs[i].disable();
@@ -46296,7 +46293,7 @@ class Game {
     const w = this.w();
     const h = this.h();
     const path = {
-      // TODO fix hardcoded last tween poing
+      // TODO: fix hardcoded last tween poing.
       x: [w + 45, w * Math.random(), w * Math.random(), -75],
       y: [h * Math.random(), h * Math.random(), h * Math.random()],
       shoot: Math.floor(Math.random() * 50),
@@ -46305,7 +46302,7 @@ class Game {
     };
     const squadSize = Math.floor(Math.random() * 5) + 2;
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < squadSize; i++) {
       this.addBaddyTweened({
         x: path.x,
         y: path.y,
@@ -46337,14 +46334,15 @@ class Game {
 
   newGame() {
     // enable keyboard... bit of a hack, not really needed
-    this.enableInput(this.inputs[0]); // TODO: use newGame() function for first game
+    this.enableInput(this.inputs[0]); // Reset the baddie rate.
 
-    this.baddies = [];
-    this.baddie_rate = 100; // add player
+    this.baddie_rate = this.baddie_rate_default; // TODO: use newGame() function for first game
+
+    this.baddies = []; // add player
 
     const params = {
       game: this,
-      lives: 1
+      lives: 2
     };
     this.mech.removeFromStage();
     this.mech = new _Mech__WEBPACK_IMPORTED_MODULE_2__["default"](params);
@@ -46375,36 +46373,35 @@ class Game {
 
   resize() {
     console.log('resize', this.stretch);
-    let calc_height;
-    let calc_width;
+    let calcHeight;
+    let calcWidth;
     let factor; // do we stretch to fullscreen ot keep aspect ratio?
 
     if (!this.stretch) {
       const WIDTH = this.width;
       const HEIGHT = this.height; // let pixi choose WebGL or canvas
 
-      const screen_width = window.innerWidth; // 800;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
 
-      const screen_height = window.innerHeight; // 600;
-
-      if (screen_width > screen_height) {
-        factor = screen_height / HEIGHT;
+      if (screenWidth > screenHeight) {
+        factor = screenHeight / HEIGHT;
       } else {
-        factor = screen_width / WIDTH;
+        factor = screenWidth / WIDTH;
       } // console.log(factor, calc_height, screen_height, calc_width, screen_width);
 
 
       this.app.renderer.view.style.display = 'block';
-      calc_height = `${HEIGHT * factor}px`;
-      calc_width = `${WIDTH * factor}px`;
+      calcHeight = `${HEIGHT * factor}px`;
+      calcWidth = `${WIDTH * factor}px`;
     } else {
-      calc_height = `${window.innerHeight}px`;
-      calc_width = '100%';
+      calcHeight = `${window.innerHeight}px`;
+      calcWidth = '100%';
     }
 
-    this.app.renderer.view.style.width = calc_width; // "100%";
+    this.app.renderer.view.style.width = calcWidth; // "100%";
 
-    this.app.renderer.view.style.height = calc_height; // "100%";
+    this.app.renderer.view.style.height = calcHeight; // "100%";
   }
 
   toggleStretch() {
@@ -46417,7 +46414,7 @@ class Game {
     return this.stretch;
   }
 
-  getAngle(x1, y1, x2, y2) {
+  static getAngle(x1, y1, x2, y2) {
     return Math.atan2(y1 - y2, x1 - x2); //* 180 / Math.PI;
   }
   /* A = the angle of the ship in radians
@@ -46447,13 +46444,13 @@ class Game {
 
   static hitTest(a, b) {
     if (a.active && b.active) {
-      if (a.source != b && b.source != a) {
+      if (a.source !== b && b.source !== a) {
         const hx = a.x() - b.x();
         const hy = a.y() - b.y();
         const dist = Math.sqrt(hx * hx + hy * hy);
-        const width_a = a.size().h / 2;
-        const width_b = b.size().h / 2;
-        return dist <= width_a + width_b;
+        const widthA = a.size().h / 2;
+        const widthB = b.size().h / 2;
+        return dist <= widthA + widthB;
       }
     }
 
@@ -46472,12 +46469,12 @@ class Game {
     if (mode === 'outside') {
       if (x + w / 2 > 0 && x - w / 2 < sw && y + h / 2 > 0 && y - h / 2 < sh) {
         return true;
-      } else {
-        return false;
       }
+
+      return false;
     }
 
-    console.log("derp... checkbounds spacked out");
+    console.log('Error in checkbounds');
     return false;
   }
 
@@ -46587,12 +46584,21 @@ class GameElement {
 
       if (this.type === 'baddyTweened') {
         this.game.mech.score += this.value;
-        this.game.score.updateScore(this.game.mech.score);
-      } // did we be dead?
+        this.game.score.updateScore(this.game.mech.score); // Extra life every 100 points.
+
+        if (this.game.mech.score % this.game.levelUp === 0) {
+          this.game.mech.lives += 1;
+          this.game.score.updateLife(this.game.mech.lives); // Increase the baddie_rate based on score.
+
+          if (this.game.baddie_rate - this.game.baddie_rate_change > this.game.baddie_rate_min) {
+            this.game.baddie_rate -= this.game.baddie_rate_change;
+          }
+        }
+      } // Are we be dead?
 
 
       if (this.type === 'mech') {
-        this.lives--;
+        this.lives -= 1;
         this.game.score.updateLife(this.lives);
       }
 
@@ -46945,7 +46951,7 @@ class Keyboard {
 
     if (this.state.shoot) {
       if (mech.fire_next > this.game.firerate) {
-        const bullet = mech.bullet(mech.w(), mech.h()); // Fire the actual super bullet.
+        const bullet = mech.bullet(); // Fire the actual super bullet.
 
         if (mech.charge > mech.charged) {
           bullet.super();
@@ -46954,7 +46960,7 @@ class Keyboard {
         this.game.fire(bullet);
         mech.fire_next = 0; // Recharge speed.
 
-        mech.charge = 25;
+        mech.charge = mech.game.chargeSpeed;
         mech.state.shoot = false;
         mech.state.charge = false;
         this.state.shoot = false;
@@ -47065,15 +47071,13 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
     this.view.anchor.x = 0.5;
     this.view.anchor.y = 0.5;
     this.view.position.y = 240;
-    this.view.position.x = 100; // this.view.width = 175;
-    // this.view.height = 50;
-
-    this.realAnimationSpeed = 1.20;
+    this.view.position.x = 100;
+    this.realAnimationSpeed = 0.1;
     this.pitch = 0.2; // when mech is moving up or down
 
     this.fire_next = 0;
     this.charge = 0;
-    this.charged = 40;
+    this.charged = 'charged' in this.game ? this.game.charged : 50;
     this.adj_altitude = false;
     this.state = {
       up: false,
@@ -47083,7 +47087,7 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
       shoot: false
     };
     this.scale = new pixi_js__WEBPACK_IMPORTED_MODULE_0__["Point"](0.5, 0.5);
-    this.is_dead = true; // this.view.scale = this.scale;
+    this.is_dead = true; // TODO: remove this.
 
     for (const p in params) {
       this[p] = params[p];
@@ -47146,13 +47150,14 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
     let y1;
     const x0 = this.view.position.x; // - this.view.width;
 
-    const y0 = this.view.position.y;
-    x += this.view.width;
+    const y0 = this.view.position.y; // Offset the xcoord so that it is not under the finder.
+
+    x += this.view.width / 2;
     let diffx = x0 - x;
     diffx = diffx < 0 ? diffx * -1 : diffx;
     const speedx = diffx < speed ? diffx : speed;
     let diffy = y0 - y;
-    const altitude_distance = diffy;
+    const altitudeDistance = diffy;
     diffy = diffy < 0 ? diffy * -1 : diffy;
     const speedy = diffy < speed ? diffy : speed;
 
@@ -47167,28 +47172,28 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
       this.view.position.y = y1;
     }
 
-    const pitch_threshold = 5;
+    const pitchThreshold = 5;
     this.adj_altitude = false;
 
-    if (altitude_distance > pitch_threshold) {
+    if (altitudeDistance > pitchThreshold) {
       this.view.rotation = this.pitch * -1;
       this.adj_altitude = true;
     }
 
-    if (altitude_distance < pitch_threshold * -1) {
+    if (altitudeDistance < pitchThreshold * -1) {
       this.view.rotation = this.pitch;
       this.adj_altitude = true;
     }
 
-    if (altitude_distance <= pitch_threshold && altitude_distance >= 0) {
+    if (altitudeDistance <= pitchThreshold && altitudeDistance >= 0) {
       this.view.rotation = 0;
     }
   }
 
   update(game) {
     this.view.animationSpeed = this.realAnimationSpeed;
-    this.fire_next++;
-    this.charge++;
+    this.fire_next += 1;
+    this.charge += 1;
     const p = {
       x: this.view.position.x,
       y: this.view.position.y,
@@ -47204,16 +47209,16 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
       const {
         inputs
       } = this.game;
-      let active_input;
+      let activeInput;
 
       for (let i = 0; i < inputs.length; i++) {
         if (inputs[i].enabled) {
           this.state = inputs[i].getState();
-          active_input = inputs[i];
+          activeInput = inputs[i];
         }
       }
 
-      active_input.update();
+      activeInput.update();
 
       if (this.charge > this.charged) {
         this.charge_frame.visible = true;
@@ -47257,7 +47262,7 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
    */
 
 
-  bullet(screen_width, screen_height) {
+  bullet() {
     let b;
     let distance;
     let p = {}; // find target...
@@ -47299,8 +47304,7 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
     return bullet;
   }
 
-  superBullet(screen_width, screen_height) {
-    // createjs.Sound.play("peow");
+  superBullet() {
     let x;
     let y;
     let b;
@@ -47613,18 +47617,18 @@ class TopScores {
     this.playerName();
   }
 
-  default() {
-    let scores = [];
+  static default() {
+    const scores = [];
     scores[0] = {
-      name: 'AAA',
+      name: 'DOG',
       score: 100
     };
     scores[1] = {
-      name: 'FUK',
+      name: 'CAT',
       score: 50
     };
     scores[2] = {
-      name: 'JOS',
+      name: 'FUN',
       score: 1
     };
     localStorage.setItem('top-scores', JSON.stringify(scores));
@@ -47634,7 +47638,7 @@ class TopScores {
     let stored = localStorage.getItem('top-scores');
 
     if (stored === null) {
-      this.default();
+      TopScores.default();
       stored = localStorage.getItem('top-scores');
     }
 
@@ -47645,8 +47649,8 @@ class TopScores {
     localStorage.setItem('top-scores', JSON.stringify(this.scores));
   }
 
-  playerNameSubmit(e) {
-    let name = this.form_text.value;
+  playerNameSubmit() {
+    const name = this.form_text.value;
     this.submit({
       name,
       score: this.game.mech.score
@@ -47654,7 +47658,7 @@ class TopScores {
     this.hidePlayerName();
   }
 
-  playerNameCancel(e) {
+  playerNameCancel() {
     this.form_text.value = '';
     this.hidePlayerName();
   }
@@ -47814,15 +47818,16 @@ class Touch {
 
     if (this.state.shoot) {
       if (mech.fire_next > this.game.firerate) {
-        let bullet = mech.bullet(mech.w(), mech.h());
+        const bullet = mech.bullet();
 
         if (mech.charge > mech.charged) {
           bullet.super();
         }
 
         this.game.fire(bullet);
-        mech.fire_next = 0;
-        mech.charge = 0;
+        mech.fire_next = 0; // Recharge speed.
+
+        mech.charge = mech.game.chargeSpeed;
         mech.state.shoot = false;
         mech.state.charge = false;
         this.state.shoot = false;
@@ -47854,7 +47859,7 @@ class Touch {
     // console.log('end', e, this);
     // this.touch.enabled = false;
     let id;
-    var duration;
+    let duration;
 
     for (let i = 0; i < e.changedTouches.length; i++) {
       id = e.changedTouches[i].identifier;
@@ -47871,15 +47876,14 @@ class Touch {
   }
 
   touchMove(e) {
-    let offset_left = this.game.app.view.offsetLeft;
-    let offset_top = this.game.app.view.offsetTop;
-    let ratio = this.game.height / parseInt(this.game.app.view.style.height);
-    let x = (e.touches.item(this.move_id).clientX - offset_left) * ratio;
-    let y = (e.touches.item(this.move_id).clientY - offset_top) * ratio;
+    const offset_left = this.game.app.view.offsetLeft;
+    const offset_top = this.game.app.view.offsetTop;
+    const ratio = this.game.height / parseInt(this.game.app.view.style.height);
+    const x = (e.touches.item(this.move_id).clientX - offset_left) * ratio;
+    const y = (e.touches.item(this.move_id).clientY - offset_top) * ratio;
     this.state.targetx = x;
     this.state.targety = y;
-    this.state.touch = true; // console.log('moveto:', x, y, ratio);
-    // _this.mech.moveTowards(x, y, _this.mech.speed);
+    this.state.touch = true; // _this.mech.moveTowards(x, y, _this.mech.speed);
   }
 
   clearShoot() {

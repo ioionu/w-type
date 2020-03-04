@@ -8,11 +8,11 @@ export default class TopScores {
     this.playerName();
   }
 
-  default() {
-    let scores = [];
-    scores[0] = { name: 'AAA', score: 100 };
-    scores[1] = { name: 'FUK', score: 50 };
-    scores[2] = { name: 'JOS', score: 1 };
+  static default() {
+    const scores = [];
+    scores[0] = { name: 'DOG', score: 100 };
+    scores[1] = { name: 'CAT', score: 50 };
+    scores[2] = { name: 'FUN', score: 1 };
 
     localStorage.setItem('top-scores', JSON.stringify(scores));
   }
@@ -20,7 +20,7 @@ export default class TopScores {
   load() {
     let stored = localStorage.getItem('top-scores');
     if (stored === null) {
-      this.default();
+      TopScores.default();
       stored = localStorage.getItem('top-scores');
     }
     this.scores = JSON.parse(stored);
@@ -30,13 +30,13 @@ export default class TopScores {
     localStorage.setItem('top-scores', JSON.stringify(this.scores));
   }
 
-  playerNameSubmit(e) {
-    let name = this.form_text.value;
+  playerNameSubmit() {
+    const name = this.form_text.value;
     this.submit({ name, score: this.game.mech.score });
     this.hidePlayerName();
   }
 
-  playerNameCancel(e) {
+  playerNameCancel() {
     this.form_text.value = '';
     this.hidePlayerName();
   }

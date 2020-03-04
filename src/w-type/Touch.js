@@ -43,13 +43,16 @@ export default class Touch {
 
     if (this.state.shoot) {
       if (mech.fire_next > this.game.firerate) {
-        let bullet = mech.bullet(mech.w(), mech.h());
+        const bullet = mech.bullet();
         if (mech.charge > mech.charged) {
           bullet.super();
         }
         this.game.fire(bullet);
         mech.fire_next = 0;
-        mech.charge = 0;
+
+        // Recharge speed.
+        mech.charge = mech.game.chargeSpeed;
+
         mech.state.shoot = false;
         mech.state.charge = false;
         this.state.shoot = false;
@@ -79,7 +82,7 @@ export default class Touch {
     // console.log('end', e, this);
     // this.touch.enabled = false;
     let id;
-    var duration;
+    let duration;
     for (let i = 0; i < e.changedTouches.length; i++) {
       id = e.changedTouches[i].identifier;
       duration = e.timeStamp - this.current_touches[id];
@@ -95,15 +98,14 @@ export default class Touch {
   }
 
   touchMove(e) {
-    let offset_left = this.game.app.view.offsetLeft;
-    let offset_top = this.game.app.view.offsetTop;
-    let ratio = this.game.height / parseInt(this.game.app.view.style.height);
-    let x = (e.touches.item(this.move_id).clientX - offset_left) * ratio;
-    let y = (e.touches.item(this.move_id).clientY - offset_top) * ratio;
+    const offset_left = this.game.app.view.offsetLeft;
+    const offset_top = this.game.app.view.offsetTop;
+    const ratio = this.game.height / parseInt(this.game.app.view.style.height);
+    const x = (e.touches.item(this.move_id).clientX - offset_left) * ratio;
+    const y = (e.touches.item(this.move_id).clientY - offset_top) * ratio;
     this.state.targetx = x;
     this.state.targety = y;
     this.state.touch = true;
-    // console.log('moveto:', x, y, ratio);
     // _this.mech.moveTowards(x, y, _this.mech.speed);
   }
 

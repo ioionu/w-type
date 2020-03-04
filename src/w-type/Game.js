@@ -26,13 +26,24 @@ export default class Game {
     this.id = 'game';
     this.firerate = params.firerate;
 
+    // Baddie spawn rate (per score). See GameElement.hit().
+    this.baddie_rate_default = 200;
+    this.baddie_rate_change = 10;
+    this.baddie_rate_min = 80;
+
     this.stars = [];
     this.baddies = [];
     this.bullets = [];
 
-    // for(var p in params) {
-    //   this[p] = params[p];
-    // }
+    // After super bullet set charge to.
+    this.chargeSpeed = 0;
+    // When super bullet fires.
+    this.charged = 70;
+
+    this.lives = 2;
+
+    // Increase baddie rate and add extra life.
+    this.levelUp = 50;
 
     /* make "this" available in this.update() when called from requestAnimFrame()
     * http://stackoverflow.com/questions/20177297/how-to-call-requestanimframe-on-an-object-method
@@ -41,7 +52,7 @@ export default class Game {
     //  this.init();
 
     PIXI.settings.SPRITE_MAX_TEXTURES = Math.min(PIXI.settings.SPRITE_MAX_TEXTURES, 16);
-    this.app = new PIXI.Application({backgroundColor: 0x000000});
+    this.app = new PIXI.Application({ backgroundColor: 0x000000 });
 
     this.app.loader.add(this.sprite_sheet)
       .load(() => {
@@ -56,7 +67,6 @@ export default class Game {
    * @param {GAME.game} game object
    */
   start() {
-
     // let pixi choose WebGL or canvas
     // this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
     // set the canvas width and height to fill the screen
@@ -64,19 +74,18 @@ export default class Game {
     const screenHeight = window.innerHeight;// 600;
     const ratioWidth = screenWidth / this.width;
     const ratioHeight = screenHeight / this.height;
-    let calcWidth; let calcHeight;
+    let calcWidth;
+    let calcHeight;
+
     if (ratioWidth > ratioHeight) {
       calcWidth = this.width * ratioHeight;
       calcHeight = screenHeight;
-    }
-    else {
+    } else {
       calcHeight = this.height * ratioWidth;
       calcWidth = screenWidth;
     }
 
     this.app.view.style.display = 'block';
-    // this.app.view.style.width = `${calcWidth}px`;
-    // this.app.view.style.height = `${calcHeight}px`;
     this.app.view.style.margin = 'auto';
     this.app.view.id = this.id;
 
@@ -100,13 +109,14 @@ export default class Game {
 
     // add stars
     for (let s = 0; s < 25; s++) {
-      const x = this.app.view.width;
-      const y = Math.random() * this.app.view.height;
       this.addStar();
     }
 
     // add player
-    const params = { game: this, lives: 1 };
+    const params = {
+      game: this,
+      lives: 2,
+    };
     this.mech = new Mech(params);
     this.mech.active = false;
     this.app.stage.addChild(this.mech.view);
@@ -131,7 +141,7 @@ export default class Game {
     ];
 
     // fullscreen events
-    window.addEventListener('resize', (e) => {
+    window.addEventListener('resize', () => {
       this.resize();
     });
 
@@ -141,77 +151,81 @@ export default class Game {
   }
 
   animate() {
-    if (!this.paused) {
-      this.mech.update(this);
-      TWEEN.update();
+    this.mech.update(this);
+    TWEEN.update();
 
-      // add bad guy
-      // console.log(baddie_next, baddie_rate);
-      if (this.baddie_next > this.baddie_rate && this.mech.active) {
-        // addBaddy();
-        this.createBaddyTweenedSquad();
-        this.baddie_next = 0;
-        if (this.baddie_rate >= this.baddie_rate_min) {
-          this.baddie_rate = this.baddie_rate - this.baddie_rate_accel;
-        }
-        console.log(this.baddie_rate);
-      } else {
-        this.baddie_next++;
-      }
+    // add bad guy
+    // console.log(baddie_next, baddie_rate);
+    if (this.baddie_next > this.baddie_rate && this.mech.active) {
+      // addBaddy();
+      this.createBaddyTweenedSquad();
+      this.baddie_next = 0;
 
-
-      // test for hits and move baddies
-      for (const baddy in this.baddies) {
-        if (this.baddies.hasOwnProperty(baddy)) {
-          if (this.baddies[baddy].active) {
-            if (Game.hitTest(this.mech, this.baddies[baddy])) {
-              this.mech.hit(20);
-              this.baddies[baddy].die();
-            }
-
-            if (this.baddies[baddy].right() < (this.baddies[baddy].w() * -1)) {
-              this.baddies[baddy].die();
-              this.baddies[baddy].removeFromStage();
-            }
-            for (let bullet = 0; bullet < this.bullets.length; bullet++) {
-              const { damage } = this.bullets[bullet];
-              if (Game.hitTest(this.bullets[bullet], this.baddies[baddy])) {
-                // console.log("hit!!");
-                this.baddies[baddy].hit(damage);
-                this.baddies[baddy].recoil(this.bullets[bullet]);
-                if (this.bullets[bullet].type !== 'super') {
-                  this.bullets[bullet].die();
-                }
-              }
-              if (this.bullets[bullet].source != this.mech && Game.hitTest(this.bullets[bullet], this.mech)) {
-                this.bullets[bullet].die();
-                this.mech.hit(damage);
-                this.mech.recoil(this.bullets[bullet]);
-              }
-            }
-          }
-          if (this.baddies[baddy].remove) {
-            // if this baddy is not active then remove it from stage
-            this.baddies[baddy].removeFromStage();
-            delete this.baddies[baddy];
-          }
-        }
-      }
+      console.log(this.baddie_rate);
     } else {
-      // THIS DOESNT WORK
-      // https://github.com/tweenjs/tween.js/issues/15
-      // TWEEN.stop();
-    }// paused
+      this.baddie_next++;
+    }
 
+    // test for hits and move baddies
+    this.baddies.forEach((baddy) => {
+      if (baddy.active) {
+        if (Game.hitTest(this.mech, baddy)) {
+          this.mech.hit(30);
+          baddy.die();
+        }
+
+        if (baddy.right() < (baddy.w() * -1)) {
+          baddy.die();
+          baddy.removeFromStage();
+        }
+
+        this.bullets.forEach((bullet) => {
+          const { damage } = bullet;
+          if (Game.hitTest(bullet, baddy)) {
+            // console.log("hit!!");
+            baddy.hit(damage);
+            baddy.recoil(bullet);
+            if (bullet.type !== 'super') {
+              bullet.die();
+            }
+          }
+          if (
+            bullet.source !== this.mech &&
+            Game.hitTest(bullet, this.mech)
+          ) {
+            bullet.die();
+            this.mech.hit(damage);
+            this.mech.recoil(bullet);
+          }
+
+          // Test for bullet collision.
+          this.bullets.forEach((bullet2) => {
+            if (
+              bullet !== bullet2 &&
+              bullet2.source !== this.mech &&
+              Game.hitTest(bullet, bullet2)
+            ) {
+              bullet2.die();
+            }
+          });
+        });
+      }
+      if (baddy.remove) {
+        // if this baddy is not active then remove it from stage
+        baddy.removeFromStage();
+        this.baddies = this.baddies.filter((target) => target !== baddy);
+      }
+    });
+
+    this.bullets = this.bullets.filter((bullet) => bullet.active);
 
     // draw
-    // this.renderer.render(this.app.stage);
     window.requestAnimationFrame(this.animate);
   }
 
   enableInput(input) {
     for (let i = 0; i < this.inputs.length; i++) {
-      if (this.inputs[i] == input) {
+      if (this.inputs[i] === input) {
         this.inputs[i].enable();
       } else {
         this.inputs[i].disable();
@@ -262,8 +276,8 @@ export default class Game {
     const h = this.h();
     const path = {
 
-      // TODO fix hardcoded last tween poing
-      x: [w + 45, w * Math.random(), w * Math.random(), -75], 
+      // TODO: fix hardcoded last tween poing.
+      x: [w + 45, w * Math.random(), w * Math.random(), -75],
       y: [h * Math.random(), h * Math.random(), h * Math.random()],
       shoot: Math.floor(Math.random() * 50),
       interpolation: TWEEN.Interpolation.CatmullRom,
@@ -272,7 +286,7 @@ export default class Game {
 
     const squadSize = (Math.floor(Math.random() * 5)) + 2;
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < squadSize; i++) {
       this.addBaddyTweened({
         x: path.x,
         y: path.y,
@@ -304,11 +318,13 @@ export default class Game {
     // enable keyboard... bit of a hack, not really needed
     this.enableInput(this.inputs[0]);
 
+    // Reset the baddie rate.
+    this.baddie_rate = this.baddie_rate_default;
+
     // TODO: use newGame() function for first game
     this.baddies = [];
-    this.baddie_rate = 100;
     // add player
-    const params = { game: this, lives: 1 };
+    const params = { game: this, lives: 2 };
     this.mech.removeFromStage();
     this.mech = new Mech(params);
     this.app.stage.addChild(this.mech.view);
@@ -322,8 +338,7 @@ export default class Game {
     if (element.requestFullscreen) {
       if (!document.fullscreenElement) {
         element.requestFullscreen();
-      }
-      else {
+      } else {
         document.exitFullscreen();
       }
     } else if (element.mozRequestFullScreen) {
@@ -338,8 +353,8 @@ export default class Game {
 
   resize() {
     console.log('resize', this.stretch);
-    let calc_height;
-    let calc_width;
+    let calcHeight;
+    let calcWidth;
     let factor;
 
     // do we stretch to fullscreen ot keep aspect ratio?
@@ -347,24 +362,24 @@ export default class Game {
       const WIDTH = this.width;
       const HEIGHT = this.height;
       // let pixi choose WebGL or canvas
-      const screen_width = window.innerWidth;// 800;
-      const screen_height = window.innerHeight;// 600;
-      if (screen_width > screen_height) {
-        factor = screen_height / HEIGHT;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      if (screenWidth > screenHeight) {
+        factor = screenHeight / HEIGHT;
       } else {
-        factor = screen_width / WIDTH;
+        factor = screenWidth / WIDTH;
       }
       // console.log(factor, calc_height, screen_height, calc_width, screen_width);
 
       this.app.renderer.view.style.display = 'block';
-      calc_height = `${HEIGHT * factor}px`;
-      calc_width = `${WIDTH * factor}px`;
+      calcHeight = `${HEIGHT * factor}px`;
+      calcWidth = `${WIDTH * factor}px`;
     } else {
-      calc_height = `${window.innerHeight}px`;
-      calc_width = '100%';
+      calcHeight = `${window.innerHeight}px`;
+      calcWidth = '100%';
     }
-    this.app.renderer.view.style.width = calc_width; // "100%";
-    this.app.renderer.view.style.height = calc_height; // "100%";
+    this.app.renderer.view.style.width = calcWidth; // "100%";
+    this.app.renderer.view.style.height = calcHeight; // "100%";
   }
 
   toggleStretch() {
@@ -376,7 +391,7 @@ export default class Game {
     return this.stretch;
   }
 
-  getAngle(x1, y1, x2, y2) {
+  static getAngle(x1, y1, x2, y2) {
     return Math.atan2((y1 - y2), (x1 - x2));//* 180 / Math.PI;
   }
 
@@ -401,32 +416,33 @@ export default class Game {
 
   static hitTest(a, b) {
     if (a.active && b.active) {
-      if (a.source != b && b.source != a) {
+      if (a.source !== b && b.source !== a) {
         const hx = a.x() - b.x();
         const hy = a.y() - b.y();
         const dist = Math.sqrt(hx * hx + hy * hy);
-        const width_a = ((a.size()).h) / 2;
-        const width_b = ((b.size()).h) / 2;
-        return dist <= width_a + width_b;
+        const widthA = ((a.size()).h) / 2;
+        const widthB = ((b.size()).h) / 2;
+        return dist <= widthA + widthB;
       }
     }
     return false;
   }
 
-  static checkBounds(x,y,h,w,sw,sh, mode) {
-
-    if(mode === 'inside'){
-      if (x - w/2 > 0 && x + w/2 < sw && y - h/2 > 0 && y + h/2 < sh) {
+  static checkBounds(x, y, h, w, sw, sh, mode) {
+    if (mode === 'inside') {
+      if (x - w / 2 > 0 && x + w / 2 < sw && y - h / 2 > 0 && y + h / 2 < sh) {
         return true;
       }
       return false;
     }
     if (mode === 'outside') {
-
-      if(x + w/2 > 0 && x - w/2 < sw && y + h/2 > 0 && y - h/2 < sh){ return true; }
-      else { return false; }
+      if (x + w / 2 > 0 && x - w / 2 < sw && y + h / 2 > 0 && y - h / 2 < sh) {
+        return true;
+      }
+      return false;
     }
-    console.log("derp... checkbounds spacked out");
+
+    console.log('Error in checkbounds');
     return false;
   }
 }

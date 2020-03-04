@@ -154,7 +154,7 @@ export default class Keyboard {
     // TODO: move to function on mech.
     if (this.state.shoot) {
       if (mech.fire_next > this.game.firerate) {
-        const bullet = mech.bullet(mech.w(), mech.h());
+        const bullet = mech.bullet();
 
         // Fire the actual super bullet.
         if (mech.charge > mech.charged) {
@@ -164,7 +164,7 @@ export default class Keyboard {
         mech.fire_next = 0;
 
         // Recharge speed.
-        mech.charge = 25;
+        mech.charge = mech.game.chargeSpeed;
 
         mech.state.shoot = false;
         mech.state.charge = false;

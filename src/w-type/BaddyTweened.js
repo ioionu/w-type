@@ -12,7 +12,7 @@ export default class BaddyTweened extends GameElement {
     this.SPEED = 1;
     this.YMOD = 0.1;
     this.YPOWER = Math.random() * 100;
-    this.strength = 10;
+    this.strength = 20;
     this.value = 1;
     this.dob = new Date();
 
@@ -61,7 +61,7 @@ export default class BaddyTweened extends GameElement {
       .delay(this.path.delay)
       .easing(this.path.easing)
       .interpolation(this.path.interpolation)
-      .onUpdate((frame) => {
+      .onUpdate(() => {
         baddy.x(xCoord.x);
         const age = Math.floor((new Date() - baddy.dob) / 100);
         if (baddy.path.shoot + (baddy.path.delay / 100) === age) {
@@ -70,7 +70,7 @@ export default class BaddyTweened extends GameElement {
       })
       .start();
 
-    const yCoord = {y: this.path.y[0]};
+    const yCoord = { y: this.path.y[0] };
     this.tween.y = new TWEEN.Tween(yCoord)
       .to({ y: baddy.path.y.slice(1) }, baddy.path.time)
       .delay(baddy.path.delay)

@@ -86,11 +86,22 @@ class GameElement {
       if (this.type === 'baddyTweened') {
         this.game.mech.score += this.value;
         this.game.score.updateScore(this.game.mech.score);
+
+        // Extra life every 100 points.
+        if (this.game.mech.score % this.game.levelUp === 0) {
+          this.game.mech.lives += 1;
+          this.game.score.updateLife(this.game.mech.lives);
+
+          // Increase the baddie_rate based on score.
+          if ((this.game.baddie_rate - this.game.baddie_rate_change) > this.game.baddie_rate_min) {
+            this.game.baddie_rate -= this.game.baddie_rate_change;
+          }
+        }
       }
 
-      // did we be dead?
+      // Are we be dead?
       if (this.type === 'mech') {
-        this.lives--;
+        this.lives -= 1;
         this.game.score.updateLife(this.lives);
       }
       return true;
