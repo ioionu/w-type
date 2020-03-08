@@ -4,6 +4,7 @@ import Game from './Game';
 import GoodyBullet from './GoodyBullet';
 import LifeBar from './LifeBar';
 
+
 /**
  * @class Mech
  * @construcor
@@ -47,6 +48,8 @@ export default class Mech extends GameElement {
       shoot: false,
     };
     this.scale = new PIXI.Point(0.5, 0.5);
+
+    this.dieSound = () => this.game.audio.goodieDie();
 
     this.is_dead = true;
 
@@ -180,7 +183,11 @@ export default class Mech extends GameElement {
       }
       activeInput.update();
       if (this.charge > this.charged) {
+        if (!this.charge_frame.visible) {
+          this.game.audio.charge();
+        }
         this.charge_frame.visible = true;
+        
       } else {
         this.scale.set(1, 1);
         this.charge_frame.visible = false;

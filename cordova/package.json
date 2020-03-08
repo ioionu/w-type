@@ -8,9 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "run": "cordova run browser",
     "build-dev": "cordova build browser --debug",
-    "build-apk": "cordova build android",
+    "build-apk-dev": "cordova build android",
+    "build-apk-prod": "cordova build android",
     "serve": "cordova serve",
-    "reinstall-apk": "adb uninstall com.sydneywebdev.wtype && adb install platforms/android/app/build/outputs/apk/debug/app-debug.apk"
+    "reinstall-apk-dev": "adb uninstall com.sydneywebdev.wtype && adb install platforms/android/app/build/outputs/apk/debug/app-debug.apk",
+    "reinstall-apk-prod": "adb uninstall com.sydneywebdev.wtype && adb install platforms/android/app/build/outputs/apk/release/app-release.apk"
   },
   "keywords": [
     "ecosystem:cordova"

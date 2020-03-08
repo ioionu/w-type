@@ -1,3 +1,6 @@
+import { resources } from "pixi.js";
+import Audio from './Audio';
+
 export default class Keyboard {
   constructor(game) {
     this.game = game;
@@ -46,12 +49,12 @@ export default class Keyboard {
     this.state.shoot = false;
   }
 
-  //allow for WASD and arrow control scheme
+  // Allow for WASD and arrow control scheme.
   handleKeyDown(e) {
-    if(!this.enabled) {
+    if (!this.enabled) {
       this.game.enableInput(this);
     }
-    switch(e.keyCode) {
+    switch (e.keyCode) {
       case this.KEYCODE_SPACE:
         this.state.shoot = false;
         break;
@@ -81,13 +84,15 @@ export default class Keyboard {
         break;
       case this.KEYCODE_S:
         this.state.down = true;
+        break;
+      default:
         break;
     }
   }
 
   handleKeyUp(e) {
     //console.log("key", e.keyCode);
-    switch(e.keyCode) {
+    switch (e.keyCode) {
       case this.KEYCODE_SPACE:
         this.state.shoot = true;
         break;
@@ -117,6 +122,8 @@ export default class Keyboard {
         break;
       case this.KEYCODE_DOWN:
         this.state.down = false;
+        break;
+      default:
         break;
     }
   }
@@ -159,6 +166,8 @@ export default class Keyboard {
         // Fire the actual super bullet.
         if (mech.charge > mech.charged) {
           bullet.super();
+        } else {
+          // this.game.audio.zap();
         }
         this.game.fire(bullet);
         mech.fire_next = 0;

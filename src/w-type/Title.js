@@ -67,6 +67,29 @@ export default class Title {
       title.addChild(option);
     }
 
+    const audioOnTexture = PIXI.Texture.from('audio-on.png');
+    const audioOffTexture = PIXI.Texture.from('audio-off.png');
+    const audio = PIXI.Sprite.from('audio-on.png');
+    audio.anchor = new PIXI.Point(0.5, 0.5);
+
+    // Move sound icon up in cordova bc no fullscreen button.
+    const rightPosition = ('cordova' in window) ? 0.1 : 0.25;
+    audio.position = new PIXI.Point(
+      (this.game.width * 0.9),
+      (this.game.height * rightPosition)
+    );
+    audio.interactive = true;
+    audio.on('click', () => {
+      this.game.toggleAudio();
+      audio.texture = this.game.audioEnabled ? audioOnTexture : audioOffTexture;
+    });
+    audio.on('touchstart', () => {
+      this.game.toggleAudio();
+      audio.texture = this.game.audioEnabled ? audioOnTexture : audioOffTexture;
+    });
+    title.addChild(audio);
+
+
     const top_score_string = this.game.top_scores.getString();
     this.top_scores = new PIXI.Text(
       top_score_string,

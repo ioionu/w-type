@@ -11,15 +11,15 @@
       "PACKAGE_NAME": "io.cordova.hellocordova"
     },
     "cordova-plugin-screen-orientation": {
-      "PACKAGE_NAME": "io.cordova.hellocordova"
+      "PACKAGE_NAME": "com.sydneywebdev.wtype"
     },
     "cordova-plugin-fullscreen": {
-      "PACKAGE_NAME": "io.cordova.hellocordova"
+      "PACKAGE_NAME": "com.sydneywebdev.wtype"
     }
   },
   "dependent_plugins": {
     "es6-promise-plugin": {
-      "PACKAGE_NAME": "io.cordova.hellocordova"
+      "PACKAGE_NAME": "com.sydneywebdev.wtype"
     }
   }
 }

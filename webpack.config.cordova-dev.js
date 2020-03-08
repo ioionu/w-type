@@ -14,14 +14,20 @@ module.exports = {
     new webpack.ProvidePlugin({
       PIXI: 'pixi.js',
     }),
-    new CopyPlugin([{
-      from: 'src/index-cordova.html',
-      to: 'index.html',
-    },
-    {
-      from: 'src/index-cordova.js',
-      to: 'index-cordova.js',
-    }]),
+    new CopyPlugin([
+      {
+        from: 'src/index-cordova.html',
+        to: 'index.html',
+      },
+      {
+        from: 'src/index-cordova.js',
+        to: 'index-cordova.js',
+      },
+      {
+        from: 'assets/audio/',
+        to: 'audio/',
+      },
+    ]),
   ],
   module: {
     rules: [

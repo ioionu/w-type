@@ -39249,6 +39249,1528 @@ module.exports = function parseURI(str, opts) {
 
 /***/ }),
 
+/***/ "./node_modules/pixi-sound/dist/pixi-sound.esm.js":
+/*!********************************************************!*\
+  !*** ./node_modules/pixi-sound/dist/pixi-sound.esm.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @pixi/loaders */ "./node_modules/@pixi/loaders/lib/loaders.es.js");
+/* harmony import */ var _pixi_ticker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @pixi/ticker */ "./node_modules/@pixi/ticker/lib/ticker.es.js");
+/* harmony import */ var _pixi_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @pixi/utils */ "./node_modules/@pixi/utils/lib/utils.es.js");
+/* harmony import */ var _pixi_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @pixi/core */ "./node_modules/@pixi/core/lib/core.es.js");
+/*!
+ * pixi-sound - v3.0.4
+ * https://github.com/pixijs/pixi-sound
+ * Compiled Thu, 07 Nov 2019 23:26:22 UTC
+ *
+ * pixi-sound is licensed under the MIT license.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+
+
+
+
+var r = function () {
+  function t(t, e) {
+    this._output = e, this._input = t;
+  }
+
+  return Object.defineProperty(t.prototype, "destination", {
+    get: function () {
+      return this._input;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "filters", {
+    get: function () {
+      return this._filters;
+    },
+    set: function (t) {
+      var e = this;
+
+      if (this._filters && (this._filters.forEach(function (t) {
+        t && t.disconnect();
+      }), this._filters = null, this._input.connect(this._output)), t && t.length) {
+        this._filters = t.slice(0), this._input.disconnect();
+        var n = null;
+        t.forEach(function (t) {
+          null === n ? e._input.connect(t.destination) : n.connect(t.destination), n = t;
+        }), n.connect(this._output);
+      }
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.destroy = function () {
+    this.filters = null, this._input = null, this._output = null;
+  }, t;
+}(),
+    s = function () {
+  function t(t, e) {
+    this.init(t, e);
+  }
+
+  return t.prototype.init = function (t, e) {
+    this.destination = t, this.source = e || t;
+  }, t.prototype.connect = function (t) {
+    this.source.connect(t);
+  }, t.prototype.disconnect = function () {
+    this.source.disconnect();
+  }, t.prototype.destroy = function () {
+    this.disconnect(), this.destination = null, this.source = null;
+  }, t;
+}(),
+    u = function (t, e) {
+  return (u = Object.setPrototypeOf || {
+    __proto__: []
+  } instanceof Array && function (t, e) {
+    t.__proto__ = e;
+  } || function (t, e) {
+    for (var n in e) e.hasOwnProperty(n) && (t[n] = e[n]);
+  })(t, e);
+};
+
+function a(t, e) {
+  function n() {
+    this.constructor = t;
+  }
+
+  u(t, e), t.prototype = null === e ? Object.create(e) : (n.prototype = e.prototype, new n());
+}
+
+var c,
+    p = function () {
+  return (p = Object.assign || function (t) {
+    for (var e, n = 1, o = arguments.length; n < o; n++) for (var i in e = arguments[n]) Object.prototype.hasOwnProperty.call(e, i) && (t[i] = e[i]);
+
+    return t;
+  }).apply(this, arguments);
+};
+
+function h() {
+  return c;
+}
+
+var l = function () {
+  function t() {}
+
+  return t.setParamValue = function (t, e) {
+    if (t.setValueAtTime) {
+      var n = h().context;
+      t.setValueAtTime(e, n.audioContext.currentTime);
+    } else t.value = e;
+
+    return e;
+  }, t;
+}(),
+    f = 0,
+    d = function (t) {
+  function e(e) {
+    var n = t.call(this) || this;
+    return n.id = f++, n._media = null, n._paused = !1, n._muted = !1, n._elapsed = 0, n.init(e), n;
+  }
+
+  return a(e, t), e.prototype.set = function (t, e) {
+    if (void 0 === this[t]) throw new Error("Property with name " + t + " does not exist.");
+    return this[t] = e, this;
+  }, e.prototype.stop = function () {
+    this._source && (this._internalStop(), this.emit("stop"));
+  }, Object.defineProperty(e.prototype, "speed", {
+    get: function () {
+      return this._speed;
+    },
+    set: function (t) {
+      this._speed = t, this.refresh(), this._update(!0);
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "volume", {
+    get: function () {
+      return this._volume;
+    },
+    set: function (t) {
+      this._volume = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "muted", {
+    get: function () {
+      return this._muted;
+    },
+    set: function (t) {
+      this._muted = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "loop", {
+    get: function () {
+      return this._loop;
+    },
+    set: function (t) {
+      this._loop = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.refresh = function () {
+    if (this._source) {
+      var t = this._media.context,
+          e = this._media.parent;
+      this._source.loop = this._loop || e.loop;
+      var n = t.volume * (t.muted ? 0 : 1),
+          o = e.volume * (e.muted ? 0 : 1),
+          i = this._volume * (this._muted ? 0 : 1);
+      l.setParamValue(this._gain.gain, i * o * n), l.setParamValue(this._source.playbackRate, this._speed * e.speed * t.speed);
+    }
+  }, e.prototype.refreshPaused = function () {
+    var t = this._media.context,
+        e = this._media.parent,
+        n = this._paused || e.paused || t.paused;
+    n !== this._pausedReal && (this._pausedReal = n, n ? (this._internalStop(), this.emit("paused")) : (this.emit("resumed"), this.play({
+      start: this._elapsed % this._duration,
+      end: this._end,
+      speed: this._speed,
+      loop: this._loop,
+      volume: this._volume
+    })), this.emit("pause", n));
+  }, e.prototype.play = function (t) {
+    var e = t.start,
+        n = t.end,
+        o = t.speed,
+        i = t.loop,
+        r = t.volume,
+        s = t.muted;
+    this._paused = !1;
+
+    var u = this._media.nodes.cloneBufferSource(),
+        a = u.source,
+        c = u.gain;
+
+    this._source = a, this._gain = c, this._speed = o, this._volume = r, this._loop = !!i, this._muted = s, this.refresh();
+    var p = this._source.buffer.duration;
+    this._duration = p, this._end = n, this._lastUpdate = this._now(), this._elapsed = e, this._source.onended = this._onComplete.bind(this), this._loop ? (this._source.loopEnd = n, this._source.loopStart = e, this._source.start(0, e)) : n ? this._source.start(0, e, n - e) : this._source.start(0, e), this.emit("start"), this._update(!0), this._enabled = !0;
+  }, e.prototype._toSec = function (t) {
+    return t > 10 && (t /= 1e3), t || 0;
+  }, Object.defineProperty(e.prototype, "_enabled", {
+    set: function (t) {
+      _pixi_ticker__WEBPACK_IMPORTED_MODULE_1__["Ticker"].shared.remove(this._updateListener, this), t && _pixi_ticker__WEBPACK_IMPORTED_MODULE_1__["Ticker"].shared.add(this._updateListener, this);
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "progress", {
+    get: function () {
+      return this._progress;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "paused", {
+    get: function () {
+      return this._paused;
+    },
+    set: function (t) {
+      this._paused = t, this.refreshPaused();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.destroy = function () {
+    this.removeAllListeners(), this._internalStop(), this._gain && (this._gain.disconnect(), this._gain = null), this._media && (this._media.context.events.off("refresh", this.refresh, this), this._media.context.events.off("refreshPaused", this.refreshPaused, this), this._media = null), this._end = null, this._speed = 1, this._volume = 1, this._loop = !1, this._elapsed = 0, this._duration = 0, this._paused = !1, this._muted = !1, this._pausedReal = !1;
+  }, e.prototype.toString = function () {
+    return "[WebAudioInstance id=" + this.id + "]";
+  }, e.prototype._now = function () {
+    return this._media.context.audioContext.currentTime;
+  }, e.prototype._updateListener = function () {
+    this._update();
+  }, e.prototype._update = function (t) {
+    if (void 0 === t && (t = !1), this._source) {
+      var e = this._now(),
+          n = e - this._lastUpdate;
+
+      if (n > 0 || t) {
+        var o = this._source.playbackRate.value;
+        this._elapsed += n * o, this._lastUpdate = e;
+        var i = this._duration,
+            r = void 0;
+
+        if (this._source.loopStart) {
+          var s = this._source.loopEnd - this._source.loopStart;
+          r = (this._source.loopStart + this._elapsed % s) / i;
+        } else r = this._elapsed % i / i;
+
+        this._progress = r, this.emit("progress", this._progress, i);
+      }
+    }
+  }, e.prototype.init = function (t) {
+    this._media = t, t.context.events.on("refresh", this.refresh, this), t.context.events.on("refreshPaused", this.refreshPaused, this);
+  }, e.prototype._internalStop = function () {
+    this._source && (this._enabled = !1, this._source.onended = null, this._source.stop(0), this._source.disconnect(), this._source = null);
+  }, e.prototype._onComplete = function () {
+    this._source && (this._enabled = !1, this._source.onended = null, this._source.disconnect()), this._source = null, this._progress = 1, this.emit("progress", 1, this._duration), this.emit("end", this);
+  }, e;
+}(_pixi_utils__WEBPACK_IMPORTED_MODULE_2__["EventEmitter"]),
+    _ = function (t) {
+  function e(e) {
+    var n = this,
+        o = e.audioContext,
+        i = o.createBufferSource(),
+        r = o.createGain(),
+        s = o.createAnalyser();
+    return i.connect(s), s.connect(r), r.connect(e.destination), (n = t.call(this, s, r) || this).context = e, n.bufferSource = i, n.gain = r, n.analyser = s, n;
+  }
+
+  return a(e, t), Object.defineProperty(e.prototype, "script", {
+    get: function () {
+      return this._script || (this._script = this.context.audioContext.createScriptProcessor(e.BUFFER_SIZE), this._script.connect(this.context.destination)), this._script;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.destroy = function () {
+    t.prototype.destroy.call(this), this.bufferSource.disconnect(), this._script && this._script.disconnect(), this.gain.disconnect(), this.analyser.disconnect(), this.bufferSource = null, this._script = null, this.gain = null, this.analyser = null, this.context = null;
+  }, e.prototype.cloneBufferSource = function () {
+    var t = this.bufferSource,
+        e = this.context.audioContext.createBufferSource();
+    e.buffer = t.buffer, l.setParamValue(e.playbackRate, t.playbackRate.value), e.loop = t.loop;
+    var n = this.context.audioContext.createGain();
+    return e.connect(n), n.connect(this.destination), {
+      source: e,
+      gain: n
+    };
+  }, Object.defineProperty(e.prototype, "bufferSize", {
+    get: function () {
+      return this.script.bufferSize;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.BUFFER_SIZE = 0, e;
+}(r),
+    y = function () {
+  function t() {}
+
+  return t.prototype.init = function (t) {
+    this.parent = t, this._nodes = new _(this.context), this._source = this._nodes.bufferSource, this.source = t.options.source;
+  }, t.prototype.destroy = function () {
+    this.parent = null, this._nodes.destroy(), this._nodes = null, this._source = null, this.source = null;
+  }, t.prototype.create = function () {
+    return new d(this);
+  }, Object.defineProperty(t.prototype, "context", {
+    get: function () {
+      return this.parent.context;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "isPlayable", {
+    get: function () {
+      return !!this._source && !!this._source.buffer;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "filters", {
+    get: function () {
+      return this._nodes.filters;
+    },
+    set: function (t) {
+      this._nodes.filters = t;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "duration", {
+    get: function () {
+      return this._source.buffer.duration;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "buffer", {
+    get: function () {
+      return this._source.buffer;
+    },
+    set: function (t) {
+      this._source.buffer = t;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "nodes", {
+    get: function () {
+      return this._nodes;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.load = function (t) {
+    this.source ? this._decode(this.source, t) : this.parent.url ? this._loadUrl(t) : t && t(new Error("sound.url or sound.source must be set"));
+  }, t.prototype._loadUrl = function (t) {
+    var e = this,
+        n = new XMLHttpRequest(),
+        o = this.parent.url;
+    n.open("GET", o, !0), n.responseType = "arraybuffer", n.onload = function () {
+      e.source = n.response, e._decode(n.response, t);
+    }, n.send();
+  }, t.prototype._decode = function (t, e) {
+    var n = this;
+    this.parent.context.decode(t, function (t, o) {
+      if (t) e && e(t);else {
+        n.parent.isLoaded = !0, n.buffer = o;
+        var i = n.parent.autoPlayStart();
+        e && e(null, n.parent, i);
+      }
+    });
+  }, t;
+}(),
+    m = function (t) {
+  function e() {
+    var n = this,
+        i = window,
+        r = new e.AudioContext(),
+        s = r.createDynamicsCompressor(),
+        u = r.createAnalyser();
+    return u.connect(s), s.connect(r.destination), (n = t.call(this, u, s) || this)._ctx = r, n._offlineCtx = new e.OfflineAudioContext(1, 2, i.OfflineAudioContext ? r.sampleRate : 44100), n._unlocked = !1, n.compressor = s, n.analyser = u, n.events = new _pixi_utils__WEBPACK_IMPORTED_MODULE_2__["EventEmitter"](), n.volume = 1, n.speed = 1, n.muted = !1, n.paused = !1, "running" !== r.state && (n._unlock(), n._unlock = n._unlock.bind(n), document.addEventListener("mousedown", n._unlock, !0), document.addEventListener("touchstart", n._unlock, !0), document.addEventListener("touchend", n._unlock, !0)), n;
+  }
+
+  return a(e, t), e.prototype._unlock = function () {
+    this._unlocked || (this.playEmptySound(), "running" === this._ctx.state && (document.removeEventListener("mousedown", this._unlock, !0), document.removeEventListener("touchend", this._unlock, !0), document.removeEventListener("touchstart", this._unlock, !0), this._unlocked = !0));
+  }, e.prototype.playEmptySound = function () {
+    var t = this._ctx.createBufferSource();
+
+    t.buffer = this._ctx.createBuffer(1, 1, 22050), t.connect(this._ctx.destination), t.start(0, 0, 0), "suspended" === t.context.state && t.context.resume();
+  }, Object.defineProperty(e, "AudioContext", {
+    get: function () {
+      var t = window;
+      return t.AudioContext || t.webkitAudioContext || null;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e, "OfflineAudioContext", {
+    get: function () {
+      var t = window;
+      return t.OfflineAudioContext || t.webkitOfflineAudioContext || null;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.destroy = function () {
+    t.prototype.destroy.call(this);
+    var e = this._ctx;
+    void 0 !== e.close && e.close(), this.events.removeAllListeners(), this.analyser.disconnect(), this.compressor.disconnect(), this.analyser = null, this.compressor = null, this.events = null, this._offlineCtx = null, this._ctx = null;
+  }, Object.defineProperty(e.prototype, "audioContext", {
+    get: function () {
+      return this._ctx;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "offlineContext", {
+    get: function () {
+      return this._offlineCtx;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "paused", {
+    get: function () {
+      return this._paused;
+    },
+    set: function (t) {
+      t && "running" === this._ctx.state ? this._ctx.suspend() : t || "suspended" !== this._ctx.state || this._ctx.resume(), this._paused = t;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.refresh = function () {
+    this.events.emit("refresh");
+  }, e.prototype.refreshPaused = function () {
+    this.events.emit("refreshPaused");
+  }, e.prototype.toggleMute = function () {
+    return this.muted = !this.muted, this.refresh(), this.muted;
+  }, e.prototype.togglePause = function () {
+    return this.paused = !this.paused, this.refreshPaused(), this._paused;
+  }, e.prototype.decode = function (t, e) {
+    this._offlineCtx.decodeAudioData(t, function (t) {
+      e(null, t);
+    }, function (t) {
+      e(new Error(t.message || "Unable to decode file"));
+    });
+  }, e;
+}(r),
+    g = {
+  WebAudioMedia: y,
+  WebAudioInstance: d,
+  WebAudioNodes: _,
+  WebAudioContext: m,
+  WebAudioUtils: l
+},
+    b = {
+  Filter: s,
+  EqualizerFilter: function (t) {
+    function e(n, o, i, r, s, u, a, c, p, f) {
+      void 0 === n && (n = 0), void 0 === o && (o = 0), void 0 === i && (i = 0), void 0 === r && (r = 0), void 0 === s && (s = 0), void 0 === u && (u = 0), void 0 === a && (a = 0), void 0 === c && (c = 0), void 0 === p && (p = 0), void 0 === f && (f = 0);
+      var d = this;
+
+      if (!h().useLegacy) {
+        var _ = [{
+          f: e.F32,
+          type: "lowshelf",
+          gain: n
+        }, {
+          f: e.F64,
+          type: "peaking",
+          gain: o
+        }, {
+          f: e.F125,
+          type: "peaking",
+          gain: i
+        }, {
+          f: e.F250,
+          type: "peaking",
+          gain: r
+        }, {
+          f: e.F500,
+          type: "peaking",
+          gain: s
+        }, {
+          f: e.F1K,
+          type: "peaking",
+          gain: u
+        }, {
+          f: e.F2K,
+          type: "peaking",
+          gain: a
+        }, {
+          f: e.F4K,
+          type: "peaking",
+          gain: c
+        }, {
+          f: e.F8K,
+          type: "peaking",
+          gain: p
+        }, {
+          f: e.F16K,
+          type: "highshelf",
+          gain: f
+        }].map(function (t) {
+          var e = h().context.audioContext.createBiquadFilter();
+          return e.type = t.type, l.setParamValue(e.Q, 1), e.frequency.value = t.f, l.setParamValue(e.gain, t.gain), e;
+        });
+
+        (d = t.call(this, _[0], _[_.length - 1]) || this).bands = _, d.bandsMap = {};
+
+        for (var y = 0; y < d.bands.length; y++) {
+          var m = d.bands[y];
+          y > 0 && d.bands[y - 1].connect(m), d.bandsMap[m.frequency.value] = m;
+        }
+
+        return d;
+      }
+
+      d = t.call(this, null) || this;
+    }
+
+    return a(e, t), e.prototype.setGain = function (t, e) {
+      if (void 0 === e && (e = 0), !this.bandsMap[t]) throw new Error("No band found for frequency " + t);
+      l.setParamValue(this.bandsMap[t].gain, e);
+    }, e.prototype.getGain = function (t) {
+      if (!this.bandsMap[t]) throw new Error("No band found for frequency " + t);
+      return this.bandsMap[t].gain.value;
+    }, Object.defineProperty(e.prototype, "f32", {
+      get: function () {
+        return this.getGain(e.F32);
+      },
+      set: function (t) {
+        this.setGain(e.F32, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f64", {
+      get: function () {
+        return this.getGain(e.F64);
+      },
+      set: function (t) {
+        this.setGain(e.F64, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f125", {
+      get: function () {
+        return this.getGain(e.F125);
+      },
+      set: function (t) {
+        this.setGain(e.F125, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f250", {
+      get: function () {
+        return this.getGain(e.F250);
+      },
+      set: function (t) {
+        this.setGain(e.F250, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f500", {
+      get: function () {
+        return this.getGain(e.F500);
+      },
+      set: function (t) {
+        this.setGain(e.F500, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f1k", {
+      get: function () {
+        return this.getGain(e.F1K);
+      },
+      set: function (t) {
+        this.setGain(e.F1K, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f2k", {
+      get: function () {
+        return this.getGain(e.F2K);
+      },
+      set: function (t) {
+        this.setGain(e.F2K, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f4k", {
+      get: function () {
+        return this.getGain(e.F4K);
+      },
+      set: function (t) {
+        this.setGain(e.F4K, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f8k", {
+      get: function () {
+        return this.getGain(e.F8K);
+      },
+      set: function (t) {
+        this.setGain(e.F8K, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "f16k", {
+      get: function () {
+        return this.getGain(e.F16K);
+      },
+      set: function (t) {
+        this.setGain(e.F16K, t);
+      },
+      enumerable: !0,
+      configurable: !0
+    }), e.prototype.reset = function () {
+      this.bands.forEach(function (t) {
+        l.setParamValue(t.gain, 0);
+      });
+    }, e.prototype.destroy = function () {
+      this.bands.forEach(function (t) {
+        t.disconnect();
+      }), this.bands = null, this.bandsMap = null;
+    }, e.F32 = 32, e.F64 = 64, e.F125 = 125, e.F250 = 250, e.F500 = 500, e.F1K = 1e3, e.F2K = 2e3, e.F4K = 4e3, e.F8K = 8e3, e.F16K = 16e3, e;
+  }(s),
+  DistortionFilter: function (t) {
+    function e(e) {
+      void 0 === e && (e = 0);
+      var n = this;
+
+      if (!h().useLegacy) {
+        var o = h().context.audioContext.createWaveShaper();
+        return (n = t.call(this, o) || this)._distortion = o, n.amount = e, n;
+      }
+
+      n = t.call(this, null) || this;
+    }
+
+    return a(e, t), Object.defineProperty(e.prototype, "amount", {
+      get: function () {
+        return this._amount;
+      },
+      set: function (t) {
+        t *= 1e3, this._amount = t;
+
+        for (var e, n = new Float32Array(44100), o = Math.PI / 180, i = 0; i < 44100; ++i) e = 2 * i / 44100 - 1, n[i] = (3 + t) * e * 20 * o / (Math.PI + t * Math.abs(e));
+
+        this._distortion.curve = n, this._distortion.oversample = "4x";
+      },
+      enumerable: !0,
+      configurable: !0
+    }), e.prototype.destroy = function () {
+      this._distortion = null, t.prototype.destroy.call(this);
+    }, e;
+  }(s),
+  StereoFilter: function (t) {
+    function e(e) {
+      void 0 === e && (e = 0);
+      var n = this;
+
+      if (!h().useLegacy) {
+        var o,
+            i,
+            r,
+            s = h().context.audioContext;
+        return s.createStereoPanner ? r = o = s.createStereoPanner() : ((i = s.createPanner()).panningModel = "equalpower", r = i), (n = t.call(this, r) || this)._stereo = o, n._panner = i, n.pan = e, n;
+      }
+
+      n = t.call(this, null) || this;
+    }
+
+    return a(e, t), Object.defineProperty(e.prototype, "pan", {
+      get: function () {
+        return this._pan;
+      },
+      set: function (t) {
+        this._pan = t, this._stereo ? l.setParamValue(this._stereo.pan, t) : this._panner.setPosition(t, 0, 1 - Math.abs(t));
+      },
+      enumerable: !0,
+      configurable: !0
+    }), e.prototype.destroy = function () {
+      t.prototype.destroy.call(this), this._stereo = null, this._panner = null;
+    }, e;
+  }(s),
+  ReverbFilter: function (t) {
+    function e(e, n, o) {
+      void 0 === e && (e = 3), void 0 === n && (n = 2), void 0 === o && (o = !1);
+      var i = this;
+      if (!h().useLegacy) return (i = t.call(this, null) || this)._seconds = i._clamp(e, 1, 50), i._decay = i._clamp(n, 0, 100), i._reverse = o, i._rebuild(), i;
+      i = t.call(this, null) || this;
+    }
+
+    return a(e, t), e.prototype._clamp = function (t, e, n) {
+      return Math.min(n, Math.max(e, t));
+    }, Object.defineProperty(e.prototype, "seconds", {
+      get: function () {
+        return this._seconds;
+      },
+      set: function (t) {
+        this._seconds = this._clamp(t, 1, 50), this._rebuild();
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "decay", {
+      get: function () {
+        return this._decay;
+      },
+      set: function (t) {
+        this._decay = this._clamp(t, 0, 100), this._rebuild();
+      },
+      enumerable: !0,
+      configurable: !0
+    }), Object.defineProperty(e.prototype, "reverse", {
+      get: function () {
+        return this._reverse;
+      },
+      set: function (t) {
+        this._reverse = t, this._rebuild();
+      },
+      enumerable: !0,
+      configurable: !0
+    }), e.prototype._rebuild = function () {
+      for (var t, e = h().context.audioContext, n = e.sampleRate, o = n * this._seconds, i = e.createBuffer(2, o, n), r = i.getChannelData(0), s = i.getChannelData(1), u = 0; u < o; u++) t = this._reverse ? o - u : u, r[u] = (2 * Math.random() - 1) * Math.pow(1 - t / o, this._decay), s[u] = (2 * Math.random() - 1) * Math.pow(1 - t / o, this._decay);
+
+      var a = h().context.audioContext.createConvolver();
+      a.buffer = i, this.init(a);
+    }, e;
+  }(s),
+  MonoFilter: function (t) {
+    function e() {
+      var e = this;
+
+      if (!h().useLegacy) {
+        var n = h().context.audioContext,
+            o = n.createChannelSplitter(),
+            i = n.createChannelMerger();
+        return i.connect(o), (e = t.call(this, i, o) || this)._merger = i, e;
+      }
+
+      e = t.call(this, null) || this;
+    }
+
+    return a(e, t), e.prototype.destroy = function () {
+      this._merger.disconnect(), this._merger = null, t.prototype.destroy.call(this);
+    }, e;
+  }(s),
+  TelephoneFilter: function (t) {
+    function e() {
+      if (!h().useLegacy) {
+        var e = h().context.audioContext,
+            n = e.createBiquadFilter(),
+            o = e.createBiquadFilter(),
+            i = e.createBiquadFilter(),
+            r = e.createBiquadFilter();
+        return n.type = "lowpass", l.setParamValue(n.frequency, 2e3), o.type = "lowpass", l.setParamValue(o.frequency, 2e3), i.type = "highpass", l.setParamValue(i.frequency, 500), r.type = "highpass", l.setParamValue(r.frequency, 500), n.connect(o), o.connect(i), i.connect(r), t.call(this, n, r) || this;
+      }
+
+      t.call(this, null);
+    }
+
+    return a(e, t), e;
+  }(s)
+},
+    v = 0,
+    P = function (t) {
+  function e(e) {
+    var n = t.call(this) || this;
+    return n.id = v++, n.init(e), n;
+  }
+
+  return a(e, t), e.prototype.set = function (t, e) {
+    if (void 0 === this[t]) throw new Error("Property with name " + t + " does not exist.");
+    return this[t] = e, this;
+  }, Object.defineProperty(e.prototype, "progress", {
+    get: function () {
+      return this._source.currentTime / this._duration;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "paused", {
+    get: function () {
+      return this._paused;
+    },
+    set: function (t) {
+      this._paused = t, this.refreshPaused();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype._onPlay = function () {
+    this._playing = !0;
+  }, e.prototype._onPause = function () {
+    this._playing = !1;
+  }, e.prototype.init = function (t) {
+    this._playing = !1, this._duration = t.source.duration;
+    var e = this._source = t.source.cloneNode(!1);
+    e.src = t.parent.url, e.onplay = this._onPlay.bind(this), e.onpause = this._onPause.bind(this), t.context.on("refresh", this.refresh, this), t.context.on("refreshPaused", this.refreshPaused, this), this._media = t;
+  }, e.prototype._internalStop = function () {
+    this._source && this._playing && (this._source.onended = null, this._source.pause());
+  }, e.prototype.stop = function () {
+    this._internalStop(), this._source && this.emit("stop");
+  }, Object.defineProperty(e.prototype, "speed", {
+    get: function () {
+      return this._speed;
+    },
+    set: function (t) {
+      this._speed = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "volume", {
+    get: function () {
+      return this._volume;
+    },
+    set: function (t) {
+      this._volume = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "loop", {
+    get: function () {
+      return this._loop;
+    },
+    set: function (t) {
+      this._loop = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "muted", {
+    get: function () {
+      return this._muted;
+    },
+    set: function (t) {
+      this._muted = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.refresh = function () {
+    var t = this._media.context,
+        e = this._media.parent;
+    this._source.loop = this._loop || e.loop;
+    var n = t.volume * (t.muted ? 0 : 1),
+        o = e.volume * (e.muted ? 0 : 1),
+        i = this._volume * (this._muted ? 0 : 1);
+    this._source.volume = i * n * o, this._source.playbackRate = this._speed * t.speed * e.speed;
+  }, e.prototype.refreshPaused = function () {
+    var t = this._media.context,
+        e = this._media.parent,
+        n = this._paused || e.paused || t.paused;
+    n !== this._pausedReal && (this._pausedReal = n, n ? (this._internalStop(), this.emit("paused")) : (this.emit("resumed"), this.play({
+      start: this._source.currentTime,
+      end: this._end,
+      volume: this._volume,
+      speed: this._speed,
+      loop: this._loop
+    })), this.emit("pause", n));
+  }, e.prototype.play = function (t) {
+    var o = this,
+        i = t.start,
+        r = t.end,
+        s = t.speed,
+        u = t.loop,
+        a = t.volume,
+        c = t.muted;
+    this._speed = s, this._volume = a, this._loop = !!u, this._muted = c, this.refresh(), this.loop && null !== r && (this.loop = !1), this._start = i, this._end = r || this._duration, this._start = Math.max(0, this._start - e.PADDING), this._end = Math.min(this._end + e.PADDING, this._duration), this._source.onloadedmetadata = function () {
+      o._source && (o._source.currentTime = i, o._source.onloadedmetadata = null, o.emit("progress", i, o._duration), _pixi_ticker__WEBPACK_IMPORTED_MODULE_1__["Ticker"].shared.add(o._onUpdate, o));
+    }, this._source.onended = this._onComplete.bind(this), this._source.play(), this.emit("start");
+  }, e.prototype._onUpdate = function () {
+    this.emit("progress", this.progress, this._duration), this._source.currentTime >= this._end && !this._source.loop && this._onComplete();
+  }, e.prototype._onComplete = function () {
+    _pixi_ticker__WEBPACK_IMPORTED_MODULE_1__["Ticker"].shared.remove(this._onUpdate, this), this._internalStop(), this.emit("progress", 1, this._duration), this.emit("end", this);
+  }, e.prototype.destroy = function () {
+    _pixi_ticker__WEBPACK_IMPORTED_MODULE_1__["Ticker"].shared.remove(this._onUpdate, this), this.removeAllListeners();
+    var t = this._source;
+    t && (t.onended = null, t.onplay = null, t.onpause = null, this._internalStop()), this._source = null, this._speed = 1, this._volume = 1, this._loop = !1, this._end = null, this._start = 0, this._duration = 0, this._playing = !1, this._pausedReal = !1, this._paused = !1, this._muted = !1, this._media && (this._media.context.off("refresh", this.refresh, this), this._media.context.off("refreshPaused", this.refreshPaused, this), this._media = null);
+  }, e.prototype.toString = function () {
+    return "[HTMLAudioInstance id=" + this.id + "]";
+  }, e.PADDING = .1, e;
+}(_pixi_utils__WEBPACK_IMPORTED_MODULE_2__["EventEmitter"]),
+    x = function (t) {
+  function e() {
+    return null !== t && t.apply(this, arguments) || this;
+  }
+
+  return a(e, t), e.prototype.init = function (t) {
+    this.parent = t, this._source = t.options.source || new Audio(), t.url && (this._source.src = t.url);
+  }, e.prototype.create = function () {
+    return new P(this);
+  }, Object.defineProperty(e.prototype, "isPlayable", {
+    get: function () {
+      return !!this._source && 4 === this._source.readyState;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "duration", {
+    get: function () {
+      return this._source.duration;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "context", {
+    get: function () {
+      return this.parent.context;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "filters", {
+    get: function () {
+      return null;
+    },
+    set: function (t) {},
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.destroy = function () {
+    this.removeAllListeners(), this.parent = null, this._source && (this._source.src = "", this._source.load(), this._source = null);
+  }, Object.defineProperty(e.prototype, "source", {
+    get: function () {
+      return this._source;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.load = function (t) {
+    var e = this._source,
+        n = this.parent;
+
+    if (4 !== e.readyState) {
+      if (!n.url) return t(new Error("sound.url or sound.source must be set"));
+      e.src = n.url;
+
+      var o = function () {
+        e.removeEventListener("canplaythrough", i), e.removeEventListener("load", i), e.removeEventListener("abort", r), e.removeEventListener("error", s);
+      },
+          i = function () {
+        o(), n.isLoaded = !0;
+        var e = n.autoPlayStart();
+        t && t(null, n, e);
+      },
+          r = function () {
+        o(), t && t(new Error("Sound loading has been aborted"));
+      },
+          s = function () {
+        o();
+        var n = "Failed to load audio element (code: " + e.error.code + ")";
+        t && t(new Error(n));
+      };
+
+      e.addEventListener("canplaythrough", i, !1), e.addEventListener("load", i, !1), e.addEventListener("abort", r, !1), e.addEventListener("error", s, !1), e.load();
+    } else {
+      n.isLoaded = !0;
+      var u = n.autoPlayStart();
+      t && setTimeout(function () {
+        t(null, n, u);
+      }, 0);
+    }
+  }, e;
+}(_pixi_utils__WEBPACK_IMPORTED_MODULE_2__["EventEmitter"]),
+    O = function (t) {
+  function e() {
+    var e = t.call(this) || this;
+    return e.speed = 1, e.volume = 1, e.muted = !1, e.paused = !1, e;
+  }
+
+  return a(e, t), e.prototype.refresh = function () {
+    this.emit("refresh");
+  }, e.prototype.refreshPaused = function () {
+    this.emit("refreshPaused");
+  }, Object.defineProperty(e.prototype, "filters", {
+    get: function () {
+      return null;
+    },
+    set: function (t) {},
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(e.prototype, "audioContext", {
+    get: function () {
+      return null;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.prototype.toggleMute = function () {
+    return this.muted = !this.muted, this.refresh(), this.muted;
+  }, e.prototype.togglePause = function () {
+    return this.paused = !this.paused, this.refreshPaused(), this.paused;
+  }, e.prototype.destroy = function () {
+    this.removeAllListeners();
+  }, e;
+}(_pixi_utils__WEBPACK_IMPORTED_MODULE_2__["EventEmitter"]),
+    j = {
+  HTMLAudioMedia: x,
+  HTMLAudioInstance: P,
+  HTMLAudioContext: O
+},
+    w = ["mp3", "ogg", "oga", "opus", "mpeg", "wav", "m4a", "aiff", "wma", "mid"];
+
+var A,
+    F,
+    C,
+    S,
+    E = (A = {
+  m4a: "mp4",
+  oga: "ogg"
+}, F = document.createElement("audio"), C = {}, S = /^no$/, w.forEach(function (t) {
+  var e = A[t] || t,
+      n = F.canPlayType("audio/" + t).replace(S, ""),
+      o = F.canPlayType("audio/" + e).replace(S, "");
+  C[t] = !!n || !!o;
+}), Object.freeze(C)),
+    L = /\.(\{([^\}]+)\})(\?.*)?$/;
+
+function M(t) {
+  var e = L,
+      n = "string" == typeof t ? t : t.url;
+
+  if (e.test(n)) {
+    for (var o = e.exec(n), i = o[2].split(","), r = i[i.length - 1], s = 0, u = i.length; s < u; s++) {
+      var a = i[s];
+
+      if (E[a]) {
+        r = a;
+        break;
+      }
+    }
+
+    var c = n.replace(o[1], r);
+    return "string" != typeof t && (t.extension = r, t.url = c), c;
+  }
+
+  return n;
+}
+
+var k = function () {
+  function e() {}
+
+  return e.add = function () {
+    e.legacy = h().useLegacy;
+  }, Object.defineProperty(e, "legacy", {
+    set: function (e) {
+      var n = w;
+      e ? n.forEach(function (e) {
+        _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["LoaderResource"].setExtensionXhrType(e, _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["LoaderResource"].XHR_RESPONSE_TYPE.DEFAULT), _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["LoaderResource"].setExtensionLoadType(e, _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["LoaderResource"].LOAD_TYPE.AUDIO);
+      }) : n.forEach(function (e) {
+        _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["LoaderResource"].setExtensionXhrType(e, _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["LoaderResource"].XHR_RESPONSE_TYPE.BUFFER), _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["LoaderResource"].setExtensionLoadType(e, _pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["LoaderResource"].LOAD_TYPE.XHR);
+      });
+    },
+    enumerable: !0,
+    configurable: !0
+  }), e.pre = function (t, e) {
+    M(t), e();
+  }, e.use = function (t, e) {
+    t.data && w.indexOf(t.extension) > -1 ? t.sound = h().add(t.name, {
+      loaded: e,
+      preload: !0,
+      url: t.url,
+      source: t.data
+    }) : e();
+  }, e;
+}(),
+    T = function () {
+  function t(t, e) {
+    this.parent = t, Object.assign(this, e), this.duration = this.end - this.start;
+  }
+
+  return t.prototype.play = function (t) {
+    return this.parent.play({
+      complete: t,
+      speed: this.speed || this.parent.speed,
+      end: this.end,
+      start: this.start,
+      loop: this.loop
+    });
+  }, t.prototype.destroy = function () {
+    this.parent = null;
+  }, t;
+}(),
+    G = function () {
+  function t(t, e) {
+    this.media = t, this.options = e, this._instances = [], this._sprites = {}, this.media.init(this);
+    var n = e.complete;
+    this._autoPlayOptions = n ? {
+      complete: n
+    } : null, this.isLoaded = !1, this.isPlaying = !1, this.autoPlay = e.autoPlay, this.singleInstance = e.singleInstance, this.preload = e.preload || this.autoPlay, this.url = e.url, this.speed = e.speed, this.volume = e.volume, this.loop = e.loop, e.sprites && this.addSprites(e.sprites), this.preload && this._preload(e.loaded);
+  }
+
+  return t.from = function (e) {
+    var n = {};
+    return "string" == typeof e ? n.url = e : e instanceof ArrayBuffer || e instanceof HTMLAudioElement ? n.source = e : n = e, (n = p({
+      autoPlay: !1,
+      singleInstance: !1,
+      url: null,
+      source: null,
+      preload: !1,
+      volume: 1,
+      speed: 1,
+      complete: null,
+      loaded: null,
+      loop: !1
+    }, n)).url && (n.url = M(n.url)), Object.freeze(n), new t(h().useLegacy ? new x() : new y(), n);
+  }, Object.defineProperty(t.prototype, "context", {
+    get: function () {
+      return h().context;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.pause = function () {
+    return this.isPlaying = !1, this.paused = !0, this;
+  }, t.prototype.resume = function () {
+    return this.isPlaying = this._instances.length > 0, this.paused = !1, this;
+  }, Object.defineProperty(t.prototype, "paused", {
+    get: function () {
+      return this._paused;
+    },
+    set: function (t) {
+      this._paused = t, this.refreshPaused();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "speed", {
+    get: function () {
+      return this._speed;
+    },
+    set: function (t) {
+      this._speed = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "filters", {
+    get: function () {
+      return this.media.filters;
+    },
+    set: function (t) {
+      this.media.filters = t;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.addSprites = function (t, e) {
+    if ("object" == typeof t) {
+      var n = {};
+
+      for (var o in t) n[o] = this.addSprites(o, t[o]);
+
+      return n;
+    }
+
+    if ("string" == typeof t) {
+      var i = new T(this, e);
+      return this._sprites[t] = i, i;
+    }
+  }, t.prototype.destroy = function () {
+    this._removeInstances(), this.removeSprites(), this.media.destroy(), this.media = null, this._sprites = null, this._instances = null;
+  }, t.prototype.removeSprites = function (t) {
+    if (t) {
+      var e = this._sprites[t];
+      void 0 !== e && (e.destroy(), delete this._sprites[t]);
+    } else for (var n in this._sprites) this.removeSprites(n);
+
+    return this;
+  }, Object.defineProperty(t.prototype, "isPlayable", {
+    get: function () {
+      return this.isLoaded && this.media && this.media.isPlayable;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.stop = function () {
+    if (!this.isPlayable) return this.autoPlay = !1, this._autoPlayOptions = null, this;
+    this.isPlaying = !1;
+
+    for (var t = this._instances.length - 1; t >= 0; t--) this._instances[t].stop();
+
+    return this;
+  }, t.prototype.play = function (t, e) {
+    var n,
+        o = this;
+    "string" == typeof t ? n = {
+      sprite: r = t,
+      loop: this.loop,
+      complete: e
+    } : "function" == typeof t ? (n = {}).complete = t : n = t;
+
+    if ((n = p({
+      complete: null,
+      loaded: null,
+      sprite: null,
+      end: null,
+      start: 0,
+      volume: 1,
+      speed: 1,
+      muted: !1,
+      loop: !1
+    }, n || {})).sprite) {
+      var i = n.sprite,
+          r = this._sprites[i];
+      n.start = r.start, n.end = r.end, n.speed = r.speed || 1, n.loop = r.loop || n.loop, delete n.sprite;
+    }
+
+    if (n.offset && (n.start = n.offset), !this.isLoaded) return new Promise(function (t, e) {
+      o.autoPlay = !0, o._autoPlayOptions = n, o._preload(function (o, i, r) {
+        o ? e(o) : (n.loaded && n.loaded(o, i, r), t(r));
+      });
+    });
+    this.singleInstance && this._removeInstances();
+
+    var s = this._createInstance();
+
+    return this._instances.push(s), this.isPlaying = !0, s.once("end", function () {
+      n.complete && n.complete(o), o._onComplete(s);
+    }), s.once("stop", function () {
+      o._onComplete(s);
+    }), s.play(n), s;
+  }, t.prototype.refresh = function () {
+    for (var t = this._instances.length, e = 0; e < t; e++) this._instances[e].refresh();
+  }, t.prototype.refreshPaused = function () {
+    for (var t = this._instances.length, e = 0; e < t; e++) this._instances[e].refreshPaused();
+  }, Object.defineProperty(t.prototype, "volume", {
+    get: function () {
+      return this._volume;
+    },
+    set: function (t) {
+      this._volume = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "muted", {
+    get: function () {
+      return this._muted;
+    },
+    set: function (t) {
+      this._muted = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "loop", {
+    get: function () {
+      return this._loop;
+    },
+    set: function (t) {
+      this._loop = t, this.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype._preload = function (t) {
+    this.media.load(t);
+  }, Object.defineProperty(t.prototype, "instances", {
+    get: function () {
+      return this._instances;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "sprites", {
+    get: function () {
+      return this._sprites;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "duration", {
+    get: function () {
+      return this.media.duration;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.autoPlayStart = function () {
+    var t;
+    return this.autoPlay && (t = this.play(this._autoPlayOptions)), t;
+  }, t.prototype._removeInstances = function () {
+    for (var t = this._instances.length - 1; t >= 0; t--) this._poolInstance(this._instances[t]);
+
+    this._instances.length = 0;
+  }, t.prototype._onComplete = function (t) {
+    if (this._instances) {
+      var e = this._instances.indexOf(t);
+
+      e > -1 && this._instances.splice(e, 1), this.isPlaying = this._instances.length > 0;
+    }
+
+    this._poolInstance(t);
+  }, t.prototype._createInstance = function () {
+    if (t._pool.length > 0) {
+      var e = t._pool.pop();
+
+      return e.init(this.media), e;
+    }
+
+    return this.media.create();
+  }, t.prototype._poolInstance = function (e) {
+    e.destroy(), t._pool.indexOf(e) < 0 && t._pool.push(e);
+  }, t._pool = [], t;
+}(),
+    I = function () {
+  function t() {
+    this.init();
+  }
+
+  return t.prototype.init = function () {
+    return this.supported && (this._webAudioContext = new m()), this._htmlAudioContext = new O(), this._sounds = {}, this.useLegacy = !this.supported, this;
+  }, Object.defineProperty(t.prototype, "context", {
+    get: function () {
+      return this._context;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "filtersAll", {
+    get: function () {
+      return this.useLegacy ? [] : this._context.filters;
+    },
+    set: function (t) {
+      this.useLegacy || (this._context.filters = t);
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "supported", {
+    get: function () {
+      return null !== m.AudioContext;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.add = function (t, e) {
+    if ("object" == typeof t) {
+      var n = {};
+
+      for (var o in t) {
+        var i = this._getOptions(t[o], e);
+
+        n[o] = this.add(o, i);
+      }
+
+      return n;
+    }
+
+    if ("string" == typeof t) {
+      if (e instanceof G) return this._sounds[t] = e, e;
+      i = this._getOptions(e);
+      var r = G.from(i);
+      return this._sounds[t] = r, r;
+    }
+  }, t.prototype._getOptions = function (t, e) {
+    var n;
+    return n = "string" == typeof t ? {
+      url: t
+    } : t instanceof ArrayBuffer || t instanceof HTMLAudioElement ? {
+      source: t
+    } : t, n = p({}, n, e || {});
+  }, Object.defineProperty(t.prototype, "useLegacy", {
+    get: function () {
+      return this._useLegacy;
+    },
+    set: function (t) {
+      k.legacy = t, this._useLegacy = t, this._context = !t && this.supported ? this._webAudioContext : this._htmlAudioContext;
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.remove = function (t) {
+    return this.exists(t, !0), this._sounds[t].destroy(), delete this._sounds[t], this;
+  }, Object.defineProperty(t.prototype, "volumeAll", {
+    get: function () {
+      return this._context.volume;
+    },
+    set: function (t) {
+      this._context.volume = t, this._context.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), Object.defineProperty(t.prototype, "speedAll", {
+    get: function () {
+      return this._context.speed;
+    },
+    set: function (t) {
+      this._context.speed = t, this._context.refresh();
+    },
+    enumerable: !0,
+    configurable: !0
+  }), t.prototype.togglePauseAll = function () {
+    return this._context.togglePause();
+  }, t.prototype.pauseAll = function () {
+    return this._context.paused = !0, this._context.refreshPaused(), this;
+  }, t.prototype.resumeAll = function () {
+    return this._context.paused = !1, this._context.refreshPaused(), this;
+  }, t.prototype.toggleMuteAll = function () {
+    return this._context.toggleMute();
+  }, t.prototype.muteAll = function () {
+    return this._context.muted = !0, this._context.refresh(), this;
+  }, t.prototype.unmuteAll = function () {
+    return this._context.muted = !1, this._context.refresh(), this;
+  }, t.prototype.removeAll = function () {
+    for (var t in this._sounds) this._sounds[t].destroy(), delete this._sounds[t];
+
+    return this;
+  }, t.prototype.stopAll = function () {
+    for (var t in this._sounds) this._sounds[t].stop();
+
+    return this;
+  }, t.prototype.exists = function (t, e) {
+    return void 0 === e && (e = !1), !!this._sounds[t];
+  }, t.prototype.find = function (t) {
+    return this.exists(t, !0), this._sounds[t];
+  }, t.prototype.play = function (t, e) {
+    return this.find(t).play(e);
+  }, t.prototype.stop = function (t) {
+    return this.find(t).stop();
+  }, t.prototype.pause = function (t) {
+    return this.find(t).pause();
+  }, t.prototype.resume = function (t) {
+    return this.find(t).resume();
+  }, t.prototype.volume = function (t, e) {
+    var n = this.find(t);
+    return void 0 !== e && (n.volume = e), n.volume;
+  }, t.prototype.speed = function (t, e) {
+    var n = this.find(t);
+    return void 0 !== e && (n.speed = e), n.speed;
+  }, t.prototype.duration = function (t) {
+    return this.find(t).duration;
+  }, t.prototype.close = function () {
+    return this.removeAll(), this._sounds = null, this._webAudioContext && (this._webAudioContext.destroy(), this._webAudioContext = null), this._htmlAudioContext && (this._htmlAudioContext.destroy(), this._htmlAudioContext = null), this._context = null, this;
+  }, t;
+}(),
+    R = 0;
+
+var K = {
+  get PLAY_ID() {
+    return R;
+  },
+
+  playOnce: function (t, e) {
+    var n = "alias" + R++;
+    return h().add(n, {
+      url: t,
+      preload: !0,
+      autoPlay: !0,
+      loaded: function (t) {
+        t && (h().remove(n), e && e(t));
+      },
+      complete: function () {
+        h().remove(n), e && e(null);
+      }
+    }), n;
+  },
+  render: function (t, e) {
+    var n = document.createElement("canvas");
+    e = p({
+      width: 512,
+      height: 128,
+      fill: "black"
+    }, e || {}), n.width = e.width, n.height = e.height;
+    var o = _pixi_core__WEBPACK_IMPORTED_MODULE_3__["BaseTexture"].from(n);
+    if (!(t.media instanceof y)) return o;
+    var r = t.media,
+        s = n.getContext("2d");
+    s.fillStyle = e.fill;
+
+    for (var u = r.buffer.getChannelData(0), a = Math.ceil(u.length / e.width), c = e.height / 2, h = 0; h < e.width; h++) {
+      for (var l = 1, f = -1, d = 0; d < a; d++) {
+        var _ = u[h * a + d];
+        _ < l && (l = _), _ > f && (f = _);
+      }
+
+      s.fillRect(h, (1 + l) * c, 1, Math.max(1, (f - l) * c));
+    }
+
+    return o;
+  },
+  resolveUrl: M,
+  sineTone: function (t, e) {
+    void 0 === t && (t = 200), void 0 === e && (e = 1);
+    var n = G.from({
+      singleInstance: !0
+    });
+    if (!(n.media instanceof y)) return n;
+
+    for (var o = n.media, i = n.context.audioContext.createBuffer(1, 48e3 * e, 48e3), r = i.getChannelData(0), s = 0; s < r.length; s++) {
+      var u = t * (s / i.sampleRate) * Math.PI;
+      r[s] = 2 * Math.sin(u);
+    }
+
+    return o.buffer = i, n.isLoaded = !0, n;
+  },
+  extensions: w,
+  supported: E
+},
+    B = function (t) {
+  return c = t, t;
+}(new I());
+
+_pixi_loaders__WEBPACK_IMPORTED_MODULE_0__["Loader"].registerPlugin(k), Object.defineProperties(B, {
+  Filterable: {
+    get: function () {
+      return r;
+    }
+  },
+  filters: {
+    get: function () {
+      return b;
+    }
+  },
+  htmlaudio: {
+    get: function () {
+      return j;
+    }
+  },
+  Sound: {
+    get: function () {
+      return G;
+    }
+  },
+  SoundLibrary: {
+    get: function () {
+      return I;
+    }
+  },
+  SoundSprite: {
+    get: function () {
+      return T;
+    }
+  },
+  utils: {
+    get: function () {
+      return K;
+    }
+  },
+  webaudio: {
+    get: function () {
+      return g;
+    }
+  },
+  sound: {
+    get: function () {
+      return B;
+    }
+  }
+});
+/* harmony default export */ __webpack_exports__["default"] = (B);
+
+/***/ }),
+
 /***/ "./node_modules/pixi.js/lib/pixi.es.js":
 /*!*********************************************!*\
   !*** ./node_modules/pixi.js/lib/pixi.es.js ***!
@@ -45813,6 +47335,75 @@ if (document.fonts.ready === 'loaded') {
 
 /***/ }),
 
+/***/ "./src/w-type/Audio.js":
+/*!*****************************!*\
+  !*** ./src/w-type/Audio.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Audio; });
+/* harmony import */ var pixi_sound__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! pixi-sound */ "./node_modules/pixi-sound/dist/pixi-sound.esm.js");
+
+class Audio {
+  constructor(game) {
+    this.game = game;
+    this.ready = false;
+    this.game.app.loader.add('hit', 'audio/hit.mp3').add('die', 'audio/die.mp3').add('goodieDie', 'audio/goodieDie.mp3').add('charge', 'audio/charge.mp3').add('zap', 'audio/zap.mp3').add('oneUp', 'audio/1up.mp3');
+    this.game.app.loader.load((loader, res) => {
+      this.audio = res;
+      this.audio.zap.sound.volume = 0.15; // this.audio.die.sound.filters = [new sound.filters.DistortionFilter(0.3)];
+
+      this.ready = true;
+    });
+  }
+
+  isReady() {
+    return this.isReady && this.game.audioEnabled;
+  }
+
+  hit() {
+    if (this.isReady()) {
+      this.audio.hit.sound.play();
+    }
+  }
+
+  zap() {
+    if (this.isReady()) {
+      this.audio.zap.sound.play();
+    }
+  }
+
+  die() {
+    if (this.isReady()) {
+      this.audio.die.sound.play();
+    }
+  }
+
+  goodieDie() {
+    if (this.isReady()) {
+      this.audio.goodieDie.sound.play();
+    }
+  }
+
+  charge() {
+    if (this.isReady()) {
+      this.audio.charge.sound.play();
+    }
+  }
+
+  oneUp() {
+    if (this.isReady()) {
+      this.audio.oneUp.sound.play();
+    }
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/w-type/BaddyTweened.js":
 /*!************************************!*\
   !*** ./src/w-type/BaddyTweened.js ***!
@@ -45872,6 +47463,8 @@ class BaddyTweened extends _GameElement__WEBPACK_IMPORTED_MODULE_2__["default"] 
     this.path.time = 1500;
     this.path.delay = 0;
     this.path.shoot = 50; // time in tween * 100 that baddy will shoot
+
+    this.dieSound = () => this.game.audio.die();
 
     this.path = _objectSpread({}, this.path, {}, params);
     const baddy = this;
@@ -45987,8 +47580,10 @@ class Bullet extends _GameElement__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
     if (param.x2 < param.x1) {
       this.first_point_distance *= -1;
-    }
+    } // Play shoot sound.
 
+
+    this.game.audio.zap();
     const bullet = this;
     const coord = {
       x: this.x()
@@ -46030,15 +47625,19 @@ class Bullet extends _GameElement__WEBPACK_IMPORTED_MODULE_2__["default"] {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 /* harmony import */ var pixi_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
-/* harmony import */ var _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tweenjs/tween.js */ "./node_modules/@tweenjs/tween.js/dist/tween.esm.js");
-/* harmony import */ var _Mech__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Mech */ "./src/w-type/Mech.js");
-/* harmony import */ var _ScoreBoard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ScoreBoard */ "./src/w-type/ScoreBoard.js");
-/* harmony import */ var _TopScores__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TopScores */ "./src/w-type/TopScores.js");
-/* harmony import */ var _Star__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Star */ "./src/w-type/Star.js");
-/* harmony import */ var _Title__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Title */ "./src/w-type/Title.js");
-/* harmony import */ var _Keyboard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Keyboard */ "./src/w-type/Keyboard.js");
-/* harmony import */ var _Touch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Touch */ "./src/w-type/Touch.js");
-/* harmony import */ var _BaddyTweened__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./BaddyTweened */ "./src/w-type/BaddyTweened.js");
+/* harmony import */ var pixi_sound__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! pixi-sound */ "./node_modules/pixi-sound/dist/pixi-sound.esm.js");
+/* harmony import */ var _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tweenjs/tween.js */ "./node_modules/@tweenjs/tween.js/dist/tween.esm.js");
+/* harmony import */ var _Mech__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Mech */ "./src/w-type/Mech.js");
+/* harmony import */ var _ScoreBoard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ScoreBoard */ "./src/w-type/ScoreBoard.js");
+/* harmony import */ var _TopScores__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TopScores */ "./src/w-type/TopScores.js");
+/* harmony import */ var _Star__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Star */ "./src/w-type/Star.js");
+/* harmony import */ var _Title__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Title */ "./src/w-type/Title.js");
+/* harmony import */ var _Keyboard__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Keyboard */ "./src/w-type/Keyboard.js");
+/* harmony import */ var _Touch__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Touch */ "./src/w-type/Touch.js");
+/* harmony import */ var _BaddyTweened__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./BaddyTweened */ "./src/w-type/BaddyTweened.js");
+/* harmony import */ var _Audio__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Audio */ "./src/w-type/Audio.js");
+
+
 
 
 
@@ -46062,7 +47661,8 @@ class Game {
     this.stretch = true;
     this.sprite_sheet = ['img/SpriteSheet.json', 'img/page.jpg'];
     this.id = 'game';
-    this.firerate = params.firerate; // Baddie spawn rate (per score). See GameElement.hit().
+    this.firerate = params.firerate;
+    this.audioEnabled = true; // Baddie spawn rate (per score). See GameElement.hit().
 
     this.baddie_rate_default = 200;
     this.baddie_rate_change = 10;
@@ -46088,7 +47688,6 @@ class Game {
       backgroundColor: 0x000000
     });
     this.app.loader.add(this.sprite_sheet).load(() => {
-      this.app.loader.e = this;
       this.start();
     });
   }
@@ -46110,6 +47709,7 @@ class Game {
     const ratioHeight = screenHeight / this.height;
     let calcWidth;
     let calcHeight;
+    this.audio = new _Audio__WEBPACK_IMPORTED_MODULE_11__["default"](this);
 
     if (ratioWidth > ratioHeight) {
       calcWidth = this.width * ratioHeight;
@@ -46147,21 +47747,21 @@ class Game {
       game: this,
       lives: 2
     };
-    this.mech = new _Mech__WEBPACK_IMPORTED_MODULE_2__["default"](params);
+    this.mech = new _Mech__WEBPACK_IMPORTED_MODULE_3__["default"](params);
     this.mech.active = false;
     this.app.stage.addChild(this.mech.view); // add score
 
-    this.score = new _ScoreBoard__WEBPACK_IMPORTED_MODULE_3__["default"](0, this.mech.lives);
+    this.score = new _ScoreBoard__WEBPACK_IMPORTED_MODULE_4__["default"](0, this.mech.lives);
     this.score.view.position.x = '5';
     this.score.view.position.y = '5';
     this.app.stage.addChild(this.score.view); // top scores
 
-    this.top_scores = new _TopScores__WEBPACK_IMPORTED_MODULE_4__["default"](this);
+    this.top_scores = new _TopScores__WEBPACK_IMPORTED_MODULE_5__["default"](this);
     console.log('top scores', this.top_scores.get()); // add title
 
-    this.title = new _Title__WEBPACK_IMPORTED_MODULE_6__["default"](this); // keyboard events
+    this.title = new _Title__WEBPACK_IMPORTED_MODULE_7__["default"](this); // keyboard events
 
-    this.inputs = [new _Keyboard__WEBPACK_IMPORTED_MODULE_7__["default"](this), new _Touch__WEBPACK_IMPORTED_MODULE_8__["default"](this)]; // fullscreen events
+    this.inputs = [new _Keyboard__WEBPACK_IMPORTED_MODULE_8__["default"](this), new _Touch__WEBPACK_IMPORTED_MODULE_9__["default"](this)]; // fullscreen events
 
     window.addEventListener('resize', () => {
       this.resize();
@@ -46171,9 +47771,14 @@ class Game {
     this.animate();
   }
 
+  toggleAudio() {
+    this.audioEnabled = !this.audioEnabled;
+    console.log("audio set", this.audioEnabled);
+  }
+
   animate() {
     this.mech.update(this);
-    _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_1__["default"].update(); // add bad guy
+    _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_2__["default"].update(); // add bad guy
     // console.log(baddie_next, baddie_rate);
 
     if (this.baddie_next > this.baddie_rate && this.mech.active) {
@@ -46203,8 +47808,10 @@ class Game {
             damage
           } = bullet;
 
-          if (Game.hitTest(bullet, baddy)) {
+          if (bullet.source === this.mech && Game.hitTest(bullet, baddy)) {
             // console.log("hit!!");
+            // sound.Sound.from('hit.mp3').play();
+            this.audio.hit();
             baddy.hit(damage);
             baddy.recoil(bullet);
 
@@ -46217,6 +47824,7 @@ class Game {
             bullet.die();
             this.mech.hit(damage);
             this.mech.recoil(bullet);
+            this.audio.hit();
           } // Test for bullet collision.
 
 
@@ -46278,13 +47886,13 @@ class Game {
   }
 
   addStar() {
-    const star = new _Star__WEBPACK_IMPORTED_MODULE_5__["default"](this.w() + 1, Math.random() * this.h());
+    const star = new _Star__WEBPACK_IMPORTED_MODULE_6__["default"](this.w() + 1, Math.random() * this.h());
     this.stars.push(star);
     this.app.stage.addChild(star.view);
   }
 
   addBaddyTweened(params) {
-    const baddy = new _BaddyTweened__WEBPACK_IMPORTED_MODULE_9__["default"](params);
+    const baddy = new _BaddyTweened__WEBPACK_IMPORTED_MODULE_10__["default"](params);
     this.baddies.push(baddy);
     this.app.stage.addChild(baddy.view);
   }
@@ -46297,7 +47905,7 @@ class Game {
       x: [w + 45, w * Math.random(), w * Math.random(), -75],
       y: [h * Math.random(), h * Math.random(), h * Math.random()],
       shoot: Math.floor(Math.random() * 50),
-      interpolation: _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_1__["default"].Interpolation.CatmullRom,
+      interpolation: _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_2__["default"].Interpolation.CatmullRom,
       time: 9500
     };
     const squadSize = Math.floor(Math.random() * 5) + 2;
@@ -46345,7 +47953,7 @@ class Game {
       lives: 2
     };
     this.mech.removeFromStage();
-    this.mech = new _Mech__WEBPACK_IMPORTED_MODULE_2__["default"](params);
+    this.mech = new _Mech__WEBPACK_IMPORTED_MODULE_3__["default"](params);
     this.app.stage.addChild(this.mech.view);
     this.score.updateLife(this.mech.lives);
     this.score.updateScore(0);
@@ -46505,6 +48113,7 @@ class GameElement {
     this.life = 100;
     this.life_full = this.life;
     this.onDie = null;
+    this.dieSound = null;
 
     this.size = () => ({
       w: this.view.texture.width,
@@ -46580,13 +48189,19 @@ class GameElement {
     }
 
     if (this.life <= 0) {
-      this.die(); // Did we kill baddie?
+      this.die();
+
+      if (this.dieSound) {
+        this.dieSound();
+      } // Did we kill baddie?
+
 
       if (this.type === 'baddyTweened') {
         this.game.mech.score += this.value;
         this.game.score.updateScore(this.game.mech.score); // Extra life every 100 points.
 
         if (this.game.mech.score % this.game.levelUp === 0) {
+          this.game.audio.oneUp();
           this.game.mech.lives += 1;
           this.game.score.updateLife(this.game.mech.lives); // Increase the baddie_rate based on score.
 
@@ -46713,9 +48328,7 @@ class GoodyBullet extends _GameElement__WEBPACK_IMPORTED_MODULE_2__["default"] {
     this.BULLET_SPEED = 2;
     this.damage = param.damage;
     this.source = param.source;
-    this.frames = [pixi_js__WEBPACK_IMPORTED_MODULE_0__["Texture"].from('bullet01.png') // PIXI.Texture.from("bullet02"),
-    // PIXI.Texture.from("bullet03")
-    ];
+    this.frames = [pixi_js__WEBPACK_IMPORTED_MODULE_0__["Texture"].from('bullet01.png'), pixi_js__WEBPACK_IMPORTED_MODULE_0__["Texture"].from("bullet02.png"), pixi_js__WEBPACK_IMPORTED_MODULE_0__["Texture"].from("bullet03.png")];
     this.game = param.game;
     this.view = new pixi_js__WEBPACK_IMPORTED_MODULE_0__["AnimatedSprite"](this.frames);
     this.view.animationSpeed = 0.05;
@@ -46731,6 +48344,7 @@ class GoodyBullet extends _GameElement__WEBPACK_IMPORTED_MODULE_2__["default"] {
     };
     this.colloide = true;
     this.tween_speed = param.distance * this.BULLET_SPEED;
+    this.game.audio.zap();
     const bullet = this;
     const coords = {
       x: this.x(),
@@ -46768,6 +48382,10 @@ class GoodyBullet extends _GameElement__WEBPACK_IMPORTED_MODULE_2__["default"] {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Keyboard; });
+/* harmony import */ var pixi_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+/* harmony import */ var _Audio__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Audio */ "./src/w-type/Audio.js");
+
+
 class Keyboard {
   constructor(game) {
     this.game = game;
@@ -46822,7 +48440,7 @@ class Keyboard {
 
   clearShoot() {
     this.state.shoot = false;
-  } //allow for WASD and arrow control scheme
+  } // Allow for WASD and arrow control scheme.
 
 
   handleKeyDown(e) {
@@ -46870,6 +48488,9 @@ class Keyboard {
       case this.KEYCODE_S:
         this.state.down = true;
         break;
+
+      default:
+        break;
     }
   }
 
@@ -46915,6 +48536,9 @@ class Keyboard {
       case this.KEYCODE_DOWN:
         this.state.down = false;
         break;
+
+      default:
+        break;
     }
   }
 
@@ -46955,6 +48579,7 @@ class Keyboard {
 
         if (mech.charge > mech.charged) {
           bullet.super();
+        } else {// this.game.audio.zap();
         }
 
         this.game.fire(bullet);
@@ -47087,6 +48712,9 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
       shoot: false
     };
     this.scale = new pixi_js__WEBPACK_IMPORTED_MODULE_0__["Point"](0.5, 0.5);
+
+    this.dieSound = () => this.game.audio.goodieDie();
+
     this.is_dead = true; // TODO: remove this.
 
     for (const p in params) {
@@ -47221,6 +48849,10 @@ class Mech extends _GameElement__WEBPACK_IMPORTED_MODULE_1__["default"] {
       activeInput.update();
 
       if (this.charge > this.charged) {
+        if (!this.charge_frame.visible) {
+          this.game.audio.charge();
+        }
+
         this.charge_frame.visible = true;
       } else {
         this.scale.set(1, 1);
@@ -47547,6 +49179,23 @@ class Title {
       title.addChild(option);
     }
 
+    const audioOnTexture = pixi_js__WEBPACK_IMPORTED_MODULE_0__["Texture"].from('audio-on.png');
+    const audioOffTexture = pixi_js__WEBPACK_IMPORTED_MODULE_0__["Texture"].from('audio-off.png');
+    const audio = pixi_js__WEBPACK_IMPORTED_MODULE_0__["Sprite"].from('audio-on.png');
+    audio.anchor = new pixi_js__WEBPACK_IMPORTED_MODULE_0__["Point"](0.5, 0.5); // Move sound icon up in cordova bc no fullscreen button.
+
+    const rightPosition = 'cordova' in window ? 0.1 : 0.25;
+    audio.position = new pixi_js__WEBPACK_IMPORTED_MODULE_0__["Point"](this.game.width * 0.9, this.game.height * rightPosition);
+    audio.interactive = true;
+    audio.on('click', () => {
+      this.game.toggleAudio();
+      audio.texture = this.game.audioEnabled ? audioOnTexture : audioOffTexture;
+    });
+    audio.on('touchstart', () => {
+      this.game.toggleAudio();
+      audio.texture = this.game.audioEnabled ? audioOnTexture : audioOffTexture;
+    });
+    title.addChild(audio);
     const top_score_string = this.game.top_scores.getString();
     this.top_scores = new pixi_js__WEBPACK_IMPORTED_MODULE_0__["Text"](top_score_string, {
       fontFamily: 'misakiminchoregular',

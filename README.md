@@ -32,16 +32,24 @@ Convenience method for reinstalling build:
 
 ## Libraries
 
-Pixi.js — A 2D JavaScript Renderer
+### Pixi.js — A 2D JavaScript Renderer
 
 https://github.com/GoodBoyDigital/pixi.js/
 
-tween.js
+### tween.js
 
 https://github.com/sole/tween.js
 
-Misaki
+### Misaki
 
 Awesome little bitmap font including kana and kanji.
 
 http://www.geocities.jp/littlimi/misaki.htm
+
+### Samples
+
+All Creative Commons 0 from https://freesound.org/
+
+https://freesound.org/people/plasterbrain/sounds/464909/
+
+https://freesound.org/people/GameAudio/sounds/220173/

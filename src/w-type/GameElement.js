@@ -9,6 +9,7 @@ class GameElement {
     this.life = 100;
     this.life_full = this.life;
     this.onDie = null;
+    this.dieSound = null;
     this.size = () => ({
       w: this.view.texture.width,
       h: this.view.texture.height,
@@ -81,6 +82,9 @@ class GameElement {
 
     if (this.life <= 0) {
       this.die();
+      if (this.dieSound) {
+        this.dieSound();
+      }
 
       // Did we kill baddie?
       if (this.type === 'baddyTweened') {
@@ -89,6 +93,7 @@ class GameElement {
 
         // Extra life every 100 points.
         if (this.game.mech.score % this.game.levelUp === 0) {
+          this.game.audio.oneUp();
           this.game.mech.lives += 1;
           this.game.score.updateLife(this.game.mech.lives);
 

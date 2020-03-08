@@ -48,6 +48,9 @@ export default class Bullet extends GameElement {
       this.first_point_distance *= -1;
     }
 
+    // Play shoot sound.
+    this.game.audio.zap();
+
     const bullet = this;
 
     const coord = {

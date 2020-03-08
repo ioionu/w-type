@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -18,6 +19,12 @@ module.exports = {
     new webpack.ProvidePlugin({
       PIXI: 'pixi.js',
     }),
+    new CopyPlugin([
+      {
+        from: 'assets/audio/',
+        to: 'audio/',
+      },
+    ]),
   ],
   module: {
     rules: [

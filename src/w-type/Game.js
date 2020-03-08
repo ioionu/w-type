@@ -1,4 +1,6 @@
 import * as PIXI from 'pixi.js';
+import sound from 'pixi-sound';
+
 import TWEEN from '@tweenjs/tween.js';
 import Mech from './Mech';
 import ScoreBoard from './ScoreBoard';
@@ -8,6 +10,7 @@ import Title from './Title';
 import Keyboard from './Keyboard';
 import Touch from './Touch';
 import BaddyTweened from './BaddyTweened';
+import Audio from './Audio';
 
 /**
  * Construct a game
@@ -25,6 +28,8 @@ export default class Game {
     ];
     this.id = 'game';
     this.firerate = params.firerate;
+
+    this.audioEnabled = true;
 
     // Baddie spawn rate (per score). See GameElement.hit().
     this.baddie_rate_default = 200;
@@ -56,7 +61,6 @@ export default class Game {
 
     this.app.loader.add(this.sprite_sheet)
       .load(() => {
-        this.app.loader.e = this;
         this.start();
       });
   }
@@ -76,6 +80,8 @@ export default class Game {
     const ratioHeight = screenHeight / this.height;
     let calcWidth;
     let calcHeight;
+    this.audio = new Audio(this);
+
 
     if (ratioWidth > ratioHeight) {
       calcWidth = this.width * ratioHeight;
@@ -150,6 +156,11 @@ export default class Game {
     this.animate();
   }
 
+  toggleAudio() {
+    this.audioEnabled = !(this.audioEnabled);
+    console.log("audio set", this.audioEnabled);
+  }
+
   animate() {
     this.mech.update(this);
     TWEEN.update();
@@ -181,8 +192,14 @@ export default class Game {
 
         this.bullets.forEach((bullet) => {
           const { damage } = bullet;
-          if (Game.hitTest(bullet, baddy)) {
+          if (
+            bullet.source === this.mech &&
+            Game.hitTest(bullet, baddy)
+          ) {
             // console.log("hit!!");
+            // sound.Sound.from('hit.mp3').play();
+            this.audio.hit();
+
             baddy.hit(damage);
             baddy.recoil(bullet);
             if (bullet.type !== 'super') {
@@ -196,6 +213,7 @@ export default class Game {
             bullet.die();
             this.mech.hit(damage);
             this.mech.recoil(bullet);
+            this.audio.hit();
           }
 
           // Test for bullet collision.

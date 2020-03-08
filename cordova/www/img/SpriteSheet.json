@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"image": "SpriteSheet.png",
-		"size": {"w":732,"h":679},
+		"size": {"w":808,"h":679},
 		"scale": "1"
 	},
 	"frames": {
@@ -228,6 +228,22 @@
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":66,"h":69},
 			"sourceSize": {"w":66,"h":69}
+		},
+		"audio-off.png":
+		{
+			"frame": {"x":737,"y":5,"w":66,"h":67},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":66,"h":67},
+			"sourceSize": {"w":66,"h":67}
+		},
+		"audio-on.png":
+		{
+			"frame": {"x":737,"y":82,"w":66,"h":67},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":66,"h":67},
+			"sourceSize": {"w":66,"h":67}
 		}
 	}
 }

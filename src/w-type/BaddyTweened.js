@@ -46,6 +46,8 @@ export default class BaddyTweened extends GameElement {
     this.path.delay = 0;
     this.path.shoot = 50; // time in tween * 100 that baddy will shoot
 
+    this.dieSound = () => this.game.audio.die();
+
     this.path = {
       ...this.path,
       ...params,

@@ -14,8 +14,8 @@ export default class GoodyBullet extends GameElement {
     this.source = param.source;
     this.frames = [
       PIXI.Texture.from('bullet01.png'),
-      // PIXI.Texture.from("bullet02"),
-      // PIXI.Texture.from("bullet03")
+      PIXI.Texture.from("bullet02.png"),
+      PIXI.Texture.from("bullet03.png"),
     ];
 
     this.game = param.game;
@@ -33,6 +33,8 @@ export default class GoodyBullet extends GameElement {
     };
     this.colloide = true;
     this.tween_speed = param.distance * this.BULLET_SPEED;
+
+    this.game.audio.zap();
 
     const bullet = this;
     const coords = {

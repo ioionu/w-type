@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@tweenjs/tween.js": "^18.4.2",
+    "pixi-sound": "^3.0.4",
     "pixi.js": "^5.2.0",
     "webfontloader": "^1.6.28"
   },
@@ -44,6 +45,7 @@
     "build-dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.dev.js",
     "build": "./node_modules/webpack/bin/webpack.js --config webpack.config.prod.js",
     "sprite": "./node_modules/.bin/spritesheet-js --format pixi.js --name SpriteSheet --path dist/img/ --padding 5 assets/sprite/*.png",
+    "sprite-cordova": "./node_modules/.bin/spritesheet-js --format pixi.js --name SpriteSheet --path cordova/www/img/ --padding 5 assets/sprite/*.png",
     "build-cordova": "./node_modules/webpack/bin/webpack.js --watch --config webpack.config.cordova-dev.js"
   }
 }
